@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "6894b1ec-e2ac-4911-a5e0-f733b328caaa": {
+      "ProjectGuid": "6894b1ec-e2ac-4911-a5e0-f733b328caaa",
+      "DisplayName": "Crosswords",
+      "ColorIndex": 0
+    }
+  },
+  "NextColorIndex": 1
+}

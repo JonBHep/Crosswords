@@ -1,0 +1,36 @@
+﻿<Window x:Class="Crosswords.WordListWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        mc:Ignorable="d"
+        Title="WordListWindow" ShowInTaskbar="False" Height="450" Width="800" WindowStartupLocation="CenterScreen" Foreground="SaddleBrown" SizeToContent="Height" ContentRendered="WordListWindow_OnContentRendered">
+    <Grid Background="Ivory" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock Margin="12 6" FontSize="16" FontFamily="Cinzel" Foreground="SaddleBrown">Word list</TextBlock>
+        <TextBlock x:Name="PathTextBlock" Grid.Row="1" Margin="12 6" FontFamily="Lucida Console">path</TextBlock>
+        <TextBlock x:Name="SizeTextBlock" Grid.Row="2" Margin="12 6" FontFamily="Lucida Console">N words</TextBlock>
+        <DockPanel Grid.Row="3">
+            <Button HorizontalAlignment="Left" Margin="12 4" Width="72" Height="25" Click="OrderButton_OnClick">Order</Button>
+            <TextBlock x:Name="OrderTextBlock" VerticalAlignment="Center" FontFamily="Lucida Console">word / word</TextBlock>
+        </DockPanel>
+        <DockPanel Grid.Row="4">
+            <Button x:Name="FindButton" HorizontalAlignment="Left" Margin="12 4" Width="72" Height="25" Click="FindButton_OnClick">Find</Button>
+            <TextBox x:Name="FindTextBox" Margin="0 0 6 0" VerticalAlignment="Center" FontFamily="Lucida Console" TextChanged="FindTextBox_OnTextChanged"></TextBox>
+        </DockPanel>
+        <DockPanel Grid.Row="5">
+            <Button x:Name="AddButton" HorizontalAlignment="Left" Margin="12 4" Width="72" Height="25" Click="AddButton_OnClick">Add</Button>    
+            <TextBlock x:Name="FindResultTextBlock" Margin="0 0 6 0" VerticalAlignment="Center" FontFamily="Lucida Console" ></TextBlock>
+        </DockPanel>
+        
+        <Button Grid.Row="6" HorizontalAlignment="Left" Margin="12 4 0 8" Width="72" Height="25" Click="CloseButton_OnClick">Close</Button>
+    </Grid>
+</Window>

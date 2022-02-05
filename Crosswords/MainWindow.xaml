@@ -1,0 +1,116 @@
+﻿<Window x:Class="Crosswords.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+       Title="Crosswords" Height="650" Width="1200" Loaded="Window_Loaded" ContentRendered="Window_ContentRendered" Background="PapayaWhip">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBlock Margin="17,17,0,0" FontFamily="AR Julian" FontSize="32" Foreground="SaddleBrown">CROSSWORDS</TextBlock>
+            <TextBlock Margin="16,16,0,0" FontFamily="AR Julian" FontSize="32" Foreground="SandyBrown">CROSSWORDS</TextBlock>
+            
+            <DockPanel Grid.Row ="1" Margin="12 12 12 0" LastChildFill="False">
+                <Button  Width="80" Height="26" Click="NewButton_Click">New</Button>
+                <Button  Width="80" Height="26" Margin="6 0 0 0" Click="LoadButton_Click">Load</Button>
+                <ComboBox Margin="6 0 0 0" VerticalAlignment="Center" MinWidth="256"></ComboBox>
+                <Button DockPanel.Dock="Right"  Width="80" Height="26" FontWeight="Bold" Click="CloseButton_Click">Close</Button>
+                <Button DockPanel.Dock="Right"   Width="80" Height="26" Margin="6 0 6 0" Click="ListButton_OnClick">Word list</Button>
+            </DockPanel>
+            
+            <DockPanel Grid.Row="2" Margin="12 6" VerticalAlignment="Center">
+                <TextBlock Margin="12 0 0 0" >Crossword:</TextBlock>
+                <TextBlock x:Name="NameTextBlock" Margin="6 0 0 0" FontWeight="Bold">default</TextBlock>
+            </DockPanel>
+            <CheckBox Grid.Row="3" Margin="12 6" x:Name="SymmCheckBox" IsChecked="True" IsEnabled="False" Opacity="0.5">Apply rotational symmetry</CheckBox>
+            <DockPanel Grid.Row="4" Margin="12 6">
+                <CheckBox x:Name="LockCheckBox" IsChecked="True" Checked="LockCheckBox_Checked" Unchecked="LockCheckBox_Unchecked">Lock grid</CheckBox>
+                <TextBlock x:Name="LockMessage" Margin="12 0" FontWeight="Bold" Foreground="OrangeRed" >Click cells to define the grid, then lock the grid</TextBlock>
+            </DockPanel>
+            <Button Grid.Row="5" Margin="12 6" HorizontalAlignment="Left" Width="80" Height="26" ToolTip="Clear letters (the grid and clue letter patterns are not affected)" Click="ClearButton_Click">Clear</Button>
+            <DockPanel Grid.Row="6" Margin="12 6">
+                <Button  Width="80" Height="26" Click="SaveAsButton_Click">Save as...</Button>    
+                <TextBlock x:Name="DefaultNameWarningTextBlock" Margin="12 0" VerticalAlignment="Center" FontWeight="Bold" Foreground="OrangeRed">Save the crossword to give it a name</TextBlock>
+            </DockPanel>
+            <TextBlock Grid.Row="7" Margin="12 6" x:Name="ClueTitleTextBlock" FontWeight="Bold" FontFamily="Arial" FontSize="14">[clue title]</TextBlock>
+            <TextBlock Grid.Row="8" Margin="12 6" x:Name="ClueRubricATextBlock" FontFamily="Arial" >To set the format of the clue, separate words with a hyphen or a space.</TextBlock>
+            <TextBlock Grid.Row="9" Margin="12 6" x:Name="ClueRubricBTextBlock" FontFamily="Arial" >Use a full stop for an unknown letter.</TextBlock>
+            <DockPanel Grid.Row="10">
+                <TextBox Grid.Row="10"  x:Name="CluePatternTextBox" HorizontalAlignment="Left" Margin="12 6 0 0" Width="200" FontSize="16" FontFamily="Lucida Console" IsReadOnly="True" Padding="4"></TextBox>
+                <Button Grid.Row="12" x:Name="ClueCopyButton" Margin="12 6 0 0" HorizontalAlignment="Left" Width="80" Height="26" ToolTip="Copy pattern to Match box" Click="ClueCopyButton_OnClick" Content="-> Match"></Button>
+            </DockPanel>
+            
+            <DockPanel Grid.Row="11" Margin="12 6">
+                <TextBox x:Name="ClueEntryTextBox" Width="200"  FontSize="16" FontFamily="Lucida Console" Padding="4" TextChanged="ClueEntryTextBox_TextChanged"></TextBox>
+                <Button x:Name="ClueApplyButton" Margin="12 0" Width="80" Height="26" VerticalAlignment="Center" Click="ApplyButton_Click">Apply</Button>
+                <TextBlock x:Name="ConflictWarningTextBlock"  Foreground="Red" VerticalAlignment="Center" FontWeight="Medium">Conflicts with exisitng letters</TextBlock>
+            </DockPanel>
+            <Button Grid.Row="12" x:Name="ClueClearButton" Margin="12 6 0 0" HorizontalAlignment="Left" Width="80" Height="26" ToolTip="Clear clue to pattern" Click="ClueClearButton_OnClick" >Clear</Button>
+            
+                
+                
+            
+            
+            <Grid Grid.Row="13" Margin="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <DockPanel>
+                    <TextBox x:Name="AnagramTextBox" Margin="4 2 2 4" Width="200"  FontSize="16" FontFamily="Lucida Console" Padding="4" ></TextBox>
+                    <Button x:Name="AnagramButton" Margin="12 0" Width="80" Height="26" VerticalAlignment="Center" Click="AnagramButton_OnClick" >Anagrams</Button>
+                    <TextBlock x:Name="AnagramCountBlock" VerticalAlignment="Center"></TextBlock>
+                </DockPanel>
+                <DockPanel Grid.Row="0" Grid.Column="1">
+                    <TextBox x:Name="TemplateTextBox" Margin="4 2 2 4" Width="200"  FontSize="16" FontFamily="Lucida Console" Padding="4" ></TextBox>
+                    <Button x:Name="TemplateButton" Margin="12 0" Width="80" Height="26" VerticalAlignment="Center" Click="TemplateButton_OnClick">Match</Button>
+                    <TextBlock x:Name="TemplateCountBlock" VerticalAlignment="Center"></TextBlock>
+                </DockPanel>
+                <ListBox x:Name="AnagramBox" Margin="0 4 2 0" FontFamily="Lucida Console" Grid.Row="1" Grid.Column="0"
+                         MouseDoubleClick="AnagramBox_OnMouseDoubleClick"></ListBox>
+                <ListBox x:Name="TemplateBox" Margin="2 4 2 0" FontFamily="Lucida Console" Grid.Row="1" Grid.Column="1" MouseDoubleClick="TemplateBox_OnMouseDoubleClick"></ListBox>
+            </Grid>
+        </Grid>
+        
+        <DockPanel Grid.Column="1">
+            <Grid x:Name="XwordGrid" DockPanel.Dock="Top" Margin="4" />
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <ListBox x:Name="ClueAListBox" Margin="4" SelectionChanged="ClueListBox_SelectionChanged">
+                </ListBox>
+                <ListBox x:Name="ClueDListBox" Margin="4" Grid.Column="1" SelectionChanged="ClueListBox_SelectionChanged">
+                </ListBox>
+            </Grid>
+        </DockPanel>
+        
+    </Grid>
+</Window>

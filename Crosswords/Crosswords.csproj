@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <UseWPF>true</UseWPF>
+        <ApplicationIcon>..\..\..\..\..\Common\Graphics\My Icons\JH Aramis yellow other.ico</ApplicationIcon>
+        <NeutralLanguage>en-GB</NeutralLanguage>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <None Remove="App.xaml.cs~" />
+      <None Include="..\..\..\..\..\Common\Graphics\My Icons\JH Aramis yellow other.ico">
+        <Link>JH Aramis yellow other.ico</Link>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Remove="DesignWindow.xaml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="DesignWindow.xaml.cs" />
+      <Compile Remove="SourceWord.cs" />
+    </ItemGroup>
+
+</Project>
