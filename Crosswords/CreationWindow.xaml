@@ -5,8 +5,39 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:Crosswords"
         mc:Ignorable="d"
-        Title="CreationWindow" Height="450" Width="800">
+        Title="Crosswords" Height="650" Width="1200" Loaded="Window_Loaded" ContentRendered="Window_ContentRendered" Background="Moccasin" >
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        
+        <DockPanel LastChildFill="False">
+            
+                <Canvas DockPanel.Dock="Top" Height="32" Width="300" HorizontalAlignment="Left" Margin="16">
+                    <TextBlock Margin="1,1,0,0" FontFamily="AR Julian" FontSize="32" Foreground="SaddleBrown">Create Crossword</TextBlock>
+                    <TextBlock Margin="0,0,0,0" FontFamily="AR Julian" FontSize="32" Foreground="SandyBrown">Create Crossword</TextBlock>    
+                </Canvas>    
+            
+            <DockPanel  DockPanel.Dock="Top" Margin="12 12 12 0" LastChildFill="False">
+                <TextBlock VerticalAlignment="Center" FontFamily="Lucida Console">Grid size: X</TextBlock>
+                <TextBox x:Name="BoxX" Margin="6 0" VerticalAlignment="Center" Width="32" TextChanged="BoxXY_OnTextChanged"></TextBox>
+                <TextBlock VerticalAlignment="Center" FontFamily="Lucida Console">Y</TextBlock>
+                <TextBox x:Name="BoxY" Margin="6 0" VerticalAlignment="Center" Width="32" TextChanged="BoxXY_OnTextChanged"></TextBox>
+                <TextBlock VerticalAlignment="Center" FontFamily="Lucida Console">dimensions between 4 and 26</TextBlock>
+                <Button x:Name="ApplyButton" Width="80" Height="26" Margin="8 0 0 0" IsEnabled="False" Click="ApplyButton_OnClick">Apply</Button>
+            </DockPanel>
+            
+            <DockPanel  DockPanel.Dock="Top" Margin="12 12 12 0" LastChildFill="False">
+                <Button  Width="80" Height="26" FontWeight="Bold" IsEnabled="False" Click="CloseButton_Click" x:Name="SaveButton">Save</Button>
+                <Button  Width="80" Height="26" Margin="8 0 0 0" Click="CancelButton_Click">Cancel</Button>
+            </DockPanel>
+            <CheckBox DockPanel.Dock="Top" Margin="12" x:Name="SymmCheckBox" FontFamily="Lucida Console" VerticalContentAlignment="Center" IsChecked="True" >Apply rotational symmetry</CheckBox>
+        </DockPanel>
+        
+        <DockPanel Grid.Column="1">
+            <Grid x:Name="XwordGrid" DockPanel.Dock="Top" Margin="4" />
+        </DockPanel>
         
     </Grid>
 </Window>

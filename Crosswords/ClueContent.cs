@@ -85,14 +85,14 @@ public class ClueContent
     public ClueContent(string specification)
     {
         int p = specification.IndexOf(':');
-        Letters = specification[..p];
+        _letters = specification[..p];
         Format = specification[(p + 1)..];
     }
 
     public ClueContent(int sz)
     {
         // called in Clue constructor
-        Letters =CrosswordWordTemplate.Stringy(sz, CrosswordGrid.UnknownLetterChar);
+        _letters =CrosswordWordTemplate.Stringy(sz, CrosswordGrid.UnknownLetterChar);
         Format =$"#{sz}";
     }
 

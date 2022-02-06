@@ -39,21 +39,21 @@ public class Clue
         _content=new ClueContent(spec);
     }
     
-    public bool IncludesCell(GridPoint point)
+    public char? IncludesCell(GridPoint point)
     {
         if (_direction == 'A')
         {
-            if (point.Y != _ystart) { return false; }
+            if (point.Y != _ystart) { return null; }
             int diff = point.X - _xstart;
-            if ((diff < 0)||(diff>=_length)) { return false; }
-            return true;
+            if ((diff < 0)||(diff>=_length)) { return null; }
+            return _content.Letters[diff];
         }
         else
         {
-            if (point.X != _xstart) { return false; }
+            if (point.X != _xstart) { return null; }
             int diff = point.Y - _ystart;
-            if ((diff < 0) || (diff >=_length)) { return false; }
-            return true;
+            if ((diff < 0) || (diff >=_length)) { return null; }
+            return _content.Letters[diff];
         }
     }
 

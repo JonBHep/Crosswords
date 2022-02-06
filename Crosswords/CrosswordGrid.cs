@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows;
 
 namespace Crosswords;
 
@@ -28,8 +30,6 @@ public class CrosswordGrid
          
          */
 
-    // TODO Separate grid layout from found letters and clue format from letters
-    // TODO Easier way to specify pattern of spaces rather than trying to input letters and pattern simultaneously
         public const char BlackChar = '#';
         public const char WhiteChar = '~';
         public const char UnknownLetterChar = '.';
@@ -41,18 +41,9 @@ public class CrosswordGrid
         public CrosswordGrid(string specifn)
         {
             _clus = new Dictionary<string, Clue>();
-            //_lettres = new char[1, 1];
             _cells = new char[1,1];
             _indices = new int[1, 1];
-            _locked = true;
             Specification = specifn;
-        }
-
-        private bool _locked;
-        public bool IsLocked
-        {
-            get => _locked;
-            set => _locked = value;
         }
 
         public string Specification
@@ -81,7 +72,6 @@ public class CrosswordGrid
                 // deduce height
                 _height = sq / _width;
                 // read off cell values
-                //_lettres = new char[_width, _height];
                 _cells = new char[_width, _height];
                 _indices = new int[_width, _height];
                 int p = 0;
@@ -101,8 +91,6 @@ public class CrosswordGrid
         public int Height { get => _height; set => _height = value; }
 
         public char Cell(GridPoint p) { return _cells[p.X, p.Y]; }
-
-    //    public char Lettre(GridPoint p) { return _lettres[p.X, p.Y]; }
         
         public void SetCell(GridPoint point, char quelle)
         {
@@ -110,15 +98,17 @@ public class CrosswordGrid
             LocateIndices();
         }
 
-        public string IsSharedWith(GridPoint point, string clueKey)
+        public string? ClueSharingCell(GridPoint point, string clueKey, out char? otherClueLetter)
         {
-            string retVal = string.Empty;
+            string? retVal = null;
+            otherClueLetter = null;
             foreach (var clef in _clus.Keys)
             {
-                if (clef != clueKey)
+                if (clef != clueKey) // don't return the clue that's making the enquiry
                 {
                     Clue indice = _clus[clef];
-                    if (indice.IncludesCell(point))
+                    otherClueLetter = indice.IncludesCell(point);
+                    if (otherClueLetter is not null)
                     {
                         retVal = clef; break;
                     }
@@ -127,6 +117,7 @@ public class CrosswordGrid
 
             return retVal;
         }
+        
         public int Index(int x, int y) { return _indices[x, y]; }
 
         private string RunAcrossFrom(int x, int y)
@@ -226,30 +217,6 @@ public class CrosswordGrid
 // TODO Continue working with refreshing the grid and the contents separately, feeding the contents from the clue letters
 // not from the grid 'letrres' which hopefully can be disposed of - no sense in keeping two copies of the same data
 
-        public void AmendClueLetters(string clueKey, string newWord)
-        {
-            Clue cloo = _clus[clueKey];
-            int xs = cloo.Xstart;
-            int ys = cloo.Ystart;
-            // if (cloo.Direction == 'A')
-            // {
-            //     for (int a = 0; a < newWord.Length; a++)
-            //     {
-            //         _lettres[xs, ys] = newWord[a];
-            //         xs++;
-            //     }
-            // }
-            // else
-            // {
-            //     for (int a = 0; a < newWord.Length; a++)
-            //     {
-            //         _lettres[xs, ys] = newWord[a];
-            //         ys++;
-            //     }
-            // }
-
-            _clus[clueKey].Content.Letters = newWord;
-        }
         
         public void AmendClueFormat(string clueKey, string newFormat)
         {
@@ -265,8 +232,8 @@ public class CrosswordGrid
             StringBuilder builder = new StringBuilder();
             for (int z = 0; z < cellList.Count; z++)
             {
-                string indice = IsSharedWith(cellList[z], clueKey);
-                if (indice.Length>0)
+                string? indice = ClueSharingCell(cellList[z], clueKey, out char? caractere);
+                if (indice is not null)
                 {
                     Clue crossingClue = _clus[indice];
                     if (crossingClue.IsComplete())
@@ -276,15 +243,70 @@ public class CrosswordGrid
                     else
                     {
                         builder.Append(UnknownLetterChar);  // clear a letter shared with another clue if the other clue has not been completed
-                       // _lettres[cellList[z].X, cellList[z].Y] = WhiteChar;    
                     }
                 }
                 else
                 {
                     builder.Append(UnknownLetterChar);  // clear a letter not shared with another clue
-                    //_lettres[cellList[z].X, cellList[z].Y] = WhiteChar;
                 }
             }
+        }
+
+        public bool SuccessfullyApplyCrossings()
+        {
+            // Modify clue letters where they cross other clues - return false if conflict is found
+            bool faultless = true;
+            foreach (string key in _clus.Keys)
+            {
+                List<GridPoint> cellList = _clus[key].IncludedCells();
+                string lettres = _clus[key].Content.Letters;
+                for (int z=0; z<cellList.Count; z++)
+                {
+                    char homechar = lettres[z];
+                    if (ClueSharingCell(cellList[z], key, out char? alienChar) is not null)
+                    {
+                        if (alienChar is { } incomer)
+                        {
+                            if (incomer != UnknownLetterChar)
+                            {
+                                if (homechar == UnknownLetterChar)
+                                { 
+                                    lettres = AlteredCharacter(lettres, z, incomer);    
+                                }
+                                else if (homechar != alienChar)
+                                {
+                                    faultless =false;
+                                }                                
+                            }
+                        }
+                    }
+                }
+
+                if (lettres != _clus[key].Content.Letters)
+                {
+                    _clus[key].Content.Letters = lettres;
+                }
+            }
+
+            return faultless;
+        }
+
+        private string AlteredCharacter(string source, int position, char replacement)
+        {
+            StringBuilder builder = new StringBuilder();
+            for (int p = 0; p < source.Length; p++)
+            {
+                if (p == position)
+                {
+                    builder.Append(replacement);
+                }
+                else
+                {
+                    builder.Append(source[p]);    
+                }
+            }
+
+            return builder.ToString();
         }
         
         public static bool IsFormattingCharacter(char j)

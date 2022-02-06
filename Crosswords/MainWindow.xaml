@@ -24,12 +24,10 @@
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
             <TextBlock Margin="17,17,0,0" FontFamily="AR Julian" FontSize="32" Foreground="SaddleBrown">CROSSWORDS</TextBlock>
-            <TextBlock Margin="16,16,0,0" FontFamily="AR Julian" FontSize="32" Foreground="SandyBrown">CROSSWORDS</TextBlock>
+            <TextBlock Grid.Row="0" Margin="16,16,0,0" FontFamily="AR Julian" FontSize="32" Foreground="SandyBrown">CROSSWORDS</TextBlock>
             
             <DockPanel Grid.Row ="1" Margin="12 12 12 0" LastChildFill="False">
                 <Button  Width="80" Height="26" Click="NewButton_Click">New</Button>
@@ -44,45 +42,44 @@
                 <TextBlock Margin="12 0 0 0" >Crossword:</TextBlock>
                 <TextBlock x:Name="NameTextBlock" Margin="6 0 0 0" FontWeight="Bold">default</TextBlock>
             </DockPanel>
-            <DockPanel Grid.Row="3" x:Name="LockingPanel">
-                <CheckBox Grid.Row="3" Margin="12 6" x:Name="SymmCheckBox" IsChecked="True" IsEnabled="False" Opacity="0.5">Apply rotational symmetry</CheckBox>
-                <Button Width="80" Click="GridLockingButton_OnClick">Lock grid</Button>
-                <TextBlock x:Name="LockMessage" VerticalAlignment="Center" Margin="12 0" FontWeight="Bold" Foreground="OrangeRed" >Click cells to define the grid, then lock the grid</TextBlock>
-            </DockPanel>
+            <!-- <DockPanel Grid.Row="3" x:Name="LockingPanel"> -->
+            <!--     <CheckBox Grid.Row="3" Margin="12 6" x:Name="SymmCheckBox" IsChecked="True" IsEnabled="False" Opacity="0.5">Apply rotational symmetry</CheckBox> -->
+            <!--     <Button Width="80" Click="GridLockingButton_OnClick">Lock grid</Button> -->
+            <!--     <TextBlock x:Name="LockMessage" VerticalAlignment="Center" Margin="12 0" FontWeight="Bold" Foreground="OrangeRed" >Click cells to define the grid, then lock the grid</TextBlock> -->
+            <!-- </DockPanel> -->
             
-            <Button Grid.Row="4" Margin="12 6" HorizontalAlignment="Left" Width="80" Height="26" ToolTip="Clear letters (the grid and clue letter patterns are not affected)" Click="ClearButton_Click">Clear</Button>
-            <DockPanel Grid.Row="5" Margin="12 6">
-                <Button  Width="80" Height="26" Click="SaveAsButton_Click">Save as...</Button>    
-                <TextBlock x:Name="DefaultNameWarningTextBlock" Margin="12 0" VerticalAlignment="Center" FontWeight="Bold" Foreground="OrangeRed">Save the crossword to give it a name</TextBlock>
-            </DockPanel>
-            <TextBlock Grid.Row="6" Margin="12 6" x:Name="ClueTitleTextBlock" FontWeight="Bold" FontFamily="Arial" FontSize="14">[clue title]</TextBlock>
-            <TextBlock Grid.Row="7" Margin="12 6" x:Name="ClueRubricATextBlock" FontFamily="Arial" >To set the format of the clue, separate word lengths with a comma or a hyphen e.g. '5,5-4'.</TextBlock>
-            <TextBlock Grid.Row="8" Margin="12 6" x:Name="ClueRubricBTextBlock" FontFamily="Arial" >Use a full stop for an unknown letter.</TextBlock>
+            <Button Grid.Row="3" Margin="12 6" HorizontalAlignment="Left" Width="80" Height="26" ToolTip="Clear letters (the grid and clue letter patterns are not affected)" Click="ClearButton_Click">Clear</Button>
+            <!-- <DockPanel Grid.Row="5" Margin="12 6"> -->
+            <!--     <Button  Width="80" Height="26" Click="SaveAsButton_Click">Save as...</Button>     -->
+            <!--     <TextBlock x:Name="DefaultNameWarningTextBlock" Margin="12 0" VerticalAlignment="Center" FontWeight="Bold" Foreground="OrangeRed">Save the crossword to give it a name</TextBlock> -->
+            <!-- </DockPanel> -->
+            <TextBlock Grid.Row="4" Margin="12 6" x:Name="ClueTitleTextBlock" FontWeight="Bold" FontFamily="Arial" FontSize="14">[clue title]</TextBlock>
+            <TextBlock Grid.Row="5" Margin="12 6" x:Name="ClueRubricATextBlock" FontFamily="Arial" >To set the format of the clue, separate word lengths with a comma or a hyphen e.g. '5,5-4'.</TextBlock>
+            <TextBlock Grid.Row="6" Margin="12 6" x:Name="ClueRubricBTextBlock" FontFamily="Arial" >Use a full stop for an unknown letter.</TextBlock>
             
-            <DockPanel Grid.Row="9" Margin="11 6">
+            <DockPanel Grid.Row="7" Margin="11 6">
                 <TextBlock x:Name="FormatCaptionTextBlock" VerticalAlignment="Center" FontWeight="Medium" Width="72">Format:</TextBlock>
                 <TextBox x:Name="FormatEntryTextBox" Width="200"  FontSize="16" FontFamily="Lucida Console" Padding="4" TextChanged="ClueEntryTextBox_TextChanged"></TextBox>
                 <Button x:Name="FormatApplyButton" Margin="12 0" Width="80" Height="26" VerticalAlignment="Center" Click="FormatApplyButton_OnClick" >Apply</Button>
                 <TextBlock x:Name="FormatConflictWarningTextBlock"  Foreground="Red" VerticalAlignment="Center" FontWeight="Medium">Invalid format</TextBlock>
             </DockPanel>
 
-            <DockPanel Grid.Row="10" Margin="12 6">
+            <DockPanel Grid.Row="8" Margin="12 6">
                 <TextBlock x:Name="ContentCaptionTextBlock" VerticalAlignment="Center" FontWeight="Medium" Width="72">Letters:</TextBlock>
                 <TextBox x:Name="ContentEntryTextBox" Width="200"  FontSize="16" VerticalAlignment="Center" FontFamily="Lucida Console" Padding="4" TextChanged="ClueEntryTextBox_TextChanged"></TextBox>
                 <Button x:Name="ContentApplyButton" Margin="12 0" Width="80" Height="26" VerticalAlignment="Center" Click="LettersApplyButton_Click">Apply</Button>
-                <TextBlock x:Name="ContentConflictWarningTextBlock"  Foreground="Red" VerticalAlignment="Center" FontWeight="Medium">Conflicts with exisitng letters</TextBlock>
+                <TextBlock x:Name="ContentConflictWarningTextBlock"  Foreground="Red" VerticalAlignment="Center" FontWeight="Medium">Conflicts with existing letters</TextBlock>
             </DockPanel>
 
-            <DockPanel Grid.Row="11" Margin="12 6" LastChildFill="False">
+            <DockPanel Grid.Row="9" Margin="12 6" LastChildFill="False">
                 <TextBlock VerticalAlignment="Center" FontWeight="Medium" Width="72">Formatted:</TextBlock>
-                <TextBox Grid.Row="10"  x:Name="CluePatternTextBox" Width="200" VerticalAlignment="Center" FontSize="16" FontFamily="Lucida Console" IsReadOnly="True" Padding="4"></TextBox>
-                <Button Grid.Row="12" x:Name="ClueCopyButton" Margin="12 0 0 0" VerticalAlignment="Center" Width="80" Height="26" ToolTip="Copy pattern to Match box" Click="ClueCopyButton_OnClick" Content="-> Match"></Button>
+                <TextBox x:Name="CluePatternTextBox" Width="200" VerticalAlignment="Center" FontSize="16" FontFamily="Lucida Console" IsReadOnly="True" Padding="4"></TextBox>
+                <Button x:Name="ClueCopyButton" Margin="12 0 0 0" VerticalAlignment="Center" Width="80" Height="26" ToolTip="Copy pattern to Match box" Click="ClueCopyButton_OnClick" Content="-> Match"></Button>
             </DockPanel>
             
+            <Button Grid.Row="10" x:Name="ClueClearButton" Margin="12 6 0 0" HorizontalAlignment="Left" Width="80" Height="26" ToolTip="Clear clue to pattern" Click="ClueClearButton_OnClick" >Clear</Button>
             
-            <Button Grid.Row="12" x:Name="ClueClearButton" Margin="12 6 0 0" HorizontalAlignment="Left" Width="80" Height="26" ToolTip="Clear clue to pattern" Click="ClueClearButton_OnClick" >Clear</Button>
-            
-            <Grid Grid.Row="13" Margin="6">
+            <Grid Grid.Row="11" Margin="6">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
