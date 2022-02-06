@@ -93,7 +93,7 @@ public class ClueContent
     {
         // called in Clue constructor
         _letters =CrosswordWordTemplate.Stringy(sz, CrosswordGrid.UnknownLetterChar);
-        Format =$"#{sz}";
+        Format =$"{sz}";
     }
 
     public string Specification()

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Windows;
 
 namespace Crosswords;
 
@@ -98,19 +96,21 @@ public class CrosswordGrid
             LocateIndices();
         }
 
-        public string? ClueSharingCell(GridPoint point, string clueKey, out char? otherClueLetter)
+        public string? ClueSharingCell(GridPoint point, string clueKey, out char otherClueLetter)
         {
             string? retVal = null;
-            otherClueLetter = null;
+            otherClueLetter = UnknownLetterChar;
             foreach (var clef in _clus.Keys)
             {
                 if (clef != clueKey) // don't return the clue that's making the enquiry
                 {
                     Clue indice = _clus[clef];
-                    otherClueLetter = indice.IncludesCell(point);
-                    if (otherClueLetter is not null)
+                    char? c= indice.IncludesCell(point);
+                    if (c.HasValue)
                     {
-                        retVal = clef; break;
+                        otherClueLetter = c.Value;
+                        retVal = clef; 
+                        break;
                     }
                 }
             }
@@ -214,44 +214,7 @@ public class CrosswordGrid
         {
             return _clus[ky];
         }
-// TODO Continue working with refreshing the grid and the contents separately, feeding the contents from the clue letters
-// not from the grid 'letrres' which hopefully can be disposed of - no sense in keeping two copies of the same data
-
         
-        public void AmendClueFormat(string clueKey, string newFormat)
-        {
-            _clus[clueKey].Content.Format = newFormat;
-        }
-        
-        public void ClearClue(string clueKey)
-        {
-            // clear the clue, preserving any letters which belong to crossing clues which have been filled in
-            Clue cloo = _clus[clueKey];
-            List<GridPoint> cellList = cloo.IncludedCells();
-            cloo.Content.Letters = string.Empty;
-            StringBuilder builder = new StringBuilder();
-            for (int z = 0; z < cellList.Count; z++)
-            {
-                string? indice = ClueSharingCell(cellList[z], clueKey, out char? caractere);
-                if (indice is not null)
-                {
-                    Clue crossingClue = _clus[indice];
-                    if (crossingClue.IsComplete())
-                    {
-                        builder.Append(cloo.Content.Letters[z]);  // retain a letter shared with another completed clue
-                    }
-                    else
-                    {
-                        builder.Append(UnknownLetterChar);  // clear a letter shared with another clue if the other clue has not been completed
-                    }
-                }
-                else
-                {
-                    builder.Append(UnknownLetterChar);  // clear a letter not shared with another clue
-                }
-            }
-        }
-
         public bool SuccessfullyApplyCrossings()
         {
             // Modify clue letters where they cross other clues - return false if conflict is found
@@ -260,23 +223,24 @@ public class CrosswordGrid
             {
                 List<GridPoint> cellList = _clus[key].IncludedCells();
                 string lettres = _clus[key].Content.Letters;
-                for (int z=0; z<cellList.Count; z++)
+                for (int z = 0; z < cellList.Count; z++)
                 {
                     char homechar = lettres[z];
-                    if (ClueSharingCell(cellList[z], key, out char? alienChar) is not null)
+                    string autreClef = ClueSharingCell(cellList[z], key, out char alienChar);
+                    if (autreClef is not null)
                     {
-                        if (alienChar is { } incomer)
+                        if (_clus[autreClef].IsComplete())
                         {
-                            if (incomer != UnknownLetterChar)
+                            if (alienChar != UnknownLetterChar)
                             {
                                 if (homechar == UnknownLetterChar)
-                                { 
-                                    lettres = AlteredCharacter(lettres, z, incomer);    
+                                {
+                                    lettres = AlteredCharacter(lettres, z, alienChar);
                                 }
                                 else if (homechar != alienChar)
                                 {
-                                    faultless =false;
-                                }                                
+                                    faultless = false;
+                                }
                             }
                         }
                     }

@@ -86,6 +86,10 @@ public class Clue
 
     public bool IsComplete()
     {
+        if (_content.Letters.Length != _length)
+        {
+            return false;
+        }
         return !_content.Letters.Contains(CrosswordGrid.UnknownLetterChar);
     }
 
