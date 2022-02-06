@@ -23,6 +23,7 @@
     <ItemGroup>
       <Compile Remove="DesignWindow.xaml.cs" />
       <Compile Remove="SourceWord.cs" />
+      <Compile Remove="ClueFormat.cs" />
     </ItemGroup>
 
 </Project>

@@ -65,7 +65,7 @@ public class CrosswordWordTemplate
         return unspacedBuilder.ToString();
     }
     
-    private static string Stringy(int size, char c)
+    public static string Stringy(int size, char c)
     {
         var builder = new StringBuilder();
         for (int x = 0; x < size; x++)
