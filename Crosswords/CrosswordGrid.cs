@@ -213,71 +213,54 @@ public class CrosswordGrid
         {
             return _clus[ky];
         }
-        
-        public bool SuccessfullyApplyCrossings()
+
+        public List<string> CrossingConflictsDetected(string clueKey, string proposedLetters)
         {
-            // Modify clue letters where they cross other clues - return false if conflict is found
-            bool faultless = true;
-            foreach (string key in _clus.Keys)
+            // Detect conflicts between the specified clue letters and crossing clues - return keys of crossing clues in conflict
+            List<string> violated = new List<string>();
+            List<GridPoint> cellList = _clus[clueKey].IncludedCells();
+            for (int z = 0; z < cellList.Count; z++)
             {
-                List<GridPoint> cellList = _clus[key].IncludedCells();
-                string lettres = _clus[key].Content.Letters;
-                for (int z = 0; z < cellList.Count; z++)
+                char homechar = proposedLetters[z];
+                string? autreClef = ClueSharingCell(cellList[z], clueKey, out char alienChar);
+                if (autreClef is not null)
                 {
-                    char homechar = lettres[z];
-                    string? autreClef = ClueSharingCell(cellList[z], key, out char alienChar);
-                    if (autreClef is not null)
+                    if (_clus[autreClef].IsComplete())
                     {
-                        if (_clus[autreClef].IsComplete())
+                        if (homechar != alienChar)
                         {
-                            if (alienChar !=Clue.UnknownLetterChar)
-                            {
-                                if (homechar ==Clue.UnknownLetterChar)
-                                {
-                                    lettres = AlteredCharacter(lettres, z, alienChar);
-                                }
-                                else if (homechar != alienChar)
-                                {
-                                    faultless = false;
-                                }
-                            }
+                            violated.Add(autreClef);
                         }
                     }
                 }
-
-                if (lettres != _clus[key].Content.Letters)
-                {
-                    _clus[key].Content.Letters = lettres;
-                }
             }
-
-            return faultless;
+            return violated;
         }
 
-        private string AlteredCharacter(string source, int position, char replacement)
-        {
-            StringBuilder builder = new StringBuilder();
-            for (int p = 0; p < source.Length; p++)
-            {
-                if (p == position)
-                {
-                    builder.Append(replacement);
-                }
-                else
-                {
-                    builder.Append(source[p]);    
-                }
-            }
-
-            return builder.ToString();
-        }
+        // private string AlteredCharacter(string source, int position, char replacement)
+        // {
+        //     StringBuilder builder = new StringBuilder();
+        //     for (int p = 0; p < source.Length; p++)
+        //     {
+        //         if (p == position)
+        //         {
+        //             builder.Append(replacement);
+        //         }
+        //         else
+        //         {
+        //             builder.Append(source[p]);    
+        //         }
+        //     }
+        //
+        //     return builder.ToString();
+        // }
         
-        public static bool IsFormattingCharacter(char j)
-        {
-            if (j == ' ') { return true; }
-            if (j == '-') { return true; }
-            return false;
-        }
+        // public static bool IsFormattingCharacter(char j)
+        // {
+        //     if (j == ' ') { return true; }
+        //     if (j == '-') { return true; }
+        //     return false;
+        // }
 
         // public static bool IsLetterOrWhiteCell(char j)
         // {

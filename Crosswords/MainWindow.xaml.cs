@@ -61,19 +61,19 @@ namespace Crosswords
             FormatConflictWarningTextBlock.Visibility = vis;
 
             ClueTitleTextBlock.Visibility = vis;
-            CluePatternTextBox.Visibility = vis;
-            ContentEntryTextBox.Visibility = vis;
-            ContentApplyButton.Visibility = vis;
-            ContentConflictWarningTextBlock.Visibility = vis;
-            ContentCaption.Visibility = vis;
-            FormattedCaption.Visibility = vis;
+            PatternTextBox.Visibility = vis;
+            LettersEntryTextBox.Visibility = vis;
+            LettersApplyButton.Visibility = vis;
+            LettersConflictWarningTextBlock.Visibility = vis;
+            LettersCaption.Visibility = vis;
+            PatternCaption.Visibility = vis;
             
-            ClueCopyButton.Visibility = vis;
+            PatternCopyButton.Visibility = vis;
             ClueClearButton.Visibility = vis;
             ClueRubricATextBlock.Visibility = vis;
             ClueRubricBTextBlock.Visibility = vis;
 
-            if (on) ContentEntryTextBox.Focus();
+            if (on) LettersEntryTextBox.Focus();
         }
 
         private void Window_ContentRendered(object sender, EventArgs e)
@@ -227,7 +227,7 @@ namespace Crosswords
                 }
             }
         }
-
+// TODO When displaying clue pattern - crossing letters no longer added to this clue so need to be dynamically fetched from crossing clues
         private void Cell_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (sender is Canvas {Tag: string q})
@@ -538,19 +538,29 @@ namespace Crosswords
 
         private void LettersApplyButton_Click(object sender, RoutedEventArgs e)
         {
-            string nova = ContentEntryTextBox.Text;
-            ContentEntryTextBox.Clear();
             if (ClueTitleTextBlock.Tag is string clef)
             {
-                _puzzle.ClueOf(clef).Content.Letters = nova;
-                bool accomplished = _puzzle.SuccessfullyApplyCrossings();
-                if (!accomplished)
+                string nova = LettersEntryTextBox.Text;
+                List<string> conflictingClues = _puzzle.CrossingConflictsDetected(clef, nova);
+
+                if (conflictingClues.Count > 0)
                 {
-                    MessageBox.Show("Conflicting letters in different clues", "Crosswords", MessageBoxButton.OK
+                    string message = "Conflicts with other clues:";
+                    foreach (var clue in conflictingClues)
+                    {
+                        message += $"\n{clue}";
+                    }
+
+                    MessageBox.Show(message, "Crosswords", MessageBoxButton.OK
                         , MessageBoxImage.Asterisk);
                 }
-                DisplayGrid();
-                SwitchClueControls(false);
+                else
+                {
+                    LettersEntryTextBox.Clear();
+                    _puzzle.ClueOf(clef).Content.Letters = nova;
+                    DisplayGrid();
+                    SwitchClueControls(false);
+                }
             }
         }
 
@@ -559,14 +569,6 @@ namespace Crosswords
             if (sender is ListBox {SelectedItem: ListBoxItem {Tag: string k}})
             {
                 ShowClueDetails(k);
-                // Clue cloo = _puzzle.ClueOf(k);
-                // string dirn = (cloo.Direction == 'A') ? "Across" : "Down";
-                // ClueTitleTextBlock.Text = $"{cloo.Number} {dirn}";
-                // ClueTitleTextBlock.Tag = k;
-                // SwitchClueControls(true);
-                // FormatEntryTextBox.Text = cloo.Content.Format;
-                // CluePatternTextBox.Text = cloo.PatternedWord;
-                // ContentConflictWarningTextBlock.Text = string.Empty;
             }
         }
 
@@ -578,8 +580,8 @@ namespace Crosswords
             ClueTitleTextBlock.Tag = clueCode;
             SwitchClueControls(true);
             FormatEntryTextBox.Text = cloo.Content.Format;
-            CluePatternTextBox.Text = cloo.PatternedWord;
-            ContentConflictWarningTextBlock.Text = string.Empty;
+            PatternTextBox.Text = cloo.PatternedWord;
+            LettersConflictWarningTextBlock.Text = string.Empty;
         }
         private void ClueEntryTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -589,11 +591,11 @@ namespace Crosswords
             }
 
             SolidColorBrush warning = Brushes.IndianRed;
-            string pattern = CluePatternTextBox.Text;
-            string given = ContentEntryTextBox.Text.ToUpper();
-            int p = ContentEntryTextBox.CaretIndex;
-            ContentEntryTextBox.Text = given;
-            ContentEntryTextBox.CaretIndex = p;
+            string pattern = PatternTextBox.Text;
+            string given = LettersEntryTextBox.Text.ToUpper();
+            int p = LettersEntryTextBox.CaretIndex;
+            LettersEntryTextBox.Text = given;
+            LettersEntryTextBox.CaretIndex = p;
             char q = Matches(pattern, given);
             // X, L or A
             // X = wrong length or illegal character
@@ -601,23 +603,23 @@ namespace Crosswords
             // A = OK
             if (q == 'X')
             {
-                ContentEntryTextBox.Foreground = Brushes.Red;
-                ContentApplyButton.IsEnabled = false; // impossible string (wrong length or illegal character)
-                ContentConflictWarningTextBlock.Visibility = Visibility.Visible;
-                ContentConflictWarningTextBlock.Text = "Wrong length or bad characters";
+                LettersEntryTextBox.Foreground = Brushes.Red;
+                LettersApplyButton.IsEnabled = false; // impossible string (wrong length or illegal character)
+                LettersConflictWarningTextBlock.Visibility = Visibility.Visible;
+                LettersConflictWarningTextBlock.Text = "Wrong length or bad characters";
             }
             else if (q == 'L')
             {
-                ContentEntryTextBox.Foreground = warning; // allowable but conflicts with letters given in pattern
-                ContentApplyButton.IsEnabled = true;
-                ContentConflictWarningTextBlock.Visibility = Visibility.Visible;
-                ContentConflictWarningTextBlock.Text = "OK but conflicts with existing letters";
+                LettersEntryTextBox.Foreground = warning; // allowable but conflicts with letters given in pattern
+                LettersApplyButton.IsEnabled = true;
+                LettersConflictWarningTextBlock.Visibility = Visibility.Visible;
+                LettersConflictWarningTextBlock.Text = "OK but conflicts with existing letters";
             }
             else
             {
-                ContentEntryTextBox.Foreground = Brushes.Black;
-                ContentApplyButton.IsEnabled = true;
-                ContentConflictWarningTextBlock.Visibility = Visibility.Hidden;
+                LettersEntryTextBox.Foreground = Brushes.Black;
+                LettersApplyButton.IsEnabled = true;
+                LettersConflictWarningTextBlock.Visibility = Visibility.Hidden;
             }
         }
 
@@ -670,18 +672,11 @@ namespace Crosswords
 
         private void ClueClearButton_OnClick(object sender, RoutedEventArgs e)
         {
-            // TODO Modify this method - still not clearing all the unrequired letters (because they seem to be reinstated by other clues even though these others are no complete
             if (ClueTitleTextBlock.Tag is string clef)
             {
                 Clue cloo = _puzzle.ClueOf(clef);
                 cloo.Content.Letters = CrosswordWordTemplate.Stringy(cloo.WordLength, Clue.UnknownLetterChar);
-                bool accomplished = _puzzle.SuccessfullyApplyCrossings();
-                if (!accomplished)
-                {
-                    MessageBox.Show("Conflicting letters in different clues", "Crosswords", MessageBoxButton.OK
-                        , MessageBoxImage.Asterisk);
-                }
-                CluePatternTextBox.Text = cloo.PatternedWord;
+                PatternTextBox.Text = cloo.PatternedWord;
                 DisplayGrid();
             }
         }
@@ -733,7 +728,7 @@ namespace Crosswords
 
         private void ClueCopyButton_OnClick(object sender, RoutedEventArgs e)
         {
-            string pattern = CluePatternTextBox.Text.Trim();
+            string pattern = PatternTextBox.Text.Trim();
             TemplateTextBox.Text = pattern;
             TemplateBox.Items.Clear();
             TemplateCountBlock.Text = $"{TemplateBox.Items.Count} matches";
@@ -743,7 +738,7 @@ namespace Crosswords
         {
             if (sender is ListBox {SelectedItem: string word})
             {
-                ContentEntryTextBox.Text =Constrain(word);
+                LettersEntryTextBox.Text =Constrain(word);
                 TemplateTextBox.Clear();
             }
 
@@ -753,7 +748,7 @@ namespace Crosswords
         {
             if (sender is ListBox {SelectedItem: string word})
             {
-                ContentEntryTextBox.Text =Constrain(word);
+                LettersEntryTextBox.Text =Constrain(word);
                 AnagramTextBox.Clear();
             }
         }

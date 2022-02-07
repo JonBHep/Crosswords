@@ -65,16 +65,16 @@
             </DockPanel>
 
             <DockPanel Grid.Row="7" Margin="12 6">
-                <TextBlock x:Name="ContentCaption" VerticalAlignment="Center" FontWeight="Medium" Width="72">Letters:</TextBlock>
-                <TextBox x:Name="ContentEntryTextBox" Width="200"  FontSize="16" VerticalAlignment="Center" FontFamily="Lucida Console" Padding="4" TextChanged="ClueEntryTextBox_TextChanged"></TextBox>
-                <Button x:Name="ContentApplyButton" Margin="12 0" Width="80" Height="26" VerticalAlignment="Center" Click="LettersApplyButton_Click">Apply</Button>
-                <TextBlock x:Name="ContentConflictWarningTextBlock"  Foreground="Red" VerticalAlignment="Center" FontWeight="Medium">Conflicts with existing letters</TextBlock>
+                <TextBlock x:Name="LettersCaption" VerticalAlignment="Center" FontWeight="Medium" Width="72">Letters:</TextBlock>
+                <TextBox x:Name="LettersEntryTextBox" Width="200"  FontSize="16" VerticalAlignment="Center" FontFamily="Lucida Console" Padding="4" TextChanged="ClueEntryTextBox_TextChanged"></TextBox>
+                <Button x:Name="LettersApplyButton" Margin="12 0" Width="80" Height="26" VerticalAlignment="Center" Click="LettersApplyButton_Click">Apply</Button>
+                <TextBlock x:Name="LettersConflictWarningTextBlock"  Foreground="Red" VerticalAlignment="Center" FontWeight="Medium">Conflicts with existing letters</TextBlock>
             </DockPanel>
 
             <DockPanel Grid.Row="9" Margin="12 6" LastChildFill="False">
-                <TextBlock x:Name="FormattedCaption" VerticalAlignment="Center" FontWeight="Medium" Width="72">Formatted:</TextBlock>
-                <TextBox x:Name="CluePatternTextBox" Width="200" VerticalAlignment="Center" FontSize="16" FontFamily="Lucida Console" IsReadOnly="True" Padding="4"></TextBox>
-                <Button x:Name="ClueCopyButton" Margin="12 0 0 0" VerticalAlignment="Center" Width="80" Height="26" ToolTip="Copy pattern to Match box" Click="ClueCopyButton_OnClick" Content="-> Match"></Button>
+                <TextBlock x:Name="PatternCaption" VerticalAlignment="Center" FontWeight="Medium" Width="72">Formatted:</TextBlock>
+                <TextBox x:Name="PatternTextBox" Width="200" VerticalAlignment="Center" FontSize="16" FontFamily="Lucida Console" IsReadOnly="True" Padding="4"></TextBox>
+                <Button x:Name="PatternCopyButton" Margin="12 0 0 0" VerticalAlignment="Center" Width="80" Height="26" ToolTip="Copy pattern to Match box" Click="ClueCopyButton_OnClick" Content="-> Match"></Button>
             </DockPanel>
             
             <Button Grid.Row="10" x:Name="ClueClearButton" Margin="12 6 0 0" HorizontalAlignment="Left" Width="80" Height="26" ToolTip="Clear clue to pattern" Click="ClueClearButton_OnClick" >Clear</Button>
