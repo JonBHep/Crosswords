@@ -30,7 +30,6 @@ public class CrosswordGrid
 
         public const char BlackChar = '#';
         public const char WhiteChar = '~';
-        public const char UnknownLetterChar = '.';
         private readonly char[,] _cells;
         private readonly int[,] _indices;
         private int _width;
@@ -99,7 +98,7 @@ public class CrosswordGrid
         public string? ClueSharingCell(GridPoint point, string clueKey, out char otherClueLetter)
         {
             string? retVal = null;
-            otherClueLetter = UnknownLetterChar;
+            otherClueLetter = '.'; // arbitrary default value
             foreach (var clef in _clus.Keys)
             {
                 if (clef != clueKey) // don't return the clue that's making the enquiry
@@ -226,14 +225,14 @@ public class CrosswordGrid
                 for (int z = 0; z < cellList.Count; z++)
                 {
                     char homechar = lettres[z];
-                    string autreClef = ClueSharingCell(cellList[z], key, out char alienChar);
+                    string? autreClef = ClueSharingCell(cellList[z], key, out char alienChar);
                     if (autreClef is not null)
                     {
                         if (_clus[autreClef].IsComplete())
                         {
-                            if (alienChar != UnknownLetterChar)
+                            if (alienChar !=Clue.UnknownLetterChar)
                             {
-                                if (homechar == UnknownLetterChar)
+                                if (homechar ==Clue.UnknownLetterChar)
                                 {
                                     lettres = AlteredCharacter(lettres, z, alienChar);
                                 }

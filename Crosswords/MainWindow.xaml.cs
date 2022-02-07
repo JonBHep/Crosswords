@@ -183,7 +183,7 @@ namespace Crosswords
                         else
                         {
                             px++;
-                            if (t != CrosswordGrid.UnknownLetterChar)
+                            if (t != Clue.UnknownLetterChar)
                             {
                                 TextBlock letterBlock = new TextBlock()
                                 {
@@ -212,7 +212,7 @@ namespace Crosswords
                         else
                         {
                             py++;
-                            if (t != CrosswordGrid.UnknownLetterChar)
+                            if (t != Clue.UnknownLetterChar)
                             {
                                 TextBlock letterBlock = new TextBlock()
                                 {
@@ -440,7 +440,6 @@ namespace Crosswords
             LoadPuzzleFromFile(cwin.NameOfTheGame);
             DisplayGrid();
             SwitchClueControls(false);
-            
         }
 
         private string Coords(int x, int y)
@@ -463,7 +462,7 @@ namespace Crosswords
             Close();
         }
 
-        private void ClearButton_Click(object sender, RoutedEventArgs e)
+        private void ClearAllButton_Click(object sender, RoutedEventArgs e)
         {
             MessageBoxResult answ = MessageBox.Show("Clear all the letters?", Jbh.AppManager.AppName
                 , MessageBoxButton.OKCancel, MessageBoxImage.Question);
@@ -472,51 +471,12 @@ namespace Crosswords
                 return;
             }
 
-            for (int y = 0; y < _puzzle.Height; y++)
+            foreach (var key in _puzzle.ClueKeyList)
             {
-                for (int x = 0; x < _puzzle.Width; x++)
-                {
-                    GridPoint locus = new GridPoint(x, y);
-                    if (_puzzle.Cell(locus) != CrosswordGrid.BlackChar)
-                    { 
-                        if (_puzzle.Cell(locus) != CrosswordGrid.WhiteChar)
-                        {
-                            _puzzle.SetCell(locus, CrosswordGrid.WhiteChar);
-                        }
-                    }
-                }
+                _puzzle.ClueOf(key).ClearLetters();
             }
-// TODO Modify this method to address clue letters not grid contents
             DisplayGrid();
         }
-
-        // private void SaveCrosswordAs()
-        // {
-        //     SaveFileDialog dlg = new SaveFileDialog()
-        //     {
-        //         AddExtension = true, DefaultExt = "cwd", Filter = "Crossword files (*.cwd)|*.cwd"
-        //         , InitialDirectory = CrosswordsPath, OverwritePrompt = true, Title = "Save crossword as..."
-        //         , ValidateNames = true
-        //     };
-        //     bool? ans = dlg.ShowDialog();
-        //     if ((ans.HasValue) && (ans.Value))
-        //     {
-        //         FileStream fs = new FileStream(dlg.FileName, FileMode.Create);
-        //         using (StreamWriter wri = new StreamWriter(fs, Clue.JbhEncoding))
-        //         {
-        //             wri.WriteLine(_puzzle.Specification);
-        //         }
-        //
-        //         _xwordTitle = System.IO.Path.GetFileNameWithoutExtension(dlg.FileName);
-        //         
-        //     }
-        // }
-
-        // private void SetName()
-        // {
-        //     NameTextBlock.Text = _xwordTitle;
-        //     DefaultNameWarningTextBlock.Visibility = _xwordTitle == "default" ? Visibility.Visible : Visibility.Hidden;
-        // }
 
         private void SaveCrossword()
         {
@@ -529,11 +489,6 @@ namespace Crosswords
                 wri.WriteLine($"{tk}%{_puzzle.ClueOf(tk).Content.Specification()}" );
             }
         }
-
-        // private void SaveAsButton_Click(object sender, RoutedEventArgs e)
-        // {
-        //     SaveCrosswordAs();
-        // }
 
         private void LoadPuzzleFromFile(string puzzlePath)
         {
@@ -696,7 +651,7 @@ namespace Crosswords
                 char u = offeredString[p];
                 char v = patternString[p];
 
-                if ((v != CrosswordGrid.UnknownLetterChar) && (v != u))
+                if ((v != Clue.UnknownLetterChar) && (v != u))
                 {
                     lettersflag = false;
                 } // a letter in the offered string is different from the pattern and the pattern's letter is not a wildcard
@@ -719,7 +674,7 @@ namespace Crosswords
             if (ClueTitleTextBlock.Tag is string clef)
             {
                 Clue cloo = _puzzle.ClueOf(clef);
-                cloo.Content.Letters = CrosswordWordTemplate.Stringy(cloo.WordLength, CrosswordGrid.UnknownLetterChar);
+                cloo.Content.Letters = CrosswordWordTemplate.Stringy(cloo.WordLength, Clue.UnknownLetterChar);
                 bool accomplished = _puzzle.SuccessfullyApplyCrossings();
                 if (!accomplished)
                 {

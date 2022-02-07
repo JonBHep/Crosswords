@@ -13,6 +13,7 @@ public class Clue
     private readonly int _ystart;
     
     private ClueContent _content;
+    public const char UnknownLetterChar = '.';
     
     public static readonly Encoding JbhEncoding = Encoding.UTF8;
 
@@ -32,6 +33,11 @@ public class Clue
     public string Key { get => _key; }
     public int Xstart { get => _xstart; }
     public int Ystart { get => _ystart; }
+
+    public void ClearLetters()
+    {
+        _content.Letters = CrosswordWordTemplate.Stringy(_length, UnknownLetterChar);
+    }
     public ClueContent Content { get => _content; }
 
     public void AddContent(string spec)
@@ -90,7 +96,7 @@ public class Clue
         {
             return false;
         }
-        return !_content.Letters.Contains(CrosswordGrid.UnknownLetterChar);
+        return !_content.Letters.Contains(UnknownLetterChar);
     }
 
     public string PatternedWord

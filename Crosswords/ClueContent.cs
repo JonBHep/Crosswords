@@ -99,7 +99,7 @@ public class ClueContent
     public ClueContent(int sz)
     {
         // called in Clue constructor
-        _letters =CrosswordWordTemplate.Stringy(sz, CrosswordGrid.UnknownLetterChar);
+        _letters =CrosswordWordTemplate.Stringy(sz,Clue.UnknownLetterChar);
         Format =$"{sz}";
     }
 
