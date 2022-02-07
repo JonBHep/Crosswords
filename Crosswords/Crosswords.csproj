@@ -18,12 +18,14 @@
 
     <ItemGroup>
       <Page Remove="DesignWindow.xaml" />
+      <Page Remove="CrosswordSizeDialogue.xaml" />
     </ItemGroup>
 
     <ItemGroup>
       <Compile Remove="DesignWindow.xaml.cs" />
       <Compile Remove="SourceWord.cs" />
       <Compile Remove="ClueFormat.cs" />
+      <Compile Remove="CrosswordSizeDialogue.xaml.cs" />
     </ItemGroup>
 
 </Project>

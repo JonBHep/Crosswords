@@ -99,7 +99,7 @@ public class Clue
         return !_content.Letters.Contains(UnknownLetterChar);
     }
 
-    public string PatternedWord
+    public string PatternedWordIntrinsic
     {
         get
         {

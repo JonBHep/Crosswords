@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Input;
 
 namespace Crosswords;
 
@@ -28,279 +29,374 @@ public class CrosswordGrid
          
          */
 
-        public const char BlackChar = '#';
-        public const char WhiteChar = '~';
-        private readonly char[,] _cells;
-        private readonly int[,] _indices;
-        private int _width;
-        private int _height;
-        private readonly Dictionary<string, Clue> _clus;
-        public CrosswordGrid(string specifn)
-        {
-            _clus = new Dictionary<string, Clue>();
-            _cells = new char[1,1];
-            _indices = new int[1, 1];
-            Specification = specifn;
-        }
+    public const char BlackChar = '#';
+    public const char WhiteChar = '~';
+    private readonly char[,] _cells;
+    private readonly int[,] _indices;
+    private int _width;
+    private int _height;
+    private readonly Dictionary<string, Clue> _clus;
 
-        public string Specification
+    public CrosswordGrid(string specifn)
+    {
+        _clus = new Dictionary<string, Clue>();
+        _cells = new char[1, 1];
+        _indices = new int[1, 1];
+        Specification = specifn;
+    }
+
+    public string Specification
+    {
+        get
         {
-            get
+            string q = _width.ToString();
+            q = q.PadRight(2);
+            for (int y = 0; y < _height; ++y)
             {
-                string q = _width.ToString();
-                q = q.PadRight(2);
-                for (int y = 0; y < _height; ++y)
+                for (int x = 0; x < _width; ++x)
                 {
-                    for (int x = 0; x < _width; ++x)
-                    {
-                        q += _cells[x, y];
-                    }
+                    q += _cells[x, y];
                 }
+            }
 
-                return q;
-            }
-            private init
-            {
-                // read width from first two characters
-                string leader = value.Substring(0, 2);
-                _width = int.Parse(leader);
-                string spec = value.Substring(2);
-                int sq = spec.Length;
-                // deduce height
-                _height = sq / _width;
-                // read off cell values
-                _cells = new char[_width, _height];
-                _indices = new int[_width, _height];
-                int p = 0;
-                for (int y = 0; y < _height; ++y)
-                {
-                    for (int x = 0; x < _width; ++x)
-                    {
-                        _cells[x, y] = spec[p];
-                        p++;
-                    }
-                }
-                LocateIndices();
-            }
+            return q;
         }
-
-        public int Width { get => _width; set => _width = value; }
-        public int Height { get => _height; set => _height = value; }
-
-        public char Cell(GridPoint p) { return _cells[p.X, p.Y]; }
-        
-        public void SetCell(GridPoint point, char quelle)
+        private init
         {
-            _cells[point.X,point.Y] =quelle;
+            // read width from first two characters
+            string leader = value.Substring(0, 2);
+            _width = int.Parse(leader);
+            string spec = value.Substring(2);
+            int sq = spec.Length;
+            // deduce height
+            _height = sq / _width;
+            // read off cell values
+            _cells = new char[_width, _height];
+            _indices = new int[_width, _height];
+            int p = 0;
+            for (int y = 0; y < _height; ++y)
+            {
+                for (int x = 0; x < _width; ++x)
+                {
+                    _cells[x, y] = spec[p];
+                    p++;
+                }
+            }
+
             LocateIndices();
         }
+    }
 
-        public string? ClueSharingCell(GridPoint point, string clueKey, out char otherClueLetter)
+    public int Width
+    {
+        get => _width;
+        set => _width = value;
+    }
+
+    public int Height
+    {
+        get => _height;
+        set => _height = value;
+    }
+
+    public char Cell(GridPoint p)
+    {
+        return _cells[p.X, p.Y];
+    }
+
+    public void SetCell(GridPoint point, char quelle)
+    {
+        _cells[point.X, point.Y] = quelle;
+        LocateIndices();
+    }
+
+    public string? ClueSharingCell(GridPoint point, string clueKey, out char otherClueLetter)
+    {
+        string? retVal = null;
+        otherClueLetter = '.'; // arbitrary default value
+        foreach (var clef in _clus.Keys)
         {
-            string? retVal = null;
-            otherClueLetter = '.'; // arbitrary default value
-            foreach (var clef in _clus.Keys)
+            if (clef != clueKey) // don't return the clue that's making the enquiry
             {
-                if (clef != clueKey) // don't return the clue that's making the enquiry
+                Clue indice = _clus[clef];
+                char? c = indice.IncludesCell(point);
+                if (c.HasValue)
                 {
-                    Clue indice = _clus[clef];
-                    char? c= indice.IncludesCell(point);
-                    if (c.HasValue)
+                    otherClueLetter = c.Value;
+                    retVal = clef;
+                    break;
+                }
+            }
+        }
+
+        return retVal;
+    }
+
+    public int Index(int x, int y)
+    {
+        return _indices[x, y];
+    }
+
+    private string RunAcrossFrom(int x, int y)
+    {
+        if (_cells[x, y] == BlackChar)
+        {
+            return string.Empty;
+        } // cell is a black cell
+
+        if (x >= (_width - 1))
+        {
+            return string.Empty;
+        } // there is no cell to the right
+
+        if (_cells[x + 1, y] == BlackChar)
+        {
+            return string.Empty;
+        } // cell to the right is a black cell
+
+        if (x > 0) // if this cell is not at the left edge...
+        {
+            if (_cells[x - 1, y] == WhiteChar) // and the cell to its left is white, then this is not the start of a run
+            {
+                return string.Empty;
+            }
+        }
+
+        // string the white cells in this run
+        string rs = string.Empty;
+        while (_cells[x, y] == WhiteChar)
+        {
+            rs += _cells[x, y];
+            x++;
+            if (x == _width)
+            {
+                break;
+            }
+        }
+
+        return rs;
+    }
+
+    private string RunDownFrom(int x, int y)
+    {
+        if (_cells[x, y] == BlackChar)
+        {
+            return string.Empty;
+        } // cell is a black cell
+
+        if (y >= (_height - 1))
+        {
+            return string.Empty;
+        } // there is no cell below
+
+        if (_cells[x, y + 1] == BlackChar)
+        {
+            return string.Empty;
+        } // cell below is a black cell
+
+        if (y > 0) // if this cell is not at the top edge...
+        {
+            if (_cells[x, y - 1] == WhiteChar) // and the cell above is white, then this is not the start of a run
+            {
+                return string.Empty;
+            }
+        }
+
+        // string the white cells in this run
+        string rs = string.Empty;
+        while (_cells[x, y] == WhiteChar)
+        {
+            rs += _cells[x, y];
+            y++;
+            if (y == _height)
+            {
+                break;
+            }
+        }
+
+        return rs;
+    }
+
+    public void LocateIndices()
+    {
+        int v = 0;
+        _clus.Clear();
+        for (int y = 0; y < _height; y++)
+        {
+            for (int x = 0; x < _width; x++)
+            {
+                _indices[x, y] = 0;
+                string runA = RunAcrossFrom(x, y);
+                string runD = RunDownFrom(x, y);
+                if (!string.IsNullOrEmpty(runA + runD))
+                {
+                    v++;
+                    _indices[x, y] = v;
+                }
+
+                if (!string.IsNullOrEmpty(runA))
+                {
+                    string ky = $"A{v}";
+                    Clue clu = new Clue(ky, runA.Length, x, y);
+                    _clus.Add(ky, clu);
+                }
+
+                if (!string.IsNullOrEmpty(runD))
+                {
+                    string ky = $"D{v}";
+                    Clue clu = new Clue(ky, runD.Length, x, y);
+                    _clus.Add(ky, clu);
+                }
+            }
+        }
+    }
+
+    public List<Clue> CluesAcross => ClueList('A');
+
+    public List<Clue> CluesDown => ClueList('D');
+
+    private List<Clue> ClueList(char d)
+    {
+        List<Clue> clus = new List<Clue>();
+        foreach (Clue c in _clus.Values)
+        {
+            if (c.Direction == d)
+            {
+                clus.Add(c);
+            }
+        }
+
+        return clus;
+    }
+
+    public List<string> ClueKeyList => _clus.Keys.ToList();
+
+    public Clue ClueOf(string ky)
+    {
+        return _clus[ky];
+    }
+
+    public List<string> CrossingConflictsDetected(string clueKey, string proposedLetters)
+    {
+        // Detect conflicts between the specified clue letters and crossing clues - return keys of crossing clues in conflict
+        List<string> violated = new List<string>();
+        List<GridPoint> cellList = _clus[clueKey].IncludedCells();
+        for (int z = 0; z < cellList.Count; z++)
+        {
+            char homechar = proposedLetters[z];
+            string? autreClef = ClueSharingCell(cellList[z], clueKey, out char alienChar);
+            if (autreClef is not null)
+            {
+                if (_clus[autreClef].IsComplete())
+                {
+                    if (homechar != alienChar)
                     {
-                        otherClueLetter = c.Value;
-                        retVal = clef; 
-                        break;
+                        violated.Add(autreClef);
                     }
                 }
             }
-
-            return retVal;
         }
-        
-        public int Index(int x, int y) { return _indices[x, y]; }
 
-        private string RunAcrossFrom(int x, int y)
+        return violated;
+    }
+
+    public string PatternedWordConstrained(string clueKey) // pattern of letters supplied by crossing words
+    {
+        Clue clu = _clus[clueKey];
+        if (clu.IsComplete())
         {
-            if (_cells[x, y] == BlackChar) { return string.Empty; } // cell is a black cell
-            if (x >= (_width - 1)) { return string.Empty; } // there is no cell to the right
-            if (_cells[x + 1, y] == BlackChar) { return string.Empty; } // cell to the right is a black cell
-            if (x > 0) // if this cell is not at the left edge...
+            return clu.PatternedWordIntrinsic;
+        }
+
+        StringBuilder aliens = new StringBuilder();
+        List<GridPoint> cellList = clu.IncludedCells();
+        for (int z = 0; z < cellList.Count; z++)
+        {
+            string? autreClef = ClueSharingCell(cellList[z], clueKey, out char alienChar);
+            if (autreClef is null)
             {
-                if (_cells[x - 1, y] == WhiteChar) // and the cell to its left is white, then this is not the start of a run
+                aliens.Append(Clue.UnknownLetterChar);
+            }
+            else
+            {
+                if (_clus[autreClef].IsComplete())
                 {
-                    return string.Empty;
+                    aliens.Append(alienChar);
                 }
-            }
-            // string the white cells in this run
-            string rs = string.Empty;
-            while (_cells[x, y] == WhiteChar)
-            {
-                rs += _cells[x, y];
-                x++;
-                if (x == _width) { break; }
-            }
-            return rs;
-        }
-
-        private string RunDownFrom(int x, int y)
-        {
-            if (_cells[x, y] == BlackChar) { return string.Empty; } // cell is a black cell
-            if (y >= (_height - 1)) { return string.Empty; } // there is no cell below
-            if (_cells[x, y + 1] == BlackChar) { return string.Empty; } // cell below is a black cell
-            if (y > 0) // if this cell is not at the top edge...
-            {
-                if (_cells[x, y - 1] == WhiteChar) // and the cell above is white, then this is not the start of a run
+                else
                 {
-                    return string.Empty;
-                }
-            }
-            // string the white cells in this run
-            string rs = string.Empty;
-            while (_cells[x, y] == WhiteChar)
-            {
-                rs += _cells[x, y];
-                y++;
-                if (y == _height) { break; }
-            }
-            return rs;
-        }
-
-        public void LocateIndices()
-        {
-            int v = 0;
-            _clus.Clear();
-            for (int y = 0; y < _height; y++)
-            {
-                for (int x = 0; x < _width; x++)
-                {
-                    _indices[x, y] = 0;
-                    string runA = RunAcrossFrom(x, y);
-                    string runD = RunDownFrom(x, y);
-                    if (!string.IsNullOrEmpty(runA + runD)) { v++; _indices[x, y] = v; }
-                    if (!string.IsNullOrEmpty(runA))
-                    {
-                        string ky = $"A{v}";
-                        Clue clu = new Clue(ky, runA.Length, x, y);
-                        _clus.Add(ky, clu);
-                    }
-                    if (!string.IsNullOrEmpty(runD))
-                    {
-                        string ky = $"D{v}";
-                        Clue clu = new Clue(ky, runD.Length, x, y);
-                        _clus.Add(ky, clu);
-                    }
+                    aliens.Append(Clue.UnknownLetterChar);
                 }
             }
         }
 
-        public List<Clue> CluesAcross => ClueList('A');
-
-        public List<Clue> CluesDown => ClueList('D');
-
-        private List<Clue> ClueList(char d)
+        string chiffres = aliens.ToString();
+        int letterPointer = 0;
+        List<string> elements = ClueContent.FormatList(clu.Content.Format);
+        StringBuilder builder = new StringBuilder();
+        foreach (string element in elements)
         {
-            List<Clue> clus = new List<Clue>();
-            foreach (Clue c in _clus.Values)
+            switch (element[0])
             {
-                if (c.Direction == d) { clus.Add(c); }
-            }
-            return clus;
-        }
-
-        public List<string> ClueKeyList => _clus.Keys.ToList();
-
-        public Clue ClueOf(string ky)
-        {
-            return _clus[ky];
-        }
-
-        public List<string> CrossingConflictsDetected(string clueKey, string proposedLetters)
-        {
-            // Detect conflicts between the specified clue letters and crossing clues - return keys of crossing clues in conflict
-            List<string> violated = new List<string>();
-            List<GridPoint> cellList = _clus[clueKey].IncludedCells();
-            for (int z = 0; z < cellList.Count; z++)
-            {
-                char homechar = proposedLetters[z];
-                string? autreClef = ClueSharingCell(cellList[z], clueKey, out char alienChar);
-                if (autreClef is not null)
+                case '-':
                 {
-                    if (_clus[autreClef].IsComplete())
-                    {
-                        if (homechar != alienChar)
-                        {
-                            violated.Add(autreClef);
-                        }
-                    }
+                    builder.Append('-');
+                    break;
+                }
+                case ',':
+                {
+                    builder.Append(' ');
+                    break;
                 }
             }
-            return violated;
+
+            string numeric = element[1..];
+            if (int.TryParse(numeric, out int i))
+            {
+                for (int a = 0; a < i; a++)
+                {
+                    builder.Append(chiffres[letterPointer]);
+                    letterPointer++;
+                }
+            }
         }
+        return builder.ToString();
+    }
 
-        // private string AlteredCharacter(string source, int position, char replacement)
-        // {
-        //     StringBuilder builder = new StringBuilder();
-        //     for (int p = 0; p < source.Length; p++)
-        //     {
-        //         if (p == position)
-        //         {
-        //             builder.Append(replacement);
-        //         }
-        //         else
-        //         {
-        //             builder.Append(source[p]);    
-        //         }
-        //     }
-        //
-        //     return builder.ToString();
-        // }
-        
-        // public static bool IsFormattingCharacter(char j)
-        // {
-        //     if (j == ' ') { return true; }
-        //     if (j == '-') { return true; }
-        //     return false;
-        // }
-
-        // public static bool IsLetterOrWhiteCell(char j)
-        // {
-        //     if (j == WhiteChar) { return true; }
-        //     if ("ABCDEFGHIJKLMNOPQRSTUVWXYZ".Contains(j.ToString())) { return true; }
-        //     return false;
-        // }
-
-        // public static string NakedWord(string formattedWord)
-        // {
-        //     string oput = string.Empty;
-        //     for (int a = 0; a < formattedWord.Length; a++)
-        //     {
-        //         if (!IsFormattingCharacter(formattedWord[a]))
-        //         {
-        //             oput += formattedWord[a];
-        //         }
-        //     }
-        //     return oput;
-        // }
-
-        // public static string NakedTemplate(string formattedWord)
-        // {
-        //     string oput = string.Empty;
-        //     for (int a = 0; a < formattedWord.Length; a++)
-        //     {
-        //         if (IsFormattingCharacter(formattedWord[a]))
-        //         {
-        //             oput += formattedWord[a];
-        //         }
-        //         else
-        //         {
-        //             oput += WhiteChar;
-        //         }
-        //     }
-        //     return oput;
-        // }
-
-        public void AddClue(Clue cloo)
+    public string UnPatternedWordConstrained(string clueKey) // letters supplied by crossing words without spacing formatting
+    {
+        Clue clu = _clus[clueKey];
+        if (clu.IsComplete())
         {
-            _clus.Add(cloo.Key, cloo);
+            return clu.Content.Letters;
         }
+
+        StringBuilder aliens = new StringBuilder();
+        List<GridPoint> cellList = clu.IncludedCells();
+        for (int z = 0; z < cellList.Count; z++)
+        {
+            string? autreClef = ClueSharingCell(cellList[z], clueKey, out char alienChar);
+            if (autreClef is null)
+            {
+                aliens.Append(Clue.UnknownLetterChar);
+            }
+            else
+            {
+                if (_clus[autreClef].IsComplete())
+                {
+                    aliens.Append(alienChar);
+                }
+                else
+                {
+                    aliens.Append(Clue.UnknownLetterChar);
+                }
+            }
+        }
+
+        return aliens.ToString();
+    }
+    public void AddClue(Clue cloo)
+    {
+        _clus.Add(cloo.Key, cloo);
+    }
 }

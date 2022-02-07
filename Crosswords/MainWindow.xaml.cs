@@ -170,7 +170,7 @@ namespace Crosswords
                 if (clu.Direction == 'A')
                 {
                     px--;
-                    foreach (var t in clu.PatternedWord)
+                    foreach (var t in clu.PatternedWordIntrinsic)
                     {
                         if (t == ' ')
                         {
@@ -199,7 +199,7 @@ namespace Crosswords
                 else
                 {
                     py--;
-                    foreach (var t in clu.PatternedWord)
+                    foreach (var t in clu.PatternedWordIntrinsic)
                     {
                         if (t == ' ')
                         {
@@ -227,6 +227,7 @@ namespace Crosswords
                 }
             }
         }
+        
 // TODO When displaying clue pattern - crossing letters no longer added to this clue so need to be dynamically fetched from crossing clues
         private void Cell_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -370,7 +371,7 @@ namespace Crosswords
                 blk = new TextBlock() {Text = $" ({clu.Content.Format})", Foreground = pinceau, Width = 80};
                 spl.Children.Add(blk);
                 
-                string wd =clu.PatternedWord;
+                string wd =_puzzle.PatternedWordConstrained(clu.Key);
                 blk = new TextBlock()
                     {FontFamily = _fixedFont, Foreground = pinceau, Text = wd, Padding = new Thickness(0, 3, 0, 0)};
                 spl.Children.Add(blk);
@@ -409,7 +410,7 @@ namespace Crosswords
                 blk = new TextBlock() {Text = $" ({clu.Content.Format})", Foreground = pinceau, Width = 80};
                 spl.Children.Add(blk);
                 
-                string wd = clu.PatternedWord;
+                string wd =_puzzle.PatternedWordConstrained(clu.Key);
                 blk = new TextBlock()
                     {FontFamily = _fixedFont, Foreground = pinceau, Text = wd, Padding = new Thickness(0, 3, 0, 0)};
                 spl.Children.Add(blk);
@@ -580,9 +581,10 @@ namespace Crosswords
             ClueTitleTextBlock.Tag = clueCode;
             SwitchClueControls(true);
             FormatEntryTextBox.Text = cloo.Content.Format;
-            PatternTextBox.Text = cloo.PatternedWord;
+            PatternTextBox.Text = _puzzle.PatternedWordConstrained(clueCode);
             LettersConflictWarningTextBlock.Text = string.Empty;
         }
+
         private void ClueEntryTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (!_loaded)
@@ -590,36 +592,39 @@ namespace Crosswords
                 return;
             }
 
-            SolidColorBrush warning = Brushes.IndianRed;
-            string pattern = PatternTextBox.Text;
-            string given = LettersEntryTextBox.Text.ToUpper();
-            int p = LettersEntryTextBox.CaretIndex;
-            LettersEntryTextBox.Text = given;
-            LettersEntryTextBox.CaretIndex = p;
-            char q = Matches(pattern, given);
-            // X, L or A
-            // X = wrong length or illegal character
-            // L = letter conflicts with previously entered letter
-            // A = OK
-            if (q == 'X')
+            if (ClueTitleTextBlock.Tag is string clef)
             {
-                LettersEntryTextBox.Foreground = Brushes.Red;
-                LettersApplyButton.IsEnabled = false; // impossible string (wrong length or illegal character)
-                LettersConflictWarningTextBlock.Visibility = Visibility.Visible;
-                LettersConflictWarningTextBlock.Text = "Wrong length or bad characters";
-            }
-            else if (q == 'L')
-            {
-                LettersEntryTextBox.Foreground = warning; // allowable but conflicts with letters given in pattern
-                LettersApplyButton.IsEnabled = true;
-                LettersConflictWarningTextBlock.Visibility = Visibility.Visible;
-                LettersConflictWarningTextBlock.Text = "OK but conflicts with existing letters";
-            }
-            else
-            {
-                LettersEntryTextBox.Foreground = Brushes.Black;
-                LettersApplyButton.IsEnabled = true;
-                LettersConflictWarningTextBlock.Visibility = Visibility.Hidden;
+                SolidColorBrush warning = Brushes.IndianRed;
+                string pattern = _puzzle.UnPatternedWordConstrained(clef);
+                string given = LettersEntryTextBox.Text.ToUpper();
+                int p = LettersEntryTextBox.CaretIndex;
+                LettersEntryTextBox.Text = given;
+                LettersEntryTextBox.CaretIndex = p;
+                char q = Matches(pattern, given);
+                // X, L or A
+                // X = wrong length or illegal character
+                // L = letter conflicts with previously entered letter
+                // A = OK
+                if (q == 'X')
+                {
+                    LettersEntryTextBox.Foreground = Brushes.Red;
+                    LettersApplyButton.IsEnabled = false; // impossible string (wrong length or illegal character)
+                    LettersConflictWarningTextBlock.Visibility = Visibility.Visible;
+                    LettersConflictWarningTextBlock.Text = "Wrong length or bad characters";
+                }
+                else if (q == 'L')
+                {
+                    LettersEntryTextBox.Foreground = warning; // allowable but conflicts with letters given in pattern
+                    LettersApplyButton.IsEnabled = true;
+                    LettersConflictWarningTextBlock.Visibility = Visibility.Visible;
+                    LettersConflictWarningTextBlock.Text = "OK but conflicts with existing letters";
+                }
+                else
+                {
+                    LettersEntryTextBox.Foreground = Brushes.Black;
+                    LettersApplyButton.IsEnabled = true;
+                    LettersConflictWarningTextBlock.Visibility = Visibility.Hidden;
+                }
             }
         }
 
@@ -676,7 +681,7 @@ namespace Crosswords
             {
                 Clue cloo = _puzzle.ClueOf(clef);
                 cloo.Content.Letters = CrosswordWordTemplate.Stringy(cloo.WordLength, Clue.UnknownLetterChar);
-                PatternTextBox.Text = cloo.PatternedWord;
+                PatternTextBox.Text =_puzzle.PatternedWordConstrained(clef);
                 DisplayGrid();
             }
         }
