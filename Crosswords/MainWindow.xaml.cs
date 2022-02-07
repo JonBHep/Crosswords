@@ -89,8 +89,7 @@ namespace Crosswords
             // Each cell contains a Canvas enclosed in a Border
             // Indices are inserted in the cell Canvas as a TextBlock
             // Bars and hyphens are added directly to the Grid cells not to the Canvases - they are sourced from Clue.PatternedWord
-            // TODO Could also source letters from Clue.PatternedWord?
-
+            
             Canvas[,] cellCanvas = new Canvas[_puzzle.Width, _puzzle.Height];
 
             double gapSize = 2;
@@ -287,26 +286,6 @@ namespace Crosswords
                     }
 
                     SwitchClueControls(false);
-                //}
-                // else
-                // {
-                //     // build grid structure
-                //
-                //     _puzzle.SetCell(locus
-                //         , _puzzle.Cell(locus) == CrosswordGrid.BlackChar
-                //             ? CrosswordGrid.WhiteChar
-                //             : CrosswordGrid.BlackChar);
-                //
-                //     if (Symmetrical)
-                //     {
-                //         int symmX = _puzzle.Width - (locus.X + 1);
-                //         int symmY = _puzzle.Height - (locus.Y + 1);
-                //         GridPoint symmLocus = new GridPoint(symmX, symmY);
-                //         _puzzle.SetCell(symmLocus, _puzzle.Cell(locus));
-                //     }
-                //
-                //     DisplayGrid();
-                // }
             }
         }
 
@@ -456,10 +435,9 @@ namespace Crosswords
                 return;
             }
 
-            _xwordTitle = cwin.GridTitle;
+            // _xwordTitle = cwin.GridTitle;
             NameTextBlock.Text = _xwordTitle;
-            _puzzle = new CrosswordGrid(cwin.GridDefinition);
-            
+            LoadPuzzleFromFile(cwin.NameOfTheGame);
             DisplayGrid();
             SwitchClueControls(false);
             
@@ -508,7 +486,7 @@ namespace Crosswords
                     }
                 }
             }
-// TODO Modify this method
+// TODO Modify this method to address clue letters not grid contents
             DisplayGrid();
         }
 
@@ -625,17 +603,29 @@ namespace Crosswords
         {
             if (sender is ListBox {SelectedItem: ListBoxItem {Tag: string k}})
             {
-                Clue cloo = _puzzle.ClueOf(k);
-                string dirn = (cloo.Direction == 'A') ? "Across" : "Down";
-                ClueTitleTextBlock.Text = $"{cloo.Number} {dirn}";
-                ClueTitleTextBlock.Tag = k;
-                SwitchClueControls(true);
-                FormatEntryTextBox.Text = cloo.Content.Format;
-                CluePatternTextBox.Text = cloo.PatternedWord;
-                ContentConflictWarningTextBlock.Text = string.Empty;
+                ShowClueDetails(k);
+                // Clue cloo = _puzzle.ClueOf(k);
+                // string dirn = (cloo.Direction == 'A') ? "Across" : "Down";
+                // ClueTitleTextBlock.Text = $"{cloo.Number} {dirn}";
+                // ClueTitleTextBlock.Tag = k;
+                // SwitchClueControls(true);
+                // FormatEntryTextBox.Text = cloo.Content.Format;
+                // CluePatternTextBox.Text = cloo.PatternedWord;
+                // ContentConflictWarningTextBlock.Text = string.Empty;
             }
         }
 
+        private void ShowClueDetails(string clueCode)
+        {
+            Clue cloo = _puzzle.ClueOf(clueCode);
+            string dirn = (cloo.Direction == 'A') ? "Across" : "Down";
+            ClueTitleTextBlock.Text = $"{cloo.Number} {dirn}";
+            ClueTitleTextBlock.Tag = clueCode;
+            SwitchClueControls(true);
+            FormatEntryTextBox.Text = cloo.Content.Format;
+            CluePatternTextBox.Text = cloo.PatternedWord;
+            ContentConflictWarningTextBlock.Text = string.Empty;
+        }
         private void ClueEntryTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (!_loaded)
@@ -678,50 +668,45 @@ namespace Crosswords
 
         private char Matches(string patternString, string offeredString)
         {
-            // Does the entered string conform to the clue pattern (length and already entered letters)
-            string patternWord = CrosswordGrid.NakedWord(patternString);
-        
             // check offered word length against pattern
-            if (patternWord.Length != offeredString.Length)
+            if (patternString.Length != offeredString.Length)
             {
                 return 'X';
             }
-        
+
             // check for invalid characters in offered string
             bool validflag = true;
             foreach (var u in offeredString)
             {
-                if (!CrosswordGrid.IsLetterOrWhiteCell(u))
+                if (!char.IsLetter(u))
                 {
                     validflag = false;
                 }
             }
-        
+
             if (!validflag)
             {
                 return 'X';
             }
-        
+
             bool lettersflag = true;
-        
+
             for (int p = 0; p < offeredString.Length; p++)
             {
                 char u = offeredString[p];
-                char v = patternWord[p];
-                if (Alphabet.IndexOf(u) >= 0) // it's a letter not an unknown cell
+                char v = patternString[p];
+
+                if ((v != CrosswordGrid.UnknownLetterChar) && (v != u))
                 {
-                    if ((v != CrosswordGrid.UnknownLetterChar) && (v != u))
-                    {
-                        lettersflag = false;
-                    } // a letter in the offered string is different from the pattern and the pattern's letter is not a wildcard
-                }
+                    lettersflag = false;
+                } // a letter in the offered string is different from the pattern and the pattern's letter is not a wildcard
             }
-        
+
             if (!lettersflag)
             {
                 return 'L';
             }
-        
+
             return 'A';
         }
 
@@ -730,6 +715,7 @@ namespace Crosswords
 
         private void ClueClearButton_OnClick(object sender, RoutedEventArgs e)
         {
+            // TODO Modify this method - still not clearing all the unrequired letters (because they seem to be reinstated by other clues even though these others are no complete
             if (ClueTitleTextBlock.Tag is string clef)
             {
                 Clue cloo = _puzzle.ClueOf(clef);
@@ -917,7 +903,7 @@ namespace Crosswords
                     {
                         _puzzle.ClueOf(clef).Content.Format = fmt;
                         DisplayGrid();
-//                        SwitchClueControls(false); 
+                        ShowClueDetails(clef);
                         FormatApplyButton.IsEnabled = false;
                     }
                     else
@@ -952,6 +938,12 @@ namespace Crosswords
             {
                 FormatApplyButton.IsEnabled = false;
             }
+        }
+
+        private void TemplateTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            TemplateBox.Items.Clear();
+            TemplateCountBlock.Text = string.Empty;
         }
     }
 }

@@ -280,25 +280,25 @@ public class CrosswordGrid
             return false;
         }
 
-        public static bool IsLetterOrWhiteCell(char j)
-        {
-            if (j == WhiteChar) { return true; }
-            if ("ABCDEFGHIJKLMNOPQRSTUVWXYZ".Contains(j.ToString())) { return true; }
-            return false;
-        }
+        // public static bool IsLetterOrWhiteCell(char j)
+        // {
+        //     if (j == WhiteChar) { return true; }
+        //     if ("ABCDEFGHIJKLMNOPQRSTUVWXYZ".Contains(j.ToString())) { return true; }
+        //     return false;
+        // }
 
-        public static string NakedWord(string formattedWord)
-        {
-            string oput = string.Empty;
-            for (int a = 0; a < formattedWord.Length; a++)
-            {
-                if (!IsFormattingCharacter(formattedWord[a]))
-                {
-                    oput += formattedWord[a];
-                }
-            }
-            return oput;
-        }
+        // public static string NakedWord(string formattedWord)
+        // {
+        //     string oput = string.Empty;
+        //     for (int a = 0; a < formattedWord.Length; a++)
+        //     {
+        //         if (!IsFormattingCharacter(formattedWord[a]))
+        //         {
+        //             oput += formattedWord[a];
+        //         }
+        //     }
+        //     return oput;
+        // }
 
         // public static string NakedTemplate(string formattedWord)
         // {

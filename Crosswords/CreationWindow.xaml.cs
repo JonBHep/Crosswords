@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Shapes;
 using Microsoft.Win32;
 
 namespace Crosswords;
@@ -15,19 +12,16 @@ namespace Crosswords;
 public partial class CreationWindow
 {
     public CreationWindow()
-
     {
         InitializeComponent();
-        string defaultSpecification
-            = "15......#........#.#.#.#.#.#.#.#........#......#.#.#.#.#.#.#.####............#.#.#.#.#.###.#....###........#.#.#.#.#.#.#.#........###....#.###.#.#.#.#.#............####.#.#.#.#.#.#.#......#........#.#.#.#.#.#.#.#........#......";
-        _puzzle = new CrosswordGrid(defaultSpecification);
+        _puzzle = new CrosswordGrid(BlankGridSpecification(8,8));  // arbitrary size, not to be used
     }
 
     private const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private readonly double _squareSide = 36;
     private CrosswordGrid _puzzle;
-    private string _gridDefinition = String.Empty;
-    private string _xwordTitle = string.Empty;
+    private string _gamePath = String.Empty;
+    // private string _xwordTitle = string.Empty;
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
@@ -45,7 +39,8 @@ public partial class CreationWindow
 
     private void Window_ContentRendered(object sender, EventArgs e)
     {
-        DisplayGrid();
+        BoxX.Text = BoxY.Text = "15";
+        // DisplayGrid();
     }
 
     private void DisplayGrid()
@@ -55,7 +50,7 @@ public partial class CreationWindow
         // Indices are inserted in the cell Canvas as a TextBlock
         // Bars and hyphens are added directly to the Grid cells not to the Canvases - they are sourced from Clue.PatternedWord
 
-        Canvas[,] CellCanvas = new Canvas[_puzzle.Width, _puzzle.Height];
+        Canvas[,] cellCanvas = new Canvas[_puzzle.Width, _puzzle.Height];
         double gapSize = 2;
         Brush blackBrush = Brushes.Sienna;
         XwordGrid.Children.Clear();
@@ -87,25 +82,25 @@ public partial class CreationWindow
         {
             for (int y = 0; y < _puzzle.Height; y++)
             {
-                CellCanvas[x, y] = new Canvas()
+                cellCanvas[x, y] = new Canvas()
                 {
                     Tag = Coords(x, y)
                 };
 
-                CellCanvas[x, y].MouseDown += Cell_MouseDown;
+                cellCanvas[x, y].MouseDown += Cell_MouseDown;
 
                 if (_puzzle.Cell(new GridPoint(x, y)) == CrosswordGrid.BlackChar)
                 {
-                    CellCanvas[x, y].Background = blackBrush;
+                    cellCanvas[x, y].Background = blackBrush;
                 }
                 else
                 {
-                    CellCanvas[x, y].Background = Brushes.White;
+                    cellCanvas[x, y].Background = Brushes.White;
                     int i = _puzzle.Index(x, y);
                     if (i > 0)
                     {
                         TextBlock indexBlock = new TextBlock() {FontSize = 8, Text = i.ToString()};
-                        CellCanvas[x, y].Children.Add(indexBlock);
+                        cellCanvas[x, y].Children.Add(indexBlock);
                     }
 
                 }
@@ -113,13 +108,14 @@ public partial class CreationWindow
                 Border b = new Border()
                 {
                     BorderBrush = Brushes.DarkSlateGray, BorderThickness = new Thickness(1)
-                    , Child = CellCanvas[x, y]
+                    , Child = cellCanvas[x, y]
                 };
                 Grid.SetColumn(b, x * 2);
                 Grid.SetRow(b, y * 2);
                 XwordGrid.Children.Add(b);
             }
         }
+
     }
 
     private void Cell_MouseDown(object sender, MouseButtonEventArgs e)
@@ -151,36 +147,7 @@ public partial class CreationWindow
 
     private bool Symmetrical => (SymmCheckBox.IsChecked.HasValue) && (SymmCheckBox.IsChecked.Value);
 
-    // private void NewButton_Click(object sender, RoutedEventArgs e)
-    // {
-    //     CrosswordSizeDialogue dw = new CrosswordSizeDialogue() {Owner = this};
-    //
-    //     bool? q = dw.ShowDialog();
-    //     if (!q.HasValue)
-    //     {
-    //         return;
-    //     }
-    //
-    //     if (!q.Value)
-    //     {
-    //         return;
-    //     }
-    //
-    //     int sq = dw.X_Dimension * dw.Y_Dimension;
-    //     string init = dw.X_Dimension.ToString();
-    //     init = init.PadRight(2);
-    //     for (int z = 0; z < sq; z++)
-    //     {
-    //         init += CrosswordGrid.WhiteChar;
-    //     }
-    //
-    //     _puzzle = new CrosswordGrid(init);
-    //     DisplayGrid();
-    //     _xwordTitle = "default";
-    //     
-    //     SaveCrossword();
-    // }
-
+    
     private string Coords(int x, int y)
     {
         string rv = Alphabet.Substring(x, 1);
@@ -195,13 +162,9 @@ public partial class CreationWindow
         return new GridPoint(x, y);
     }
 
-    private void CloseButton_Click(object sender, RoutedEventArgs e)
+    private void SaveButton_Click(object sender, RoutedEventArgs e)
     {
-        SaveCrosswordAndClose();
-    }
-
-    private void SaveCrosswordAndClose()
-    {
+        _puzzle.LocateIndices();
         SaveFileDialog dlg = new SaveFileDialog()
         {
             AddExtension = true, DefaultExt = "cwd", Filter = "Crossword files (*.cwd)|*.cwd"
@@ -211,25 +174,22 @@ public partial class CreationWindow
         bool? ans = dlg.ShowDialog();
         if ((ans.HasValue) && (ans.Value))
         {
+            _gamePath = dlg.FileName;
             FileStream fs = new FileStream(dlg.FileName, FileMode.Create);
             using (StreamWriter wri = new StreamWriter(fs, Clue.JbhEncoding))
             {
                 wri.WriteLine(_puzzle.Specification);
+                foreach (string tk in _puzzle.ClueKeyList)
+                {
+                    wri.WriteLine($"{tk}%{_puzzle.ClueOf(tk).Content.Specification()}" );
+                }
             }
-
-            _xwordTitle = System.IO.Path.GetFileNameWithoutExtension(dlg.FileName);
+            // _xwordTitle = Path.GetFileNameWithoutExtension(dlg.FileName);
             DialogResult = true;
         }
     }
-
-    private void SaveAsButton_Click(object sender, RoutedEventArgs e)
-    {
-        SaveCrosswordAndClose();
-    }
-
-
-    private static string CrosswordsPath => System.IO.Path.Combine(Jbh.AppManager.DataPath, "Crosswords");
-    private string WordListFile => System.IO.Path.Combine(Jbh.AppManager.DataPath, "CrosswordLists", "wordlist.txt");
+    
+    private static string CrosswordsPath => Path.Combine(Jbh.AppManager.DataPath, "Crosswords");
 
     private void CancelButton_Click(object sender, RoutedEventArgs e)
     {
@@ -281,26 +241,23 @@ public partial class CreationWindow
             return;
         }
 
-        int sq = dx * dy;
+        string specification = BlankGridSpecification(dx, dy);
+        _puzzle = new CrosswordGrid(specification);
+        DisplayGrid();
+        SaveButton.IsEnabled = true;
+    }
+
+    private string BlankGridSpecification(int width, int height)
+    {
+        int sq = width * height;
         StringBuilder builder = new StringBuilder();
-        builder.Append(dx.ToString().PadRight(2));
+        builder.Append(width.ToString().PadRight(2));
         for (int z = 0; z < sq; z++)
         {
             builder.Append(CrosswordGrid.WhiteChar);
         }
-
-        _gridDefinition = builder.ToString();
-        _puzzle = new CrosswordGrid(builder.ToString());
-        DisplayGrid();
+        return builder.ToString();
     }
-
-    public string GridDefinition
-    {
-        get => _gridDefinition;
-    }
-
-    public string GridTitle
-    {
-        get => _xwordTitle;
-    }
+    public string NameOfTheGame => _gamePath; 
+    // public string GridTitle => _xwordTitle;
 }

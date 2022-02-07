@@ -16,7 +16,6 @@ public class ClueContent
             {
                 ok = false;
                 break;
-
             }
         }
 
@@ -26,6 +25,7 @@ public class ClueContent
         }
 
         string[] parts = q.Split("-,".ToCharArray());
+        int added = 0;
         foreach (var part in parts)
         {
             if (int.TryParse(part, out int i))
@@ -34,14 +34,21 @@ public class ClueContent
                 {
                     ok = false; // zero length element
                 }
+                else
+                {
+                    added += i;
+                }
             }
             else
             {
                 ok = false; // length not an integer
             }
         }
-
-        return ok;
+        if (!ok)
+        {
+            return false; // contains invalid length specifier
+        }
+        return added==total;
     }
 
     public static List<string> FormatList(string q)
