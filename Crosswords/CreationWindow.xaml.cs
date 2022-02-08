@@ -244,6 +244,7 @@ public partial class CreationWindow
         string specification = BlankGridSpecification(dx, dy);
         _puzzle = new CrosswordGrid(specification);
         DisplayGrid();
+        StartButton.IsEnabled = true;
         SaveButton.IsEnabled = true;
     }
 
@@ -258,6 +259,34 @@ public partial class CreationWindow
         }
         return builder.ToString();
     }
+    private string StarterGridSpecification(int width, int height)
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.Append(width.ToString().PadRight(2));
+        for (int y = 0; y < height; y++)
+        {
+            char squareChar = CrosswordGrid.WhiteChar;
+            for (int x = 0; x < width; x++)
+            {
+                builder.Append(squareChar);
+                if (y % 2 == 1)
+                {
+                    squareChar = (squareChar == CrosswordGrid.WhiteChar)
+                        ? CrosswordGrid.BlackChar
+                        : CrosswordGrid.WhiteChar;
+                }
+            }
+        }
+        return builder.ToString();
+    }
+    
     public string NameOfTheGame => _gamePath; 
     // public string GridTitle => _xwordTitle;
+    private void StartPatternButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        string specification =StarterGridSpecification(_puzzle.Width, _puzzle.Height);
+        _puzzle = new CrosswordGrid(specification);
+        DisplayGrid();
+    }
+    
 }

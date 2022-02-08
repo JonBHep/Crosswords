@@ -55,24 +55,8 @@ namespace Crosswords
         private void SwitchClueControls(bool on)
         {
             Visibility vis = (on) ? Visibility.Visible : Visibility.Hidden;
-            FormatApplyButton.Visibility = vis;
-            FormatCaption.Visibility = vis;
-            FormatEntryTextBox.Visibility = vis;
-            FormatConflictWarningTextBlock.Visibility = vis;
-
-            ClueTitleTextBlock.Visibility = vis;
-            PatternTextBox.Visibility = vis;
-            LettersEntryTextBox.Visibility = vis;
-            LettersApplyButton.Visibility = vis;
-            LettersConflictWarningTextBlock.Visibility = vis;
-            LettersCaption.Visibility = vis;
-            PatternCaption.Visibility = vis;
+            SelectedClueGrid.Visibility = vis;
             
-            PatternCopyButton.Visibility = vis;
-            ClueClearButton.Visibility = vis;
-            ClueRubricATextBlock.Visibility = vis;
-            ClueRubricBTextBlock.Visibility = vis;
-
             if (on) LettersEntryTextBox.Focus();
         }
 
@@ -690,6 +674,7 @@ namespace Crosswords
         private string WordListFile => System.IO.Path.Combine(Jbh.AppManager.DataPath, "CrosswordLists", "wordlist.txt");
         private void AnagramButton_OnClick(object sender, RoutedEventArgs e)
         {
+            Cursor=Cursors.Wait;
             AnagramBox.Items.Clear();
             string source = AnagramTextBox.Text.Trim();
             string ordered = CrosswordWordTemplate.AnagramString(source);
@@ -708,10 +693,12 @@ namespace Crosswords
             }
 
             AnagramCountBlock.Text = $"{AnagramBox.Items.Count} matches";
+            Cursor=Cursors.Arrow;
         }
 
         private void TemplateButton_OnClick(object sender, RoutedEventArgs e)
         {
+            Cursor=Cursors.Wait;
             TemplateBox.Items.Clear();
             string source = TemplateTextBox.Text;
             CrosswordWordTemplate template = new CrosswordWordTemplate(source);
@@ -729,6 +716,7 @@ namespace Crosswords
                 }
             }
             TemplateCountBlock.Text = $"{TemplateBox.Items.Count} matches";
+            Cursor=Cursors.Arrow;
         }
 
         private void ClueCopyButton_OnClick(object sender, RoutedEventArgs e)
@@ -736,7 +724,7 @@ namespace Crosswords
             string pattern = PatternTextBox.Text.Trim();
             TemplateTextBox.Text = pattern;
             TemplateBox.Items.Clear();
-            TemplateCountBlock.Text = $"{TemplateBox.Items.Count} matches";
+            TemplateCountBlock.Text =string.Empty;
         }
 
         private void TemplateBox_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -900,5 +888,7 @@ namespace Crosswords
             TemplateBox.Items.Clear();
             TemplateCountBlock.Text = string.Empty;
         }
+        // TODO Review how template matching takes account of punctuation in word list e.g. isn't and what? are currently counted as length 5  
+        // TODO Try to start with no grid rather than default pattern
     }
 }
