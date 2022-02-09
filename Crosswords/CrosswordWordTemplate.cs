@@ -41,10 +41,11 @@ public class CrosswordWordTemplate
             {
                 gapsBuilder.Append($"{a:00}");
             }
-            else
+            else if (char.IsLetter(c) || (c==Clue.UnknownLetterChar))
             {
                 unspacedBuilder.Append(c);
             }
+            // NB other characters e.g. apostrophes do not count as spacers nor letters
         }
 
         squeezed = unspacedBuilder.ToString();
