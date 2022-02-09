@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Crosswords;
 
@@ -30,6 +31,7 @@ public partial class WordListWindow
         AddButton.IsEnabled = false;
         FindButton.IsEnabled = false;
         OrderTextBlock.Text = string.Empty;
+        FindTextBox.Focus();
     }
 
     private void OrderButton_OnClick(object sender, RoutedEventArgs e)
@@ -64,6 +66,8 @@ public partial class WordListWindow
 
     private void AddButton_OnClick(object sender, RoutedEventArgs e)
     {
+        Cursor=Cursors.Wait;
+        
         if (AddButton.Tag is string word)
         {
             AddButton.IsEnabled = false;
@@ -100,6 +104,8 @@ public partial class WordListWindow
             File.Delete(_filePath);
             File.Move(_tempPath, _filePath);
             SizeTextBlock.Text = $"{counter:#,0} words";
+            FindResultTextBlock.Text = "Added";
+            Cursor=Cursors.Arrow;
         }
     }
 

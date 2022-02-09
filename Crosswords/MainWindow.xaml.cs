@@ -32,7 +32,7 @@ namespace Crosswords
         private readonly FontFamily _fixedFont = new("Liberation Mono");
         private CrosswordGrid _puzzle;
         private string _xwordTitle = "default";
-        private readonly SolidColorBrush _barBrush = Brushes.Black;
+        private Brush _barBrush = Brushes.DarkBlue;
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -48,6 +48,7 @@ namespace Crosswords
             Top = ym;
             SwitchClueControls(false);
             FillGamesComboBox();
+            FillColourComboBox();
         }
 
         private void SwitchClueControls(bool on)
@@ -63,6 +64,7 @@ namespace Crosswords
             DisplayGrid();
             NameTextBlock.Text = "Choose Open or New"; 
             SwitchClueControls(false);
+            VocabButton.IsEnabled = false;
         }
 
         private void DisplayGrid()
@@ -76,7 +78,6 @@ namespace Crosswords
 
             double gapSize = 2;
             FontFamily ff = new FontFamily("Times New Roman");
-            Brush blackBrush = Brushes.Black;
             
             XwordGrid.Children.Clear();
             XwordGrid.ColumnDefinitions.Clear();
@@ -116,7 +117,7 @@ namespace Crosswords
 
                     if (_puzzle.Cell(new GridPoint(x, y)) == CrosswordGrid.BlackChar)
                     {
-                        cellCanvas[x, y].Background = blackBrush;
+                        cellCanvas[x, y].Background =Brushes.Black;
                     }
                     else
                     {
@@ -169,7 +170,7 @@ namespace Crosswords
                             {
                                 TextBlock letterBlock = new TextBlock()
                                 {
-                                    FontFamily = ff, FontSize = 22, Text = t.ToString(), FontWeight = FontWeights.Bold
+                                    FontFamily = ff, FontSize = 22, Text = t.ToString(), FontWeight = FontWeights.Bold, Foreground = _barBrush
                                 };
                                 Canvas.SetLeft(letterBlock, 9);
                                 Canvas.SetTop(letterBlock, 6);
@@ -198,7 +199,7 @@ namespace Crosswords
                             {
                                 TextBlock letterBlock = new TextBlock()
                                 {
-                                    FontFamily = ff, FontSize = 22, Text = t.ToString(), FontWeight = FontWeights.Bold
+                                    FontFamily = ff, FontSize = 22, Text = t.ToString(), FontWeight = FontWeights.Bold, Foreground = _barBrush
                                 };
                                 Canvas.SetLeft(letterBlock, 9);
                                 Canvas.SetTop(letterBlock, 6);
@@ -313,6 +314,7 @@ namespace Crosswords
 
         private void ListClues()
         {
+            bool allDone = true;
             SolidColorBrush dimbrush = Brushes.Silver;
             SolidColorBrush abrush = Brushes.RoyalBlue;
             SolidColorBrush dbrush = Brushes.DarkViolet;
@@ -336,8 +338,9 @@ namespace Crosswords
                 if (!clu.IsComplete())
                 {
                     pinceau = abrush;
+                    allDone = false;
                 }
-
+                
                 StackPanel spl = new StackPanel() {Orientation = Orientation.Horizontal};
                 
                 blk = new TextBlock() {Width = 80,Text = clu.Number.ToString(), FontWeight = FontWeights.Medium, Foreground = pinceau};
@@ -375,8 +378,9 @@ namespace Crosswords
                 if (!clu.IsComplete())
                 {
                     pinceau = dbrush;
+                    allDone = false;
                 }
-
+                
                 StackPanel spl = new StackPanel() {Orientation = Orientation.Horizontal};
                 
                 blk = new TextBlock() {Width = 80,Text = clu.Number.ToString(), FontWeight = FontWeights.Medium, Foreground = pinceau};
@@ -397,6 +401,13 @@ namespace Crosswords
                 itm = new ListBoxItem() {Content = spl, Tag = clu.Key};
                 ClueDListBox.Items.Add(itm);
             }
+
+            if (allDone)
+            {
+                VocabButton.IsEnabled = true;
+            }
+
+            ;
         }
 
         private void NewButton_Click(object sender, RoutedEventArgs e)
@@ -472,7 +483,7 @@ namespace Crosswords
         private void LoadPuzzleFromFile(string puzzlePath)
         {
             SaveCrossword();
-            
+            VocabButton.IsEnabled = false;
             using (StreamReader rdr = new StreamReader(puzzlePath, Clue.JbhEncoding))
             {
                 // load puzzle grid
@@ -798,6 +809,23 @@ namespace Crosswords
             }
         }
 
+        private void FillColourComboBox()
+        {
+            ColourComboBox.Items.Clear();
+            ColourComboBox.Items.Add(new ListBoxItem()
+                {Tag = Brushes.Black, Content = new Rectangle() {Width = 128, Height = 16, Fill = Brushes.Black}});
+            ColourComboBox.Items.Add(new ListBoxItem()
+                {Tag = Brushes.RoyalBlue, Content = new Rectangle() {Width = 128, Height = 16, Fill = Brushes.RoyalBlue}});
+            ColourComboBox.Items.Add(new ListBoxItem()
+                {Tag = Brushes.SaddleBrown, Content = new Rectangle() {Width = 128, Height = 16, Fill = Brushes.SaddleBrown}});
+            ColourComboBox.Items.Add(new ListBoxItem()
+                {Tag = Brushes.ForestGreen, Content = new Rectangle() {Width = 128, Height = 16, Fill = Brushes.ForestGreen}});
+            ColourComboBox.Items.Add(new ListBoxItem()
+                {Tag = Brushes.DarkViolet, Content = new Rectangle() {Width = 128, Height = 16, Fill = Brushes.DarkViolet}});
+            ColourComboBox.Items.Add(new ListBoxItem()
+                {Tag = Brushes.Crimson, Content = new Rectangle() {Width = 128, Height = 16, Fill = Brushes.Crimson}});
+            ColourComboBox.SelectedIndex = 0;
+        }
         private void FillGamesComboBox()
         {
             GamesComboBox.Items.Clear();
@@ -904,6 +932,128 @@ namespace Crosswords
             TemplateBox.Items.Clear();
             TemplateCountBlock.Text = string.Empty;
         }
-        
+
+        private void CheckVocabButton_Click(object sender, RoutedEventArgs e)
+        {
+            SolidColorBrush dimbrush = Brushes.Silver;
+            SolidColorBrush abrush = Brushes.RoyalBlue;
+            SolidColorBrush dbrush = Brushes.DarkViolet;
+
+            ClueAListBox.Items.Clear();
+            ClueDListBox.Items.Clear();
+
+            SolidColorBrush pinceau = abrush;
+            List<Clue> clist = _puzzle.CluesAcross;
+            TextBlock blk = new TextBlock();
+            Run r = new Run() {Text = $"ACROSS: ", FontWeight = FontWeights.Bold, Foreground = pinceau};
+            blk.Inlines.Add(r);
+            r = new Run() {Text = $"{clist.Count} clues", Foreground = pinceau};
+            blk.Inlines.Add(r);
+            ListBoxItem itm = new ListBoxItem() {Content = blk, IsHitTestVisible = false};
+            ClueAListBox.Items.Add(itm);
+
+            foreach (Clue clu in clist)
+            {
+                pinceau = dimbrush;
+                if (!clu.IsComplete())
+                {
+                    pinceau = abrush;
+                }
+
+                StackPanel spl = new StackPanel() {Orientation = Orientation.Horizontal};
+                
+                blk = new TextBlock() {Width = 80,Text = clu.Number.ToString(), FontWeight = FontWeights.Medium, Foreground = pinceau};
+                spl.Children.Add(blk);
+                
+                if (clu.Content.Format.Length == 0)
+                {
+                    clu.Content.Format =$"{clu.WordLength}";
+                }
+                blk = new TextBlock() {Text = $" ({clu.Content.Format})", Foreground = pinceau, Width = 80};
+                spl.Children.Add(blk);
+                
+                string wd =_puzzle.PatternedWordConstrained(clu.Key);
+                bool whether = FoundInWordList(wd);
+                Brush brosse = whether ? Brushes.DarkGreen : Brushes.Red;
+                
+                blk = new TextBlock()
+                    {FontFamily = _fixedFont, Foreground = brosse, Text = wd, Padding = new Thickness(0, 3, 0, 0)};
+                spl.Children.Add(blk);
+                
+                itm = new ListBoxItem() {Content = spl, Tag = clu.Key};
+                ClueAListBox.Items.Add(itm);
+            }
+
+            pinceau = dbrush;
+            clist = _puzzle.CluesDown;
+            blk = new TextBlock();
+            r = new Run() {Text = $"DOWN: ", FontWeight = FontWeights.Bold, Foreground = pinceau};
+            blk.Inlines.Add(r);
+            r = new Run() {Text = $"{clist.Count} clues", Foreground = pinceau};
+            blk.Inlines.Add(r);
+            itm = new ListBoxItem() {Content = blk, IsHitTestVisible = false};
+            ClueDListBox.Items.Add(itm);
+
+            foreach (Clue clu in clist)
+            {
+                pinceau = dimbrush;
+                if (!clu.IsComplete())
+                {
+                    pinceau = dbrush;
+                }
+
+                StackPanel spl = new StackPanel() {Orientation = Orientation.Horizontal};
+                
+                blk = new TextBlock() {Width = 80,Text = clu.Number.ToString(), FontWeight = FontWeights.Medium, Foreground = pinceau};
+                spl.Children.Add(blk);
+                
+                if (clu.Content.Format.Length == 0)
+                {
+                    clu.Content.Format =$"{clu.WordLength}";
+                }
+                blk = new TextBlock() {Text = $" ({clu.Content.Format})", Foreground = pinceau, Width = 80};
+                spl.Children.Add(blk);
+                
+                string wd =_puzzle.PatternedWordConstrained(clu.Key);
+                bool whether = FoundInWordList(wd);
+                Brush brosse = whether ? Brushes.DarkGreen : Brushes.Red;
+                
+                blk = new TextBlock()
+                    {FontFamily = _fixedFont, Foreground = brosse, Text = wd, Padding = new Thickness(0, 3, 0, 0)};
+                spl.Children.Add(blk);
+                
+                itm = new ListBoxItem() {Content = spl, Tag = clu.Key};
+                ClueDListBox.Items.Add(itm);
+            }
+        }
+
+        private bool FoundInWordList(string verba)
+        {
+            CrosswordWordTemplate verbaTemplate = new CrosswordWordTemplate(verba);
+            bool flag = false;
+            using StreamReader reader = new(WordListFile, Clue.JbhEncoding);
+            while (!reader.EndOfStream)
+            {
+                string? mot = reader.ReadLine();
+                if (mot is { } word)
+                {
+                    CrosswordWordTemplate wordTemplate = new CrosswordWordTemplate(word);
+                    if (wordTemplate.MatchesTemplate(verbaTemplate))
+                    {
+                        flag = true; break;
+                    }
+                }
+            }
+
+            return flag;
+        }
+
+        private void ColourComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ColourComboBox.SelectedItem is ListBoxItem {Tag: Brush pinceau})
+            {
+                _barBrush = pinceau;
+            }
+        }
     }
 }

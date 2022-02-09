@@ -35,21 +35,27 @@
                 <Button DockPanel.Dock="Right" Width="80" Height="26" Margin="6 0 6 0" Click="ListButton_OnClick">Word list</Button>
             </DockPanel>
 
-            <DockPanel Grid.Row="2" Margin="12 6" VerticalAlignment="Center">
-                <TextBlock Margin="12 0 0 0">Crossword:</TextBlock>
-                <TextBlock x:Name="NameTextBlock" Margin="6 0 0 0" FontWeight="Bold">default</TextBlock>
+            <DockPanel Grid.Row="2" Margin="12 12 12 0" VerticalAlignment="Center">
+                <TextBlock VerticalAlignment="Center" >Crossword:</TextBlock>
+                <TextBlock x:Name="NameTextBlock" Margin="8 0 0 0" FontSize="16" FontWeight="Bold">default</TextBlock>
             </DockPanel>
-            <!-- <DockPanel Grid.Row="3" x:Name="LockingPanel"> -->
-            <!--     <CheckBox Grid.Row="3" Margin="12 6" x:Name="SymmCheckBox" IsChecked="True" IsEnabled="False" Opacity="0.5">Apply rotational symmetry</CheckBox> -->
-            <!--     <Button Width="80" Click="GridLockingButton_OnClick">Lock grid</Button> -->
-            <!--     <TextBlock x:Name="LockMessage" VerticalAlignment="Center" Margin="12 0" FontWeight="Bold" Foreground="OrangeRed" >Click cells to define the grid, then lock the grid</TextBlock> -->
-            <!-- </DockPanel> -->
-
-            <Button Grid.Row="3" Margin="12 6" HorizontalAlignment="Left" Width="80" Height="26"
-                    ToolTip="Clear letters (the grid and clue letter patterns are not affected)"
-                    Click="ClearAllButton_Click">
-                Clear
-            </Button>
+            
+            <DockPanel Grid.Row="3" Margin="12 12 12 0" LastChildFill="False">
+                <Button HorizontalAlignment="Left" Width="80" Height="26"
+                        ToolTip="Clear letters (the grid and clue letter patterns are not affected)"
+                        Click="ClearAllButton_Click">
+                    Clear
+                </Button>    
+                <Button x:Name="VocabButton" Margin=" 6 0 0 0" HorizontalAlignment="Left" Width="80" Height="26"
+                                        ToolTip="Check all answers against word list"
+                                        Click="CheckVocabButton_Click">
+                                    Check
+                                </Button>
+                <ComboBox Margin="6 0 0 0" VerticalAlignment="Center" Width="140" Height="24" x:Name="ColourComboBox"
+                          SelectionChanged="ColourComboBox_OnSelectionChanged">
+                </ComboBox>
+            </DockPanel>
+            
             <!-- <DockPanel Grid.Row="5" Margin="12 6"> -->
             <!--     <Button  Width="80" Height="26" Click="SaveAsButton_Click">Save as...</Button>     -->
             <!--     <TextBlock x:Name="DefaultNameWarningTextBlock" Margin="12 0" VerticalAlignment="Center" FontWeight="Bold" Foreground="OrangeRed">Save the crossword to give it a name</TextBlock> -->
