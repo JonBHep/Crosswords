@@ -280,18 +280,22 @@ public class CrosswordGrid
     {
         // Detect conflicts between the specified clue letters and crossing clues - return keys of crossing clues in conflict
         List<string> violated = new List<string>();
+        
         List<GridPoint> cellList = _clus[clueKey].IncludedCells();
-        for (int z = 0; z < cellList.Count; z++)
+        if (cellList.Count == proposedLetters.Length)
         {
-            char homechar = proposedLetters[z];
-            string? autreClef = ClueSharingCell(cellList[z], clueKey, out char alienChar);
-            if (autreClef is not null)
+            for (int z = 0; z < cellList.Count; z++)
             {
-                if (_clus[autreClef].IsComplete())
+                char homechar = proposedLetters[z];
+                string? autreClef = ClueSharingCell(cellList[z], clueKey, out char alienChar);
+                if (autreClef is not null)
                 {
-                    if (homechar != alienChar)
+                    if (_clus[autreClef].IsComplete())
                     {
-                        violated.Add(autreClef);
+                        if (homechar != alienChar)
+                        {
+                            violated.Add(autreClef);
+                        }
                     }
                 }
             }

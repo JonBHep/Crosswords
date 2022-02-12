@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Crosswords" Height="650" Width="1200" Loaded="Window_Loaded" ContentRendered="Window_ContentRendered"
+        Title="Crosswords" Height="650" Width="1200" Loaded="Window_Loaded" ContentRendered="Window_ContentRendered" PreviewKeyDown="MainWindow_OnPreviewKeyDown"
         Background="PapayaWhip">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -81,7 +81,7 @@
                 </TextBlock>
                 <DockPanel Grid.Row="0" Grid.Column="0" Margin="11 6">
                     <TextBlock x:Name="FormatCaption" VerticalAlignment="Center" FontWeight="Medium" Width="72">Format:</TextBlock>
-                    <TextBox x:Name="FormatEntryTextBox" Width="200" FontSize="16" FontFamily="Lucida Console"
+                    <TextBox x:Name="FormatEntryTextBox" AcceptsReturn="False" Width="200" FontSize="16" FontFamily="Lucida Console"
                              Padding="4" TextChanged="FormatEntryTextBox_OnTextChanged">
                     </TextBox>
                     <Button x:Name="FormatApplyButton" Margin="12 0" Width="80" Height="26" VerticalAlignment="Center"
@@ -96,7 +96,7 @@
                 <TextBlock Grid.Row="1" Grid.Column="0" Margin="12 6" x:Name="ClueRubricATextBlock" FontFamily="Arial">To set the format of the clue, separate word lengths with a comma or a hyphen e.g. '5,5-4'.</TextBlock>
                 <DockPanel Grid.Row="2" Grid.Column="0" Margin="12 6">
                     <TextBlock x:Name="LettersCaption" VerticalAlignment="Center" FontWeight="Medium" Width="72">Letters:</TextBlock>
-                    <TextBox x:Name="LettersEntryTextBox" Width="200" FontSize="16" VerticalAlignment="Center"
+                    <TextBox x:Name="LettersEntryTextBox" AcceptsReturn="False" Width="200" FontSize="16" VerticalAlignment="Center"
                              FontFamily="Lucida Console" Padding="4" TextChanged="ClueEntryTextBox_TextChanged">
                     </TextBox>
                     <Button x:Name="LettersApplyButton" Margin="12 0" Width="80" Height="26" VerticalAlignment="Center"

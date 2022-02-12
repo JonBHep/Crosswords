@@ -96,9 +96,10 @@ public class CrosswordWordTemplate
             return false;
         }
 
-        // wildcard is full stop, not question mark and there is no variable-length wildcard '*'
+        // wildcard is full stop, not question mark, and there is no variable-length wildcard '*'
 
         string allWildCards = Stringy(UnSpacedLength, '.');
+        
         if (template.UnSpaced == allWildCards)
         {
             return true; // the template is all wildcards and the same length and spacing as this word
