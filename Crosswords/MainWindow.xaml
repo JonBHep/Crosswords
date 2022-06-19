@@ -79,7 +79,7 @@
                            FontWeight="Bold" FontFamily="Arial" FontSize="32" VerticalAlignment="Center">
                     [clue title]
                 </TextBlock>
-                <DockPanel Grid.Row="0" Grid.Column="0" Margin="11 6">
+                <DockPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="11 6" LastChildFill="False">
                     <TextBlock x:Name="FormatCaption" VerticalAlignment="Center" FontWeight="Medium" Width="72">Format:</TextBlock>
                     <TextBox x:Name="FormatEntryTextBox" AcceptsReturn="False" Width="200" FontSize="16" FontFamily="Lucida Console"
                              Padding="4" TextChanged="FormatEntryTextBox_OnTextChanged">
@@ -92,6 +92,10 @@
                                FontWeight="Medium">
                         Invalid format
                     </TextBlock>
+                    <TextBlock Foreground="Black" VerticalAlignment="Center" FontWeight="Medium" Margin="8 0 4 0">Pick word lengths</TextBlock>
+                    <ComboBox x:Name="CluePatternCombo" Width="128" VerticalAlignment="Center" FontSize="16" FontFamily="Lucida Console" SelectionChanged="CluePatternCombo_OnSelectionChanged"></ComboBox>
+                    <TextBlock Foreground="Black" VerticalAlignment="Center" FontWeight="Medium" Margin="8 0 4 0">Pick format</TextBlock>
+                    <ComboBox x:Name="ClueVariantCombo" Width="128" VerticalAlignment="Center" FontSize="16" FontFamily="Lucida Console" SelectionChanged="ClueVariantCombo_OnSelectionChanged"></ComboBox>
                 </DockPanel>
                 <TextBlock Grid.Row="1" Grid.Column="0" Margin="12 6" x:Name="ClueRubricATextBlock" FontFamily="Arial">To set the format of the clue, separate word lengths with a comma or a hyphen e.g. '5,5-4'.</TextBlock>
                 <DockPanel Grid.Row="2" Grid.Column="0" Margin="12 6">

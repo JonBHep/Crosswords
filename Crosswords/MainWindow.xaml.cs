@@ -581,11 +581,28 @@ namespace Crosswords
             ClueTitleTextBlock.Tag = clueCode;
             SwitchClueControls(true);
             FormatEntryTextBox.Text = cloo.Content.Format;
+            FillCluePatternCombo(cloo.WordLength);
             PatternTextBox.Text = TemplateTextBox.Text = _puzzle.PatternedWordConstrained(clueCode);
             LettersConflictWarningTextBlock.Text = string.Empty;
             TemplateBlindMatchCount();
         }
 
+        private void FillCluePatternCombo(int length)
+        {
+            List<string> patterns = ClueContent.LetterPatterns(length);
+            CluePatternCombo.Items.Clear();
+            ClueVariantCombo.Items.Clear();
+            CluePatternCombo.Items.Add(
+                new ComboBoxItem() {Tag = $"{length}", Content = new TextBlock() {Text = $"{length}"}});
+            foreach (var pattern in patterns)
+            {
+                CluePatternCombo.Items.Add(
+                    new ComboBoxItem() {Tag = pattern, Content = new TextBlock() {Text = pattern}});
+            }
+
+            CluePatternCombo.SelectedIndex = -1;
+        }
+        
         private void ClueEntryTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
 
@@ -1136,5 +1153,30 @@ namespace Crosswords
                 }
             }
         }
+
+        private void CluePatternCombo_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (CluePatternCombo.SelectedItem is ComboBoxItem {Tag: string format})
+            {
+                FormatEntryTextBox.Text = format;
+                ClueVariantCombo.Items.Clear();
+                List<string> variants = ClueContent.CommaHyphenPermutations(format);
+                foreach (var v in variants)
+                {
+                    ClueVariantCombo.Items.Add(new ComboBoxItem() {Tag = v, Content = new TextBlock() {Text = v}});
+                }
+
+                ClueVariantCombo.SelectedIndex = 0;
+            }
+        }
+
+        private void ClueVariantCombo_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ClueVariantCombo.SelectedItem is ComboBoxItem {Tag: string format})
+            {
+                FormatEntryTextBox.Text = format;
+            }
+        }
     }
+    
 }
