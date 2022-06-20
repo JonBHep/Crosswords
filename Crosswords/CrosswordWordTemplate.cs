@@ -20,7 +20,6 @@ public class CrosswordWordTemplate
 
     public CrosswordWordTemplate(string source)
     {
-        // TODO Check whether the following line does it's job e.g. so that ship's boy and what's new? no longer match 6,2
         string lowered=source.Trim().ToLower(CultureInfo.CurrentCulture); // convert to lower to aid comparison
         string relevant = IrrelevantCharsExcluded(lowered);
         Formatted = relevant;
@@ -44,7 +43,7 @@ public class CrosswordWordTemplate
             {
                 b += c;
             }
-  else          
+            else          
             {
                 if (c is ' ' or '-')
                 {

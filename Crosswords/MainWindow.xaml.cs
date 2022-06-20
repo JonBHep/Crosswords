@@ -362,8 +362,8 @@ namespace Crosswords
                 blk = new TextBlock()
                     {FontFamily = _fixedFont, Foreground = pinceau, Text = wd, Padding = new Thickness(0, 3, 0, 0)};
                 spl.Children.Add(blk);
-
-                itm = new ListBoxItem() {Content = spl, Tag = clu.Key};
+                
+                itm = new ListBoxItem() {Content =spl, Tag = clu.Key};
                 ClueAListBox.Items.Add(itm);
             }
 
@@ -404,7 +404,6 @@ namespace Crosswords
                 blk = new TextBlock()
                     {FontFamily = _fixedFont, Foreground = pinceau, Text = wd, Padding = new Thickness(0, 3, 0, 0)};
                 spl.Children.Add(blk);
-
                 itm = new ListBoxItem() {Content = spl, Tag = clu.Key};
                 ClueDListBox.Items.Add(itm);
             }
