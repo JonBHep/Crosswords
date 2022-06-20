@@ -54,6 +54,7 @@
                 <ComboBox Margin="6 0 0 0" VerticalAlignment="Center" Width="140" Height="24" x:Name="ColourComboBox"
                           SelectionChanged="ColourComboBox_OnSelectionChanged">
                 </ComboBox>
+                <!-- <Button Margin="8 0" Width="72" VerticalAlignment="Center" Height="24" Click="TesterButton_OnClick">Tester</Button> -->
             </DockPanel>
             
             <!-- <DockPanel Grid.Row="5" Margin="12 6"> -->

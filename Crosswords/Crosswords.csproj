@@ -26,6 +26,7 @@
       <Compile Remove="SourceWord.cs" />
       <Compile Remove="ClueFormat.cs" />
       <Compile Remove="CrosswordSizeDialogue.xaml.cs" />
+      <Compile Remove="WordTemplate.cs" />
     </ItemGroup>
 
 </Project>

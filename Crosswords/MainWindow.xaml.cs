@@ -751,7 +751,7 @@ namespace Crosswords
             while (!reader.EndOfStream)
             {
                 string? mot = reader.ReadLine();
-                if (mot is { } word)
+                if (mot is {} word)
                 {
                     CrosswordWordTemplate wordTemplate = new CrosswordWordTemplate(word);
                     if (wordTemplate.MatchesTemplate(template))
@@ -765,6 +765,7 @@ namespace Crosswords
             TemplateCountBlock.Text = (g < 1) ? "No matches" : g > 1 ? $"{g:#,0} matches" : "1 match";
             Cursor = Cursors.Arrow;
         }
+        
         private void TemplateBlindMatchCount()
         {
             Cursor = Cursors.Wait;
@@ -796,18 +797,23 @@ namespace Crosswords
         {
             if (sender is ListBox {SelectedItem: string word})
             {
-                LettersEntryTextBox.Text = Constrain(word);
-                TemplateTextBox.Clear();
+                if (SelectedClueGrid.IsVisible)
+                {
+                    LettersEntryTextBox.Text = Constrain(word);
+                    TemplateTextBox.Clear();    
+                }
             }
-
         }
 
         private void AnagramBox_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (sender is ListBox {SelectedItem: string word})
             {
-                LettersEntryTextBox.Text = Constrain(word);
-                AnagramTextBox.Clear();
+                if (SelectedClueGrid.IsVisible)
+                {
+                    LettersEntryTextBox.Text = Constrain(word);
+                    AnagramTextBox.Clear();
+                }
             }
         }
 
@@ -1177,6 +1183,22 @@ namespace Crosswords
                 FormatEntryTextBox.Text = format;
             }
         }
+
+        // private void TesterButton_OnClick(object sender, RoutedEventArgs e)
+        // {
+        //     string targetWord = "ship's boy";
+        //     string hypothesisWord = "..... ...";
+        //     CrosswordWordTemplate target = new CrosswordWordTemplate(targetWord);
+        //     CrosswordWordTemplate hypothesis = new CrosswordWordTemplate( hypothesisWord);
+        //     if (target.MatchesTemplate(hypothesis))
+        //     {
+        //         MessageBox.Show($"{targetWord} matches {hypothesisWord}");
+        //     }
+        //     else
+        //     {
+        //         MessageBox.Show($"{targetWord} does not match {hypothesisWord}");
+        //     }
+        // }
     }
     
 }
