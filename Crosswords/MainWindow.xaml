@@ -155,7 +155,7 @@
                     <TextBox x:Name="TemplateTextBox" Margin="4 2 2 4" Width="200" FontSize="16"
                              FontFamily="Lucida Console" Padding="4" TextChanged="TemplateTextBox_OnTextChanged">
                     </TextBox>
-                    <Button x:Name="TemplateButton" Margin="12 0" Width="80" Height="26" VerticalAlignment="Center"
+                    <Button Margin="12 0" Width="80" Height="26" VerticalAlignment="Center"
                             Click="TemplateButton_OnClick">
                         Match
                     </Button>

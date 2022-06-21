@@ -687,9 +687,8 @@ namespace Crosswords
             return 'A';
         }
 
-
         // TODO Align letters better in grid e.g. 'I'
-
+        
         private void ClueClearButton_OnClick(object sender, RoutedEventArgs e)
         {
             if (ClueTitleTextBlock.Tag is string clef)
@@ -742,6 +741,7 @@ namespace Crosswords
 
         private void GetTemplateMatches()
         {
+            // TODO For multiple-word clues find the words individually as well as in phrases
             Cursor = Cursors.Wait;
             TemplateBox.Items.Clear();
             string source = TemplateTextBox.Text;

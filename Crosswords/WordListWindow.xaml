@@ -5,8 +5,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         mc:Ignorable="d"
         Title="WordListWindow" ShowInTaskbar="False" Height="450" Width="800" WindowStartupLocation="CenterScreen"
-        Foreground="SaddleBrown" SizeToContent="Height" ContentRendered="WordListWindow_OnContentRendered">
-    <Grid Background="Ivory" >
+        Foreground="SaddleBrown" SizeToContent="Height" ContentRendered="WordListWindow_OnContentRendered" AllowsTransparency="True" Background="Transparent" WindowStyle="None">
+    <Border Background="Ivory" CornerRadius="8" BorderBrush="SaddleBrown" BorderThickness="2">
+    <Grid Margin="6">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
@@ -34,4 +35,5 @@
         
         <Button Grid.Row="6" HorizontalAlignment="Left" Margin="12 4 0 8" Width="72" Height="25" Click="CloseButton_OnClick">Close</Button>
     </Grid>
+        </Border>
 </Window>
