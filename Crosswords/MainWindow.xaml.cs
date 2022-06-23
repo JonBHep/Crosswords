@@ -29,6 +29,7 @@ namespace Crosswords
 
         private const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         private readonly double _squareSide = 36;
+        private readonly double _letterWidth = 30;
         private readonly FontFamily _fixedFont = new("Liberation Mono");
         private CrosswordGrid _puzzle;
         private string _xwordTitle = "default";
@@ -129,7 +130,6 @@ namespace Crosswords
                                 {FontSize = 8, Text = i.ToString(), Margin = new Thickness(2, 0, 0, 0)};
                             cellCanvas[x, y].Children.Add(indexBlock);
                         }
-
                     }
 
                     Border b = new Border()
@@ -172,9 +172,9 @@ namespace Crosswords
                                 TextBlock letterBlock = new TextBlock()
                                 {
                                     FontFamily = ff, FontSize = 22, Text = t.ToString(), FontWeight = FontWeights.Bold
-                                    , Foreground = _barBrush
+                                    , Foreground =_barBrush, Width = _letterWidth, TextAlignment = TextAlignment.Center
                                 };
-                                Canvas.SetLeft(letterBlock, 9);
+                                Canvas.SetLeft(letterBlock, 2); 
                                 Canvas.SetTop(letterBlock, 6);
                                 cellCanvas[px, py].Children.Add(letterBlock);
                             }
@@ -199,12 +199,22 @@ namespace Crosswords
                             py++;
                             if (t != Clue.UnknownLetterChar)
                             {
+                                // TextBlock letterBlock = new TextBlock()
+                                // {
+                                //     FontFamily = ff, FontSize = 22, Text = t.ToString(), FontWeight = FontWeights.Bold
+                                //     , Foreground = _barBrush
+                                // };
+                                // Canvas.SetLeft(letterBlock, 9);
+                                // Canvas.SetTop(letterBlock, 6);
+                                // cellCanvas[px, py].Children.Add(letterBlock);
+                                
+                                
                                 TextBlock letterBlock = new TextBlock()
                                 {
                                     FontFamily = ff, FontSize = 22, Text = t.ToString(), FontWeight = FontWeights.Bold
-                                    , Foreground = _barBrush
+                                    , Foreground =_barBrush, Width = _letterWidth, TextAlignment = TextAlignment.Center
                                 };
-                                Canvas.SetLeft(letterBlock, 9);
+                                Canvas.SetLeft(letterBlock, 2); 
                                 Canvas.SetTop(letterBlock, 6);
                                 cellCanvas[px, py].Children.Add(letterBlock);
                             }
@@ -686,8 +696,6 @@ namespace Crosswords
 
             return 'A';
         }
-
-        // TODO Align letters better in grid e.g. 'I'
         
         private void ClueClearButton_OnClick(object sender, RoutedEventArgs e)
         {

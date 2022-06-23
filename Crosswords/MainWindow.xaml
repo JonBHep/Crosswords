@@ -171,7 +171,7 @@
         </Grid>
 
         <DockPanel Grid.Column="1">
-            <Grid x:Name="XwordGrid" DockPanel.Dock="Top" Margin="4" />
+            <Grid x:Name="XwordGrid" DockPanel.Dock="Top" Margin="4" MinHeight="200" />
 
             <Grid>
                 <Grid.ColumnDefinitions>
