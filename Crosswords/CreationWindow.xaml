@@ -18,13 +18,13 @@
                     <TextBlock Margin="0,0,0,0" FontFamily="AR Julian" FontSize="32" Foreground="SandyBrown">Create Crossword</TextBlock>    
                 </Canvas>    
             
-            <DockPanel  DockPanel.Dock="Top" Margin="12 12 12 0" LastChildFill="False">
+            <DockPanel DockPanel.Dock="Top" Margin="12 12 12 0" LastChildFill="False">
                 <TextBlock VerticalAlignment="Center" FontFamily="Lucida Console">Grid size: X</TextBlock>
-                <TextBox x:Name="BoxX" Margin="6 0" VerticalAlignment="Center" Width="32" TextChanged="BoxXY_OnTextChanged"></TextBox>
+                <ComboBox x:Name="DimensionComboBox" Margin="6 0" VerticalAlignment="Center" Width="48"></ComboBox>
                 <TextBlock VerticalAlignment="Center" FontFamily="Lucida Console">Y</TextBlock>
-                <TextBox x:Name="BoxY" Margin="6 0" VerticalAlignment="Center" Width="32" TextChanged="BoxXY_OnTextChanged"></TextBox>
+                <ComboBox x:Name="YDimensionComboBox" Margin="6 0" VerticalAlignment="Center" Width="64"></ComboBox>
                 <TextBlock VerticalAlignment="Center" FontFamily="Lucida Console">dimensions between 4 and 26</TextBlock>
-                <Button x:Name="ApplyButton" Width="80" Height="26" Margin="8 0 0 0" IsEnabled="False" Click="ApplyButton_OnClick">Apply</Button>
+                <Button x:Name="ApplyDimensionsButton" Width="80" Height="26" Margin="8 0 0 0" Click="ApplyDimensionsButton_OnClick">Apply</Button>
             </DockPanel>
             
             

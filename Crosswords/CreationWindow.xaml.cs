@@ -39,8 +39,20 @@ public partial class CreationWindow
 
     private void Window_ContentRendered(object sender, EventArgs e)
     {
-        BoxX.Text = BoxY.Text = "15";
-        // DisplayGrid();
+        DimensionComboBox.Items.Clear();
+        YDimensionComboBox.Items.Clear();
+        YDimensionComboBox.Items.Add(new ComboBoxItem()
+            {Tag = 0, Content = new TextBlock() {Text = "= X", FontFamily = new FontFamily("Lucida Console")}});
+        for (int d = 4; d < 27; d++)
+        {
+            DimensionComboBox.Items.Add(new ComboBoxItem()
+                {Tag = d, Content = new TextBlock() {Text = $"{d}", FontFamily = new FontFamily("Lucida Console")}});
+            YDimensionComboBox.Items.Add(new ComboBoxItem()
+                {Tag = d, Content = new TextBlock() {Text = $"{d}", FontFamily = new FontFamily("Lucida Console")}});
+        }
+
+        DimensionComboBox.SelectedIndex = 11;
+        YDimensionComboBox.SelectedIndex = 0;
     }
 
     private void DisplayGrid()
@@ -196,57 +208,57 @@ public partial class CreationWindow
         DialogResult = false;
     }
 
-    private void BoxXY_OnTextChanged(object sender, TextChangedEventArgs e)
-    {
-        ApplyButton.IsEnabled = false;
-        if (int.TryParse(BoxX.Text, out int x))
-        {
-            if (int.TryParse(BoxY.Text, out int y))
-            {
-                if (x is > 3 and < 27)
-                {
-                    if (y is > 3 and < 27)
-                    {
-                        ApplyButton.IsEnabled = true;
-                    }
-                }
-            }
-        }
-    }
+    // private void BoxXY_OnTextChanged(object sender, TextChangedEventArgs e)
+    // {
+    //     ApplyButton.IsEnabled = false;
+    //     if (int.TryParse(BoxX.Text, out int x))
+    //     {
+    //         if (int.TryParse(BoxY.Text, out int y))
+    //         {
+    //             if (x is > 3 and < 27)
+    //             {
+    //                 if (y is > 3 and < 27)
+    //                 {
+    //                     ApplyButton.IsEnabled = true;
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 
-    private void ApplyButton_OnClick(object sender, RoutedEventArgs e)
-    {
-        bool ok = false;
-        int dx = 0;
-        int dy = 0;
-        ApplyButton.IsEnabled = false;
-        if (int.TryParse(BoxX.Text, out int x))
-        {
-            if (int.TryParse(BoxY.Text, out int y))
-            {
-                if (x is > 3 and < 27)
-                {
-                    if (y is > 3 and < 27)
-                    {
-                        dx = x;
-                        dy = y;
-                        ok = true;
-                    }
-                }
-            }
-        }
-
-        if (!ok)
-        {
-            return;
-        }
-
-        string specification = BlankGridSpecification(dx, dy);
-        _puzzle = new CrosswordGrid(specification);
-        DisplayGrid();
-        StartButton.IsEnabled = true;
-        SaveButton.IsEnabled = true;
-    }
+    // private void ApplyButton_OnClick(object sender, RoutedEventArgs e)
+    // {
+    //     bool ok = false;
+    //     int dx = 0;
+    //     int dy = 0;
+    //     ApplyButton.IsEnabled = false;
+    //     if (int.TryParse(BoxX.Text, out int x))
+    //     {
+    //         if (int.TryParse(BoxY.Text, out int y))
+    //         {
+    //             if (x is > 3 and < 27)
+    //             {
+    //                 if (y is > 3 and < 27)
+    //                 {
+    //                     dx = x;
+    //                     dy = y;
+    //                     ok = true;
+    //                 }
+    //             }
+    //         }
+    //     }
+    //
+    //     if (!ok)
+    //     {
+    //         return;
+    //     }
+    //
+    //     string specification = BlankGridSpecification(dx, dy);
+    //     _puzzle = new CrosswordGrid(specification);
+    //     DisplayGrid();
+    //     StartButton.IsEnabled = true;
+    //     SaveButton.IsEnabled = true;
+    // }
 
     private string BlankGridSpecification(int width, int height)
     {
@@ -288,5 +300,23 @@ public partial class CreationWindow
         _puzzle = new CrosswordGrid(specification);
         DisplayGrid();
     }
-    
+
+    private void ApplyDimensionsButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        int dx;
+        int dy;
+        if (DimensionComboBox.SelectedItem is ComboBoxItem {Tag: int x})
+        {
+            if (YDimensionComboBox.SelectedItem is ComboBoxItem {Tag: int y})
+            {
+                dx = x;
+                dy = y == 0 ? x : y;
+                string specification = BlankGridSpecification(dx, dy);
+                _puzzle = new CrosswordGrid(specification);
+                DisplayGrid();
+                StartButton.IsEnabled = true;
+                SaveButton.IsEnabled = true;
+            }
+        }
+    }
 }
