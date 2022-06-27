@@ -34,7 +34,8 @@ namespace Crosswords
         private CrosswordGrid _puzzle;
         private string _xwordTitle = "default";
         private Brush _barBrush = Brushes.DarkBlue;
-
+        private string _selectedClueKey = string.Empty;
+        
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             double scrX = SystemParameters.PrimaryScreenWidth;
@@ -54,10 +55,16 @@ namespace Crosswords
 
         private void SwitchClueControls(bool on)
         {
-            Visibility vis = (on) ? Visibility.Visible : Visibility.Hidden;
+            Visibility vis = on ? Visibility.Visible : Visibility.Hidden;
             SelectedClueGrid.Visibility = vis;
-
-            if (on) LettersEntryTextBox.Focus();
+            if (on)
+            {
+                LettersEntryTextBox.Focus();
+            }
+            else
+            {
+                _selectedClueKey = string.Empty;
+            }
         }
 
         private void Window_ContentRendered(object sender, EventArgs e)
@@ -549,10 +556,10 @@ namespace Crosswords
 
         private void ApplyLetters()
         {
-            if (ClueTitleTextBlock.Tag is string clef)
+            if (!string.IsNullOrWhiteSpace(_selectedClueKey))
             {
                 string nova = LettersEntryTextBox.Text;
-                List<string> conflictingClues = _puzzle.CrossingConflictsDetected(clef, nova);
+                List<string> conflictingClues = _puzzle.CrossingConflictsDetected(_selectedClueKey, nova);
 
                 if (conflictingClues.Count > 0)
                 {
@@ -568,7 +575,7 @@ namespace Crosswords
                 else
                 {
                     LettersEntryTextBox.Clear();
-                    _puzzle.ClueOf(clef).Content.Letters = nova;
+                    _puzzle.ClueOf(_selectedClueKey).Content.Letters = nova;
                     DisplayGrid();
                     SwitchClueControls(false);
                 }
@@ -587,7 +594,7 @@ namespace Crosswords
             Clue cloo = _puzzle.ClueOf(clueCode);
             string dirn = (cloo.Direction == 'A') ? "Across" : "Down";
             ClueTitleTextBlock.Text = $"{cloo.Number} {dirn}";
-            ClueTitleTextBlock.Tag = clueCode;
+            _selectedClueKey = clueCode;
             SwitchClueControls(true);
             FormatEntryTextBox.Text = cloo.Content.Format;
             FillCluePatternCombo(cloo.WordLength);
@@ -614,11 +621,10 @@ namespace Crosswords
         
         private void ClueEntryTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-
-            if (ClueTitleTextBlock.Tag is string clef)
+            if (!string.IsNullOrWhiteSpace(_selectedClueKey))
             {
                 SolidColorBrush warning = Brushes.IndianRed;
-                string pattern = _puzzle.UnPatternedWordConstrained(clef);
+                string pattern = _puzzle.UnPatternedWordConstrained(_selectedClueKey);
                 string given = LettersEntryTextBox.Text.ToUpper();
                 int p = LettersEntryTextBox.CaretIndex;
                 LettersEntryTextBox.Text = given;
@@ -652,7 +658,7 @@ namespace Crosswords
                 }
             }
         }
-
+        
         private char Matches(string patternString, string offeredString)
         {
             // check offered word length against pattern
@@ -699,11 +705,11 @@ namespace Crosswords
         
         private void ClueClearButton_OnClick(object sender, RoutedEventArgs e)
         {
-            if (ClueTitleTextBlock.Tag is string clef)
+            if (!string.IsNullOrWhiteSpace(_selectedClueKey))
             {
-                Clue cloo = _puzzle.ClueOf(clef);
+                Clue cloo = _puzzle.ClueOf(_selectedClueKey);
                 cloo.Content.Letters = CrosswordWordTemplate.Stringy(cloo.WordLength, Clue.UnknownLetterChar);
-                PatternTextBox.Text = _puzzle.PatternedWordConstrained(clef);
+                PatternTextBox.Text = _puzzle.PatternedWordConstrained(_selectedClueKey);
                 DisplayGrid();
             }
         }
@@ -816,14 +822,32 @@ namespace Crosswords
         {
             if (sender is ListBox {SelectedItem: string word})
             {
-                if (SelectedClueGrid.IsVisible)
+                string constrained = Constrain(word);
+                if (!string.IsNullOrWhiteSpace(_selectedClueKey))
                 {
-                    LettersEntryTextBox.Text = Constrain(word);
-                    AnagramTextBox.Clear();
+                    if (_puzzle.ClueOf(_selectedClueKey).WordLength == constrained.Length)
+                    {
+                        LettersEntryTextBox.Text = constrained;
+                        AnagramTextBox.Clear();
+                    }
                 }
             }
         }
-
+        // private void WordListBox_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        // {
+        //     if (sender is ListBox box)
+        //     {
+        //         if (box.SelectedItem is string word)
+        //         {
+        //             string constrained = Constrain(word);
+        //             if (SelectedClueGrid.IsVisible)
+        //             {
+        //                 LettersEntryTextBox.Text = constrained;
+        //                 box.Items.Clear();
+        //             }
+        //         }
+        //     }
+        // }
         private static string Constrain(string input)
         {
             StringBuilder builder = new StringBuilder();
@@ -960,13 +984,13 @@ namespace Crosswords
             if (FormatEntryTextBox.Text.Trim().Length > 0)
             {
                 string fmt = FormatEntryTextBox.Text.Trim();
-                if (ClueTitleTextBlock.Tag is string clef)
+                if (!string.IsNullOrWhiteSpace(_selectedClueKey))
                 {
-                    if (ClueContent.GoodFormatSpecification(fmt, _puzzle.ClueOf(clef).WordLength))
+                    if (ClueContent.GoodFormatSpecification(fmt, _puzzle.ClueOf(_selectedClueKey).WordLength))
                     {
-                        _puzzle.ClueOf(clef).Content.Format = fmt;
+                        _puzzle.ClueOf(_selectedClueKey).Content.Format = fmt;
                         DisplayGrid();
-                        ShowClueDetails(clef);
+                        ShowClueDetails(_selectedClueKey);
                         FormatApplyButton.IsEnabled = false;
                     }
                     else
@@ -983,9 +1007,9 @@ namespace Crosswords
             if (FormatEntryTextBox.Text.Trim().Length > 0)
             {
                 string fmt = FormatEntryTextBox.Text.Trim();
-                if (ClueTitleTextBlock.Tag is string clef)
+                if (!string.IsNullOrWhiteSpace(_selectedClueKey))
                 {
-                    if (ClueContent.GoodFormatSpecification(fmt, _puzzle.ClueOf(clef).WordLength))
+                    if (ClueContent.GoodFormatSpecification(fmt, _puzzle.ClueOf(_selectedClueKey).WordLength))
                     {
                         FormatApplyButton.IsEnabled = true;
                         FormatConflictWarningTextBlock.Text = string.Empty;
