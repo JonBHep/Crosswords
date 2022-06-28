@@ -1159,6 +1159,7 @@ namespace Crosswords
             if (ColourComboBox.SelectedItem is ListBoxItem {Tag: Brush pinceau})
             {
                 _barBrush = pinceau;
+                ClueTitleTextBlock.Foreground = pinceau;
             }
         }
 

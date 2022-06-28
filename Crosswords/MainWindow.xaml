@@ -77,11 +77,28 @@
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Row="1" Grid.RowSpan="3" Grid.Column="1" Margin="12 0 6 0" x:Name="ClueTitleTextBlock"
+                <TextBlock Grid.Row="0" Grid.Column="1" Margin="12 0 6 0" x:Name="ClueTitleTextBlock"
                            FontWeight="Bold" FontFamily="Arial" FontSize="32" VerticalAlignment="Center">
                     [clue title]
                 </TextBlock>
-                <DockPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="11 6" LastChildFill="False">
+                
+                
+                <DockPanel Grid.Row="0" Grid.Column="0" Margin="12 6">
+                    <TextBlock x:Name="LettersCaption" VerticalAlignment="Center" FontWeight="Medium" Width="72">Letters:</TextBlock>
+                    <TextBox x:Name="LettersEntryTextBox" AcceptsReturn="False" Width="200" FontSize="16" VerticalAlignment="Center"
+                             FontFamily="Lucida Console" Padding="4" TextChanged="ClueEntryTextBox_TextChanged">
+                    </TextBox>
+                    <Button x:Name="LettersApplyButton" Margin="12 0" Width="80" Height="26" VerticalAlignment="Center"
+                            Click="LettersApplyButton_Click">
+                        Apply
+                    </Button>
+                    <TextBlock x:Name="LettersConflictWarningTextBlock" Foreground="Red" VerticalAlignment="Center"
+                               FontWeight="Medium">
+                        Conflicts with existing letters
+                    </TextBlock>
+                </DockPanel>
+                
+                <DockPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="11 6" LastChildFill="False">
                     <TextBlock x:Name="FormatCaption" VerticalAlignment="Center" FontWeight="Medium" Width="72">Format:</TextBlock>
                     <TextBox x:Name="FormatEntryTextBox" AcceptsReturn="False" Width="200" FontSize="16" FontFamily="Lucida Console"
                              Padding="4" TextChanged="FormatEntryTextBox_OnTextChanged">
@@ -99,32 +116,18 @@
                     <TextBlock Foreground="Black" VerticalAlignment="Center" FontWeight="Medium" Margin="8 0 4 0">Pick format</TextBlock>
                     <ComboBox x:Name="ClueVariantCombo" Width="128" VerticalAlignment="Center" FontSize="16" FontFamily="Lucida Console" SelectionChanged="ClueVariantCombo_OnSelectionChanged"></ComboBox>
                 </DockPanel>
-                <TextBlock Grid.Row="1" Grid.Column="0" Margin="12 6" x:Name="ClueRubricATextBlock" FontFamily="Arial">To set the format of the clue, separate word lengths with a comma or a hyphen e.g. '5,5-4'.</TextBlock>
-                <DockPanel Grid.Row="2" Grid.Column="0" Margin="12 6">
-                    <TextBlock x:Name="LettersCaption" VerticalAlignment="Center" FontWeight="Medium" Width="72">Letters:</TextBlock>
-                    <TextBox x:Name="LettersEntryTextBox" AcceptsReturn="False" Width="200" FontSize="16" VerticalAlignment="Center"
-                             FontFamily="Lucida Console" Padding="4" TextChanged="ClueEntryTextBox_TextChanged">
-                    </TextBox>
-                    <Button x:Name="LettersApplyButton" Margin="12 0" Width="80" Height="26" VerticalAlignment="Center"
-                            Click="LettersApplyButton_Click">
-                        Apply
-                    </Button>
-                    <TextBlock x:Name="LettersConflictWarningTextBlock" Foreground="Red" VerticalAlignment="Center"
-                               FontWeight="Medium">
-                        Conflicts with existing letters
-                    </TextBlock>
-                </DockPanel>
-                <TextBlock Grid.Row="3" Grid.Column="0" Margin="12 6" x:Name="ClueRubricBTextBlock" FontFamily="Arial">Letters only; no hyphens, spaces or unknown letters.</TextBlock>
+                
+                <TextBlock Grid.Row="3" Grid.Column="0" Margin="12 6" x:Name="ClueRubricATextBlock" FontFamily="Arial">To set the format of the clue, separate word lengths with a comma or a hyphen e.g. '5,5-4'.</TextBlock>
+                
                 <DockPanel Grid.Row="4" Grid.Column="0" Margin="12 6" LastChildFill="False">
                     <TextBlock x:Name="PatternCaption" VerticalAlignment="Center" FontWeight="Medium" Width="72">Formatted:</TextBlock>
                     <TextBox x:Name="PatternTextBox" Width="200" VerticalAlignment="Center" FontSize="16"
                              FontFamily="Lucida Console" IsReadOnly="True" Padding="4">
                     </TextBox>
-                    <!-- <Button x:Name="PatternCopyButton" Margin="12 0 0 0" VerticalAlignment="Center" Width="80" -->
-                    <!--         Height="26" ToolTip="Copy pattern to Match box" Click="ClueCopyButton_OnClick" -->
-                    <!--         Content="-> Match"> -->
-                    <!-- </Button> -->
                 </DockPanel>
+                
+                <TextBlock Grid.Row="1" Grid.Column="0" Margin="12 6" x:Name="ClueRubricBTextBlock" FontFamily="Arial">Letters only; no hyphens, spaces or unknown letters.</TextBlock>
+                
                 <Button Grid.Row="5" x:Name="ClueClearButton" Margin="12 6 0 12" HorizontalAlignment="Left" Width="80"
                         Height="26" ToolTip="Clear clue to pattern" Click="ClueClearButton_OnClick">
                     Clear
