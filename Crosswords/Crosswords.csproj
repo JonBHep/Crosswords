@@ -14,6 +14,7 @@
       <None Include="..\..\..\..\..\Common\Graphics\My Icons\JH Aramis yellow other.ico">
         <Link>JH Aramis yellow other.ico</Link>
       </None>
+      <None Remove="SaveDialogueWindow.xaml~" />
     </ItemGroup>
 
     <ItemGroup>

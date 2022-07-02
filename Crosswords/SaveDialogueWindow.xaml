@@ -1,0 +1,42 @@
+﻿<Window x:Class="Crosswords.SaveDialogueWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        mc:Ignorable="d"
+        Title="SaveDialogueWindow" Height="360" Width="800" Loaded="SaveDialogueWindow_OnLoaded" WindowStartupLocation="CenterScreen" WindowStyle="None" AllowsTransparency="True" Background="Transparent" ShowInTaskbar="False">
+<Border CornerRadius="16" Background="OldLace" BorderBrush="SaddleBrown" BorderThickness="2">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBlock FontWeight="Bold" Text="Save new crossword" VerticalAlignment="Center" FontSize="16"></TextBlock>
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Select book" VerticalAlignment="Center" FontSize="14"></TextBlock>
+            <ComboBox  Grid.Row="1" Grid.Column="1" x:Name="BooksCombo" VerticalAlignment="Center" SelectionChanged="BooksCombo_OnSelectionChanged"></ComboBox>
+            <Button Grid.Row="2" Grid.Column="1" x:Name="SelectBookButton" VerticalAlignment="Center" HorizontalAlignment="Right" Width="72" Height="24" Click="SelectBookButton_OnClick">Select</Button>
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="Add new book" VerticalAlignment="Center" FontSize="14"></TextBlock>
+            <TextBox Grid.Row="3" Grid.Column="1" x:Name="NewBookTitleTextBox" HorizontalAlignment="Stretch" VerticalAlignment="Center" TextChanged="NewBookTitleTextBox_OnTextChanged"></TextBox>
+            <Button Grid.Row="4" Grid.Column="1" x:Name="NewBookTitleButton" VerticalAlignment="Center" HorizontalAlignment="Right" Width="72" Height="24" Click="NewBookTitleButton_OnClick">Add</Button>
+            <TextBlock Grid.Row="5" Grid.Column="0" Text="Book" VerticalAlignment="Center" FontSize="14"></TextBlock>
+            <TextBlock Grid.Row="5" Grid.Column="1" x:Name="BookTitleBlock" Text="[select or add book]" VerticalAlignment="Center" FontSize="14"></TextBlock>
+            <TextBlock Grid.Row="6" Grid.Column="0" Text="Already saved" VerticalAlignment="Center" FontSize="14"></TextBlock>
+            <TextBlock Grid.Row="6" Grid.Column="1" x:Name="ExistingPuzzleNumbersTextBlock" Text="[games]" VerticalAlignment="Center" FontSize="14"></TextBlock>
+            <TextBlock Grid.Row="7" Grid.Column="0" Text="Puzzle number" VerticalAlignment="Center" FontSize="14"></TextBlock>
+            <TextBox Grid.Row="7" Grid.Column="1" x:Name="PuzzleNumberBox" Width="64" HorizontalAlignment="Left" VerticalAlignment="Center"></TextBox>
+            <Button Grid.Row="8" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="72" Height="24" FontWeight="Bold" Click="SaveButton_OnClick">Save</Button>
+            <Button Grid.Row="8" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Width="72" Height="24" IsCancel="True">Cancel</Button>
+        </Grid>
+    </Border>
+</Window>

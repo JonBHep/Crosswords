@@ -21,7 +21,6 @@ public partial class CreationWindow
     private readonly double _squareSide = 36;
     private CrosswordGrid _puzzle;
     private string _gamePath = String.Empty;
-    // private string _xwordTitle = string.Empty;
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
@@ -156,7 +155,7 @@ public partial class CreationWindow
 
         }
     }
-
+    private static string CrosswordsPath => Path.Combine(Jbh.AppManager.DataPath, "Crosswords");
     private bool Symmetrical => (SymmCheckBox.IsChecked.HasValue) && (SymmCheckBox.IsChecked.Value);
 
     
@@ -177,18 +176,13 @@ public partial class CreationWindow
     private void SaveButton_Click(object sender, RoutedEventArgs e)
     {
         _puzzle.LocateIndices();
-        SaveFileDialog dlg = new SaveFileDialog()
+        SaveDialogueWindow sdw = new SaveDialogueWindow() {Owner = this};
+        bool? ans = sdw.ShowDialog();
+        if (ans ?? false)
         {
-            AddExtension = true, DefaultExt = "cwd", Filter = "Crossword files (*.cwd)|*.cwd"
-            , InitialDirectory = CrosswordsPath, OverwritePrompt = true, Title = "Save crossword as..."
-            , ValidateNames = true
-        };
-        bool? ans = dlg.ShowDialog();
-        if ((ans.HasValue) && (ans.Value))
-        {
-            _gamePath = dlg.FileName;
-            FileStream fs = new FileStream(dlg.FileName, FileMode.Create);
-            using (StreamWriter wri = new StreamWriter(fs, Clue.JbhEncoding))
+            _gamePath = sdw.PuzzleFileSpecification();
+            FileStream fs = new FileStream(_gamePath, FileMode.Create);
+            using (var wri = new StreamWriter(fs, Clue.JbhEncoding))
             {
                 wri.WriteLine(_puzzle.Specification);
                 foreach (string tk in _puzzle.ClueKeyList)
@@ -196,70 +190,16 @@ public partial class CreationWindow
                     wri.WriteLine($"{tk}%{_puzzle.ClueOf(tk).Content.Specification()}" );
                 }
             }
-            // _xwordTitle = Path.GetFileNameWithoutExtension(dlg.FileName);
             DialogResult = true;
         }
+        
     }
-    
-    private static string CrosswordsPath => Path.Combine(Jbh.AppManager.DataPath, "Crosswords");
 
     private void CancelButton_Click(object sender, RoutedEventArgs e)
     {
         DialogResult = false;
     }
-
-    // private void BoxXY_OnTextChanged(object sender, TextChangedEventArgs e)
-    // {
-    //     ApplyButton.IsEnabled = false;
-    //     if (int.TryParse(BoxX.Text, out int x))
-    //     {
-    //         if (int.TryParse(BoxY.Text, out int y))
-    //         {
-    //             if (x is > 3 and < 27)
-    //             {
-    //                 if (y is > 3 and < 27)
-    //                 {
-    //                     ApplyButton.IsEnabled = true;
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-
-    // private void ApplyButton_OnClick(object sender, RoutedEventArgs e)
-    // {
-    //     bool ok = false;
-    //     int dx = 0;
-    //     int dy = 0;
-    //     ApplyButton.IsEnabled = false;
-    //     if (int.TryParse(BoxX.Text, out int x))
-    //     {
-    //         if (int.TryParse(BoxY.Text, out int y))
-    //         {
-    //             if (x is > 3 and < 27)
-    //             {
-    //                 if (y is > 3 and < 27)
-    //                 {
-    //                     dx = x;
-    //                     dy = y;
-    //                     ok = true;
-    //                 }
-    //             }
-    //         }
-    //     }
-    //
-    //     if (!ok)
-    //     {
-    //         return;
-    //     }
-    //
-    //     string specification = BlankGridSpecification(dx, dy);
-    //     _puzzle = new CrosswordGrid(specification);
-    //     DisplayGrid();
-    //     StartButton.IsEnabled = true;
-    //     SaveButton.IsEnabled = true;
-    // }
-
+   
     private string BlankGridSpecification(int width, int height)
     {
         int sq = width * height;
@@ -293,7 +233,6 @@ public partial class CreationWindow
     }
     
     public string NameOfTheGame => _gamePath; 
-    // public string GridTitle => _xwordTitle;
     private void StartPatternButton_OnClick(object sender, RoutedEventArgs e)
     {
         string specification =StarterGridSpecification(_puzzle.Width, _puzzle.Height);

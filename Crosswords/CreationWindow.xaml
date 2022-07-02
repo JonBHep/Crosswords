@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         mc:Ignorable="d"
-        Title="Crosswords" Height="650" Width="1200" Loaded="Window_Loaded" ContentRendered="Window_ContentRendered" Background="Moccasin" >
+        Title="Crosswords" ShowInTaskbar="False" Height="650" Width="1200" Loaded="Window_Loaded" ContentRendered="Window_ContentRendered" Background="Moccasin" >
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
