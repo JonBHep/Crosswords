@@ -165,10 +165,10 @@
                     </Button>
                     <TextBlock x:Name="TemplateCountBlock" VerticalAlignment="Center"></TextBlock>
                 </DockPanel>
-                <ListBox x:Name="AnagramBox" Margin="0 4 2 0" FontFamily="Lucida Console" Grid.Row="1" Grid.Column="0"
+                <ListBox x:Name="AnagramListBox" Margin="0 4 2 0" FontFamily="Lucida Console" Grid.Row="1" Grid.Column="0"
                          MouseDoubleClick="AnagramBox_OnMouseDoubleClick">
                 </ListBox>
-                <ListBox x:Name="TemplateBox" Margin="2 4 2 0" FontFamily="Lucida Console" Grid.Row="1" Grid.Column="1"
+                <ListBox x:Name="TemplateListBox" Margin="2 4 2 0" FontFamily="Lucida Console" Grid.Row="1" Grid.Column="1"
                          MouseDoubleClick="TemplateBox_OnMouseDoubleClick">
                 </ListBox>
             </Grid>

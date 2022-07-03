@@ -20,8 +20,6 @@ namespace Crosswords
         // https://www.crosswordunclued.com/2009/09/crossword-grid-symmetry.html
 
         // TODO Signal when anagram length does not match selected clue
-        // TODO anagram and pattern text boxes - u case only
-        // TODO Flag when puzzle complete (? as well as showing progress)
         
         public MainWindow()
         {
@@ -210,16 +208,6 @@ namespace Crosswords
                             py++;
                             if (t != Clue.UnknownLetterChar)
                             {
-                                // TextBlock letterBlock = new TextBlock()
-                                // {
-                                //     FontFamily = ff, FontSize = 22, Text = t.ToString(), FontWeight = FontWeights.Bold
-                                //     , Foreground = _barBrush
-                                // };
-                                // Canvas.SetLeft(letterBlock, 9);
-                                // Canvas.SetTop(letterBlock, 6);
-                                // cellCanvas[px, py].Children.Add(letterBlock);
-                                
-                                
                                 TextBlock letterBlock = new TextBlock()
                                 {
                                     FontFamily = ff, FontSize = 22, Text = t.ToString(), FontWeight = FontWeights.Bold
@@ -429,7 +417,7 @@ namespace Crosswords
                 ClueDListBox.Items.Add(new ListBoxItem() {Content = spl, Tag = clu.Key});
                 
                 // Display progress
-                ProgressTextBlock.Text =(cluesDone == clueCount) ? "Complete": $"Completed {cluesDone} of {clueCount} clues";
+                ProgressTextBlock.Text =(cluesDone == clueCount) ? "COMPLETE": $"Completed {cluesDone} of {clueCount} clues";
             }
 
             if (cluesDone==clueCount)
@@ -665,7 +653,24 @@ namespace Crosswords
                 }
             }
         }
-        
+
+        /// <summary>
+        /// Converts content of TextBox to upper case
+        /// </summary>
+        /// <param name="sender">TextBox</param>
+        /// <param name="e"></param>
+        private void MakeUpperTextBoxText(TextBox box)
+        {
+            string letters = box.Text.Trim();
+            string lettersU = letters.ToUpper();
+            if (lettersU != letters)
+            {
+                int pt = box.CaretIndex;
+                box.Text = lettersU;
+                box.CaretIndex = pt;
+            }
+        }
+
         private char Matches(string patternString, string offeredString)
         {
             // check offered word length against pattern
@@ -734,7 +739,7 @@ namespace Crosswords
         private void GetAnagrams()
         {
             Cursor = Cursors.Wait;
-            AnagramBox.Items.Clear();
+            AnagramListBox.Items.Clear();
             string source = AnagramTextBox.Text.Trim();
             string ordered = CrosswordWordTemplate.AnagramString(source);
             using StreamReader reader = new(WordListFile, Clue.JbhEncoding);
@@ -746,12 +751,12 @@ namespace Crosswords
                     string bien = CrosswordWordTemplate.AnagramString(word);
                     if (bien == ordered)
                     {
-                        AnagramBox.Items.Add(word);
+                        AnagramListBox.Items.Add(word);
                     }
                 }
             }
 
-            int g = AnagramBox.Items.Count;
+            int g = AnagramListBox.Items.Count;
             AnagramCountBlock.Text = (g < 1) ? "No matches" : g > 1 ? $"{g:#,0} matches" : "1 match";
             Cursor = Cursors.Arrow;
         }
@@ -764,7 +769,7 @@ namespace Crosswords
         {
             // TODO For multiple-word clues find the words individually as well as in phrases
             Cursor = Cursors.Wait;
-            TemplateBox.Items.Clear();
+            TemplateListBox.Items.Clear();
             string source = TemplateTextBox.Text;
             CrosswordWordTemplate template = new CrosswordWordTemplate(source);
             using StreamReader reader = new(WordListFile, Clue.JbhEncoding);
@@ -776,12 +781,12 @@ namespace Crosswords
                     CrosswordWordTemplate wordTemplate = new CrosswordWordTemplate(word);
                     if (wordTemplate.MatchesTemplate(template))
                     {
-                        TemplateBox.Items.Add(word);
+                        TemplateListBox.Items.Add(word);
                     }
                 }
             }
 
-            int g = TemplateBox.Items.Count;
+            int g = TemplateListBox.Items.Count;
             TemplateCountBlock.Text = (g < 1) ? "No matches" : g > 1 ? $"{g:#,0} matches" : "1 match";
             Cursor = Cursors.Arrow;
         }
@@ -790,7 +795,7 @@ namespace Crosswords
         {
             Cursor = Cursors.Wait;
             int counter = 0;
-            TemplateBox.Items.Clear();
+            TemplateListBox.Items.Clear();
             string source = TemplateTextBox.Text;
             CrosswordWordTemplate template = new CrosswordWordTemplate(source);
             using StreamReader reader = new(WordListFile, Clue.JbhEncoding);
@@ -976,8 +981,9 @@ namespace Crosswords
 
         private void AnagramTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            AnagramBox.Items.Clear();
+            AnagramListBox.Items.Clear();
             AnagramCountBlock.Text = String.Empty;
+            MakeUpperTextBoxText(AnagramTextBox);
             AnagramButton.IsEnabled = AnagramTextBox.Text.Trim().Length > 0;
         }
 
@@ -1037,8 +1043,9 @@ namespace Crosswords
 
         private void TemplateTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            TemplateBox.Items.Clear();
+            TemplateListBox.Items.Clear();
             TemplateCountBlock.Text = string.Empty;
+            MakeUpperTextBoxText(TemplateTextBox);
         }
 
         private void CheckVocabButton_Click(object sender, RoutedEventArgs e)

@@ -5,7 +5,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using Microsoft.Win32;
 
 namespace Crosswords;
 
@@ -155,9 +154,7 @@ public partial class CreationWindow
 
         }
     }
-    private static string CrosswordsPath => Path.Combine(Jbh.AppManager.DataPath, "Crosswords");
     private bool Symmetrical => (SymmCheckBox.IsChecked.HasValue) && (SymmCheckBox.IsChecked.Value);
-
     
     private string Coords(int x, int y)
     {
@@ -242,14 +239,12 @@ public partial class CreationWindow
 
     private void ApplyDimensionsButton_OnClick(object sender, RoutedEventArgs e)
     {
-        int dx;
-        int dy;
         if (DimensionComboBox.SelectedItem is ComboBoxItem {Tag: int x})
         {
             if (YDimensionComboBox.SelectedItem is ComboBoxItem {Tag: int y})
             {
-                dx = x;
-                dy = y == 0 ? x : y;
+                var dx = x;
+                var dy = y == 0 ? x : y;
                 string specification = BlankGridSpecification(dx, dy);
                 _puzzle = new CrosswordGrid(specification);
                 DisplayGrid();
