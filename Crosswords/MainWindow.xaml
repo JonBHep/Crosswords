@@ -146,10 +146,11 @@
                     <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
                 <DockPanel>
-                    <TextBox x:Name="AnagramTextBox" Margin="4 2 2 4" Width="200" FontSize="16"
+                    <TextBox x:Name="AnagramTextBox" Margin="4 2 0 4" Width="200" FontSize="16"
                              FontFamily="Lucida Console" Padding="4" TextChanged="AnagramTextBox_OnTextChanged">
                     </TextBox>
-                    <Button x:Name="AnagramButton" Margin="12 0" Width="80" Height="26" VerticalAlignment="Center"
+                    <TextBlock x:Name="AnagramLengthBlock" FontWeight="Medium" Width="32" Margin="4 0 4 0" TextAlignment="Center" VerticalAlignment="Center">0</TextBlock>
+                    <Button x:Name="AnagramButton" Width="80" Height="26" VerticalAlignment="Center"
                             Click="AnagramButton_OnClick">
                         Anagrams
                     </Button>

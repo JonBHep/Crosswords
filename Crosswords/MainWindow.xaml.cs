@@ -33,7 +33,7 @@ namespace Crosswords
         private readonly double _letterWidth = 30;
         private readonly FontFamily _fixedFont = new("Liberation Mono");
         private CrosswordGrid _puzzle;
-        private string _xwordTitle = "default";
+        private string _xWordTitle = "default";
         private Brush _barBrush = Brushes.DarkBlue;
         private string _selectedClueKey = string.Empty;
         
@@ -326,8 +326,6 @@ namespace Crosswords
 
         private void ListClues()
         {
-            //bool allDone = true;
-            int clueCount = 0;
             int cluesDone = 0;
             SolidColorBrush dimbrush = Brushes.Silver;
             SolidColorBrush abrush = Brushes.RoyalBlue;
@@ -339,7 +337,7 @@ namespace Crosswords
             // Across heading
             SolidColorBrush pinceau;
             List<Clue> clueList = _puzzle.CluesAcross;
-            clueCount = clueList.Count;
+            var clueCount = clueList.Count;
             TextBlock block = new TextBlock();
             Run r = new Run() {Text = $"ACROSS: ", FontWeight = FontWeights.Bold, Foreground = abrush};
             block.Inlines.Add(r);
@@ -443,7 +441,7 @@ namespace Crosswords
                 return;
             }
 
-            NameTextBlock.Text = _xwordTitle;
+            NameTextBlock.Text = _xWordTitle;
             LoadPuzzleFromFile(cwin.NameOfTheGame);
             DisplayGrid();
             SwitchClueControls(false);
@@ -488,7 +486,7 @@ namespace Crosswords
 
         private void SaveCrossword()
         {
-            string path = System.IO.Path.Combine(CrosswordsPath, _xwordTitle + ".cwd");
+            string path = System.IO.Path.Combine(CrosswordsPath, _xWordTitle + ".cwd");
             FileStream fs = new FileStream(path, FileMode.Create);
             using StreamWriter wri = new StreamWriter(fs, Clue.JbhEncoding);
             wri.WriteLine(_puzzle.Specification);
@@ -523,9 +521,9 @@ namespace Crosswords
                 }
             }
 
-            _xwordTitle = System.IO.Path.GetFileNameWithoutExtension(puzzlePath);
+            _xWordTitle = System.IO.Path.GetFileNameWithoutExtension(puzzlePath);
 
-            NameTextBlock.Text = _xwordTitle;
+            NameTextBlock.Text = _xWordTitle;
 
             DisplayGrid();
             SwitchClueControls(false);
@@ -657,8 +655,6 @@ namespace Crosswords
         /// <summary>
         /// Converts content of TextBox to upper case
         /// </summary>
-        /// <param name="sender">TextBox</param>
-        /// <param name="e"></param>
         private void MakeUpperTextBoxText(TextBox box)
         {
             string letters = box.Text.Trim();
@@ -863,16 +859,15 @@ namespace Crosswords
         private static string Constrain(string input)
         {
             StringBuilder builder = new StringBuilder();
-            for (int x = 0; x < input.Length; x++)
+            foreach (var c in input)
             {
-                char c = input[x];
                 if (char.IsLetter(c))
                 {
                     builder.Append(c);
                 }
             }
 
-            string output = builder.ToString();
+            var output = builder.ToString();
             output = UnAccent(output);
             return output.ToUpperInvariant();
         }
@@ -981,6 +976,7 @@ namespace Crosswords
 
         private void AnagramTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
         {
+            AnagramLengthBlock.Text = $"({AnagramTextBox.Text.Trim().Length})";
             AnagramListBox.Items.Clear();
             AnagramCountBlock.Text = String.Empty;
             MakeUpperTextBoxText(AnagramTextBox);
@@ -1050,6 +1046,7 @@ namespace Crosswords
 
         private void CheckVocabButton_Click(object sender, RoutedEventArgs e)
         {
+            Cursor=Cursors.Wait;
             SolidColorBrush dimbrush = Brushes.Silver;
             SolidColorBrush abrush = Brushes.RoyalBlue;
             SolidColorBrush dbrush = Brushes.DarkViolet;
@@ -1144,6 +1141,7 @@ namespace Crosswords
                 itm = new ListBoxItem() {Content = spl, Tag = clu.Key};
                 ClueDListBox.Items.Add(itm);
             }
+            Cursor=Cursors.Arrow;
         }
 
         private bool FoundInWordList(string verba)
