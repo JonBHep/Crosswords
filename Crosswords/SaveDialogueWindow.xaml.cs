@@ -139,7 +139,8 @@ public partial class SaveDialogueWindow
     {
         ExistingPuzzleNumbersTextBlock.Text = string.Empty;
         var list = PuzzlesForBook(vol);
-        ExistingPuzzleNumbersTextBlock.Text =NumbersReport(list);
+        ExistingPuzzleNumbersTextBlock.Text = NumbersReport(list);
+        PuzzleNumberBox.Text =$"{FirstFree(list)}";
     }
     
     private string NumbersReport(List<int> set)
@@ -163,4 +164,25 @@ public partial class SaveDialogueWindow
         }
         return report;
     }
+    private int FirstFree(List<int> set)
+    {
+        int vide = -1;
+        int top = set.Max();
+        for (int a = 1; a < top; a++)
+        {
+            if (!set.Contains(a))
+            {
+                vide = a;
+                break;
+            }
+        }
+
+        if (vide == -1)
+        {
+            vide = top + 1;
+        }
+
+        return vide;
+    }
+    
 }

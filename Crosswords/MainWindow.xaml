@@ -128,7 +128,7 @@
                 
                 <TextBlock Grid.Row="1" Grid.Column="0" Margin="12 6" x:Name="ClueRubricBTextBlock" FontFamily="Arial">Letters only; no hyphens, spaces or unknown letters.</TextBlock>
                 
-                <Button Grid.Row="5" x:Name="ClueClearButton" Margin="12 6 0 12" HorizontalAlignment="Left" Width="80"
+                <Button Grid.Row="5" Grid.Column="0" x:Name="ClueClearButton" Margin="12 6 0 12" HorizontalAlignment="Left" Width="80"
                         Height="26" ToolTip="Clear clue to pattern" Click="ClueClearButton_OnClick">
                     Clear
                 </Button>
@@ -143,6 +143,7 @@
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
                     <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
                 <DockPanel>
@@ -154,7 +155,7 @@
                             Click="AnagramButton_OnClick">
                         Anagrams
                     </Button>
-                    <TextBlock x:Name="AnagramCountBlock" VerticalAlignment="Center"></TextBlock>
+                    <TextBlock x:Name="AnagramCountBlock" VerticalAlignment="Center" Margin="4 0 0 0"></TextBlock>
                 </DockPanel>
                 <DockPanel Grid.Row="0" Grid.Column="1">
                     <TextBox x:Name="TemplateTextBox" Margin="4 2 2 4" Width="200" FontSize="16"
@@ -166,10 +167,18 @@
                     </Button>
                     <TextBlock x:Name="TemplateCountBlock" VerticalAlignment="Center"></TextBlock>
                 </DockPanel>
-                <ListBox x:Name="AnagramListBox" Margin="0 4 2 0" FontFamily="Lucida Console" Grid.Row="1" Grid.Column="0"
+                <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
+                    <CheckBox x:Name="CapitalsCheckBox" VerticalAlignment="Center" Margin="4 0 0 0" 
+                              Checked="Capitals_Toggled" Unchecked="Capitals_Toggled">Capitalised only</CheckBox>
+                    <CheckBox x:Name="ReversibleCheckBox" VerticalAlignment="Center" Margin="4 0 0 0"
+                              Checked="Capitals_Toggled" Unchecked="Capitals_Toggled" 
+                              ToolTip="Only words which make another word when reversed">Reversible only</CheckBox>
+                </StackPanel>
+                
+                <ListBox x:Name="AnagramListBox" Margin="0 4 2 0" FontFamily="Lucida Console" Grid.Row="1" Grid.RowSpan="2" Grid.Column="0"
                          MouseDoubleClick="AnagramBox_OnMouseDoubleClick">
                 </ListBox>
-                <ListBox x:Name="TemplateListBox" Margin="2 4 2 0" FontFamily="Lucida Console" Grid.Row="1" Grid.Column="1"
+                <ListBox x:Name="TemplateListBox" Margin="2 4 2 0" FontFamily="Lucida Console" Grid.Row="2" Grid.Column="1"
                          MouseDoubleClick="TemplateBox_OnMouseDoubleClick">
                 </ListBox>
             </Grid>

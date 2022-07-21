@@ -269,4 +269,14 @@ public class ClueContent
 
         return results;
     }
+
+    public static string Backwards(string normal)
+    {
+        // Convert to char array, then call Array.Reverse.
+        // ... Finally use string constructor on array.
+        char[] array = normal.ToCharArray();
+        Array.Reverse(array);
+        return new string(array);
+    }
+    
 }

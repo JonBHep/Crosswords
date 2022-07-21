@@ -36,7 +36,7 @@ namespace Crosswords
         private string _xWordTitle = "default";
         private Brush _barBrush = Brushes.DarkBlue;
         private string _selectedClueKey = string.Empty;
-        
+        private bool _disableCheckBoxesTrigger;
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             double scrX = SystemParameters.PrimaryScreenWidth;
@@ -766,8 +766,12 @@ namespace Crosswords
             // TODO For multiple-word clues find the words individually as well as in phrases
             Cursor = Cursors.Wait;
             TemplateListBox.Items.Clear();
+            bool onlyCaps = CapitalsCheckBox.IsChecked ?? false;
+            bool onlyRevs = ReversibleCheckBox.IsChecked ?? false;
             string source = TemplateTextBox.Text;
             CrosswordWordTemplate template = new CrosswordWordTemplate(source);
+            List<string> matches = new();
+
             using StreamReader reader = new(WordListFile, Clue.JbhEncoding);
             while (!reader.EndOfStream)
             {
@@ -777,11 +781,44 @@ namespace Crosswords
                     CrosswordWordTemplate wordTemplate = new CrosswordWordTemplate(word);
                     if (wordTemplate.MatchesTemplate(template))
                     {
-                        TemplateListBox.Items.Add(word);
+                        if (char.IsUpper(word[0]) || !onlyCaps)
+                        {
+                            matches.Add(word);
+
+                        }
                     }
                 }
             }
 
+            if (onlyRevs)
+            {
+                var retained = new List<string>();
+                reader.BaseStream.Position = 0; // reset read position to start
+                while (!reader.EndOfStream)
+                {
+                    string? mot = reader.ReadLine();
+                    if (mot is {} )
+                    {
+                        string back = ClueContent.Backwards(mot);
+                        if (matches.Contains(back))
+                        {
+                            retained.Add(back);
+                        }
+                    }
+                }   
+                foreach (var wd in retained)
+                {
+                    TemplateListBox.Items.Add(wd);                    
+                }
+            }
+            else
+            {
+                foreach (var wd in matches)
+                {
+                    TemplateListBox.Items.Add(wd);                    
+                }
+            }
+            
             int g = TemplateListBox.Items.Count;
             TemplateCountBlock.Text = (g < 1) ? "No matches" : g > 1 ? $"{g:#,0} matches" : "1 match";
             Cursor = Cursors.Arrow;
@@ -1042,6 +1079,11 @@ namespace Crosswords
             TemplateListBox.Items.Clear();
             TemplateCountBlock.Text = string.Empty;
             MakeUpperTextBoxText(TemplateTextBox);
+            
+            _disableCheckBoxesTrigger = true;
+            CapitalsCheckBox.IsChecked = false;
+            ReversibleCheckBox.IsChecked = false;
+            _disableCheckBoxesTrigger = false;
         }
 
         private void CheckVocabButton_Click(object sender, RoutedEventArgs e)
@@ -1227,22 +1269,12 @@ namespace Crosswords
                 FormatEntryTextBox.Text = format;
             }
         }
-
-        // private void TesterButton_OnClick(object sender, RoutedEventArgs e)
-        // {
-        //     string targetWord = "ship's boy";
-        //     string hypothesisWord = "..... ...";
-        //     CrosswordWordTemplate target = new CrosswordWordTemplate(targetWord);
-        //     CrosswordWordTemplate hypothesis = new CrosswordWordTemplate( hypothesisWord);
-        //     if (target.MatchesTemplate(hypothesis))
-        //     {
-        //         MessageBox.Show($"{targetWord} matches {hypothesisWord}");
-        //     }
-        //     else
-        //     {
-        //         MessageBox.Show($"{targetWord} does not match {hypothesisWord}");
-        //     }
-        // }
+        
+        private void Capitals_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (_disableCheckBoxesTrigger){return;}
+            GetTemplateMatches();
+        }
     }
     
 }

@@ -38,7 +38,7 @@ public class Clue
     {
         _content.Letters = CrosswordWordTemplate.Stringy(_length, UnknownLetterChar);
     }
-    public ClueContent Content { get => _content; }
+    public ClueContent Content => _content;
 
     public void AddContent(string spec)
     {
