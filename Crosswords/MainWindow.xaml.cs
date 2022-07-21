@@ -806,6 +806,7 @@ namespace Crosswords
                         }
                     }
                 }   
+                retained.Sort();
                 foreach (var wd in retained)
                 {
                     TemplateListBox.Items.Add(wd);                    
