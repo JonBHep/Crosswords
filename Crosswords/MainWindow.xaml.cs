@@ -37,7 +37,8 @@ namespace Crosswords
         private Brush _barBrush = Brushes.DarkBlue;
         private string _selectedClueKey = string.Empty;
         private bool _disableCheckBoxesTrigger;
-        private List<Canvas> _cellCanvasList = new(); // NOTE to enable referring to cell canvases for clue highlighting
+        //private List<Canvas> _cellCanvasList = new(); // NOTE to enable referring to cell canvases for clue highlighting
+        private Canvas[,] _cellPaper = new Canvas[0,0];
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             double scrX = SystemParameters.PrimaryScreenWidth;
@@ -85,10 +86,11 @@ namespace Crosswords
             // Indices are inserted in the cell Canvas as a TextBlock
             // Bars and hyphens are added directly to the Grid cells not to the Canvases - they are sourced from Clue.PatternedWord
 
-            var cellCanvas = new Canvas[_puzzle.Width, _puzzle.Height];
+            //var cellCanvas = new Canvas[_puzzle.Width, _puzzle.Height];
             
-            _cellCanvasList.Clear();
-
+            //_cellCanvasList.Clear();
+            _cellPaper = new Canvas[_puzzle.Width, _puzzle.Height];
+            
             const double gapSize = 2;
             var ff = new FontFamily("Times New Roman");
 
@@ -118,38 +120,38 @@ namespace Crosswords
             {
                 for (int y = 0; y < _puzzle.Height; y++)
                 {
-                    cellCanvas[x, y] = new Canvas()
+              _cellPaper[x, y] = new Canvas()
                     {
                         Tag = Coords(x, y)
                     };
 
-                    cellCanvas[x, y].MouseDown += Cell_MouseDown;
+                   _cellPaper[x, y].MouseDown += Cell_MouseDown;
 
                     if (_puzzle.Cell(new GridPoint(x, y)) == CrosswordGrid.BlackChar)
                     {
-                        cellCanvas[x, y].Background = Brushes.Black;
+                        _cellPaper[x, y].Background = Brushes.Black;
                     }
                     else
                     {
-                        cellCanvas[x, y].Background = Brushes.White;
+                        _cellPaper[x, y].Background = Brushes.White;
                         int i = _puzzle.Index(x, y);
                         if (i > 0)
                         {
                             TextBlock indexBlock = new TextBlock()
                                 {FontSize = 8, Text = i.ToString(), Margin = new Thickness(2, 0, 0, 0)};
-                            cellCanvas[x, y].Children.Add(indexBlock);
+                            _cellPaper[x, y].Children.Add(indexBlock);
                         }
                     }
 
                     Border b = new Border()
                     {
                         BorderBrush = Brushes.DarkSlateGray, BorderThickness = new Thickness(1)
-                        , Child = cellCanvas[x, y]
+                        , Child = _cellPaper[x, y]
                     };
                     Grid.SetColumn(b, x * 2);
                     Grid.SetRow(b, y * 2);
                     XwordGrid.Children.Add(b);
-                    _cellCanvasList.Add(cellCanvas[x,y]);
+                    //_cellCanvasList.Add(cellCanvas[x,y]);
                 }
             }
 
@@ -186,7 +188,7 @@ namespace Crosswords
                                 };
                                 Canvas.SetLeft(letterBlock, 2); 
                                 Canvas.SetTop(letterBlock, 6);
-                                cellCanvas[px, py].Children.Add(letterBlock);
+                                _cellPaper[px, py].Children.Add(letterBlock);
                             }
                         }
                     }
@@ -216,7 +218,7 @@ namespace Crosswords
                                 };
                                 Canvas.SetLeft(letterBlock, 2); 
                                 Canvas.SetTop(letterBlock, 6);
-                                cellCanvas[px, py].Children.Add(letterBlock);
+                                _cellPaper[px, py].Children.Add(letterBlock);
                             }
                         }
                     }
@@ -600,19 +602,16 @@ namespace Crosswords
         private void HighLightClueInGrid(Clue indice)
         {
             // TODO highlight clue cells in crossword grid
-            
-            foreach (var canvas in _cellCanvasList)
+
+            for (int xx = 0; xx < _puzzle.Width; xx++)
             {
-                if (canvas.Tag is string q)
+                for (int yy = 0; yy < _puzzle.Height; yy++)
                 {
 
-                    if (canvas.Background != Brushes.Black)
+                    if (_puzzle.Cell(new GridPoint(xx, yy)) != CrosswordGrid.BlackChar)
                     {
-                        canvas.Background=Brushes.White;
+                        _cellPaper[xx,yy].Background=Brushes.White;
                     }
-
-                                
-
                 }
             }
             
@@ -620,8 +619,8 @@ namespace Crosswords
             int sy = indice.Ystart;
             for (int a = 0; a < indice.WordLength; a++)
             {
-                int px = 0;
-                int py = 0;
+                int px;
+                int py;
                 if (indice.Direction == 'A')
                 {
                     px = sx + a;
@@ -633,17 +632,7 @@ namespace Crosswords
                     py = sy+a;
                 }
 
-                foreach (var canvas in _cellCanvasList)
-                {
-                    if (canvas.Tag is string q)
-                    {
-                        var what = CoordPoint(q);
-                        if (what.X == px && what.Y == py)
-                        {
-                    canvas.Background=Brushes.SkyBlue;        
-                        }
-                    }
-                }
+                _cellPaper[px, py].Background= Brushes.NavajoWhite;
             }
         }
         
