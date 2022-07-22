@@ -58,11 +58,6 @@
                 <TextBlock x:Name="ProgressTextBlock" VerticalAlignment="Center" Margin="20 0 0 0" FontSize="16" FontWeight="Bold" Text="[progress]"></TextBlock>
             </DockPanel>
             
-            <!-- <DockPanel Grid.Row="5" Margin="12 6"> -->
-            <!--     <Button  Width="80" Height="26" Click="SaveAsButton_Click">Save as...</Button>     -->
-            <!--     <TextBlock x:Name="DefaultNameWarningTextBlock" Margin="12 0" VerticalAlignment="Center" FontWeight="Bold" Foreground="OrangeRed">Save the crossword to give it a name</TextBlock> -->
-            <!-- </DockPanel> -->
-
             <Border Grid.Row="4" BorderBrush="Tan" BorderThickness="1.5" CornerRadius="8" Margin="4">
             <Grid  x:Name="SelectedClueGrid">
                 <Grid.RowDefinitions>
@@ -128,7 +123,7 @@
                 
                 <TextBlock Grid.Row="1" Grid.Column="0" Margin="12 6" x:Name="ClueRubricBTextBlock" FontFamily="Arial">Letters only; no hyphens, spaces or unknown letters.</TextBlock>
                 
-                <Button Grid.Row="5" Grid.Column="0" x:Name="ClueClearButton" Margin="12 6 0 12" HorizontalAlignment="Left" Width="80"
+                <Button Grid.Row="5" Grid.Column="0" Margin="12 6 0 12" HorizontalAlignment="Left" Width="80"
                         Height="26" ToolTip="Clear clue to pattern" Click="ClueClearButton_OnClick">
                     Clear
                 </Button>

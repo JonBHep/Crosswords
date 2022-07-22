@@ -37,6 +37,7 @@ namespace Crosswords
         private Brush _barBrush = Brushes.DarkBlue;
         private string _selectedClueKey = string.Empty;
         private bool _disableCheckBoxesTrigger;
+        private List<Canvas> _cellCanvasList = new(); // NOTE to enable referring to cell canvases for clue highlighting
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             double scrX = SystemParameters.PrimaryScreenWidth;
@@ -84,31 +85,30 @@ namespace Crosswords
             // Indices are inserted in the cell Canvas as a TextBlock
             // Bars and hyphens are added directly to the Grid cells not to the Canvases - they are sourced from Clue.PatternedWord
 
-            Canvas[,] cellCanvas = new Canvas[_puzzle.Width, _puzzle.Height];
+            var cellCanvas = new Canvas[_puzzle.Width, _puzzle.Height];
+            
+            _cellCanvasList.Clear();
 
-            double gapSize = 2;
-            FontFamily ff = new FontFamily("Times New Roman");
+            const double gapSize = 2;
+            var ff = new FontFamily("Times New Roman");
 
-            XwordGrid.Children.Clear();
+            XwordGrid.Children.Clear(); // clear Grid
             XwordGrid.ColumnDefinitions.Clear();
             XwordGrid.RowDefinitions.Clear();
-            for (int x = 0; x < _puzzle.Width; x++)
+            
+            for (int x = 0; x < _puzzle.Width; x++) // add column definitions
             {
-                ColumnDefinition col = new ColumnDefinition() {Width = new GridLength(_squareSide)};
-                XwordGrid.ColumnDefinitions.Add(col);
-                ColumnDefinition gap = new ColumnDefinition() {Width = new GridLength(gapSize)};
-                XwordGrid.ColumnDefinitions.Add(gap);
+                XwordGrid.ColumnDefinitions.Add(new ColumnDefinition() {Width = new GridLength(_squareSide)}); // column of letter squares
+                XwordGrid.ColumnDefinitions.Add(new ColumnDefinition() {Width = new GridLength(gapSize)}); // gap between columns
             }
 
             ColumnDefinition lastcol = new ColumnDefinition();
             XwordGrid.ColumnDefinitions.Add(lastcol);
 
-            for (int y = 0; y < _puzzle.Height; y++)
+            for (int y = 0; y < _puzzle.Height; y++) // add row definitions
             {
-                RowDefinition row = new RowDefinition() {Height = new GridLength(_squareSide)};
-                XwordGrid.RowDefinitions.Add(row);
-                RowDefinition gap = new RowDefinition() {Height = new GridLength(gapSize)};
-                XwordGrid.RowDefinitions.Add(gap);
+                XwordGrid.RowDefinitions.Add(new RowDefinition() {Height = new GridLength(_squareSide)}); // row of letter squares
+                XwordGrid.RowDefinitions.Add(new RowDefinition() {Height = new GridLength(gapSize)}); // gap between rows
             }
 
             RowDefinition lastrow = new RowDefinition();
@@ -149,6 +149,7 @@ namespace Crosswords
                     Grid.SetColumn(b, x * 2);
                     Grid.SetRow(b, y * 2);
                     XwordGrid.Children.Add(b);
+                    _cellCanvasList.Add(cellCanvas[x,y]);
                 }
             }
 
@@ -222,66 +223,66 @@ namespace Crosswords
                 }
             }
         }
-
+        
         private void Cell_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (sender is Canvas {Tag: string q})
-            {
-                // get coordinates
-                GridPoint locus = CoordPoint(q);
+           if (sender is Canvas { Tag: string q})
+           {
+               // get coordinates
+               GridPoint locus = CoordPoint(q);
 
-                // if (_puzzle.IsLocked)
-                // {
-                // highlight clue
-                string t = string.Empty;
-                ClueAListBox.SelectedIndex = -1;
-                ClueDListBox.SelectedIndex = -1;
-                foreach (string s in _puzzle.ClueKeyList)
-                {
-                    if (_puzzle.ClueOf(s).IncludesCell(locus) is not null)
-                    {
-                        t = s;
-                        break;
-                    }
-                }
+               var t = string.Empty;
+               ClueAListBox.SelectedIndex = -1;
+               ClueDListBox.SelectedIndex = -1;
+               foreach (var s in _puzzle.ClueKeyList)
+               {
+                   if (_puzzle.ClueOf(s).IncludesCell(locus) is not null)
+                   {
+                       t = s;
+                       break;
+                   }
+               }
 
-                int r = -1;
-                for (int z = 1; z < ClueAListBox.Items.Count; z++) // don't take first item which is the heading
-                {
-                    ListBoxItem itm = (ListBoxItem) ClueAListBox.Items[z];
-                    string? k = itm.Tag.ToString();
-                    if (k == t)
-                    {
-                        r = z;
-                        break;
-                    }
-                }
+               // Select the corresponding clue in the Across or Down clue ListBox 
+               int r = -1;
+               for (var z = 1; z < ClueAListBox.Items.Count; z++) // don't take first item which is the heading
+               {
+                   if (ClueAListBox.Items[z] is ListBoxItem {Tag: string j})
+                   {
+                       if (j == t)
+                       {
+                           r = z;
+                           break;
+                       }    
+                   }
+               }
 
-                if (r >= 0)
-                {
-                    ClueAListBox.SelectedIndex = r;
-                    return;
-                }
+               if (r >= 0)
+               {
+                   ClueAListBox.SelectedIndex = r;
+                   return;
+               }
 
-                for (int z = 1; z < ClueDListBox.Items.Count; z++) // don't take first item which is the heading
-                {
-                    ListBoxItem itm = (ListBoxItem) ClueDListBox.Items[z];
-                    string? k = itm.Tag.ToString();
-                    if (k == t)
-                    {
-                        r = z;
-                        break;
-                    }
-                }
+               for (int z = 1; z < ClueDListBox.Items.Count; z++) // don't take first item which is the heading
+               {
+                   if (ClueDListBox.Items[z] is ListBoxItem {Tag: string j})
+                   {
+                       if (j == t)
+                       {
+                           r = z;
+                           break;
+                       }
+                   }
+               }
 
-                if (r >= 0)
-                {
-                    ClueDListBox.SelectedIndex = r;
-                    return;
-                }
+               if (r >= 0)
+               {
+                   ClueDListBox.SelectedIndex = r;
+                   return;
+               }
 
-                SwitchClueControls(false);
-            }
+               SwitchClueControls(false);
+           }
         }
 
         private void MakeRightBar(GridPoint point)
@@ -344,7 +345,6 @@ namespace Crosswords
             r = new Run() {Text = $"{clueList.Count} clues", Foreground = abrush};
             block.Inlines.Add(r);
             ClueAListBox.Items.Add(new ListBoxItem() {Content = block, IsHitTestVisible = false});
-
             
             foreach (Clue clu in clueList)
             {
@@ -585,6 +585,7 @@ namespace Crosswords
         private void ShowClueDetails(string clueCode)
         {
             Clue cloo = _puzzle.ClueOf(clueCode);
+            HighLightClueInGrid(cloo);
             string dirn = (cloo.Direction == 'A') ? "Across" : "Down";
             ClueTitleTextBlock.Text = $"{cloo.Number} {dirn}";
             _selectedClueKey = clueCode;
@@ -596,6 +597,56 @@ namespace Crosswords
             TemplateBlindMatchCount();
         }
 
+        private void HighLightClueInGrid(Clue indice)
+        {
+            // TODO highlight clue cells in crossword grid
+            
+            foreach (var canvas in _cellCanvasList)
+            {
+                if (canvas.Tag is string q)
+                {
+
+                    if (canvas.Background != Brushes.Black)
+                    {
+                        canvas.Background=Brushes.White;
+                    }
+
+                                
+
+                }
+            }
+            
+            int sx = indice.Xstart;
+            int sy = indice.Ystart;
+            for (int a = 0; a < indice.WordLength; a++)
+            {
+                int px = 0;
+                int py = 0;
+                if (indice.Direction == 'A')
+                {
+                    px = sx + a;
+                    py = sy;
+                }
+                else
+                {
+                    px = sx;
+                    py = sy+a;
+                }
+
+                foreach (var canvas in _cellCanvasList)
+                {
+                    if (canvas.Tag is string q)
+                    {
+                        var what = CoordPoint(q);
+                        if (what.X == px && what.Y == py)
+                        {
+                    canvas.Background=Brushes.SkyBlue;        
+                        }
+                    }
+                }
+            }
+        }
+        
         private void FillCluePatternCombo(int length)
         {
             List<string> patterns = ClueContent.LetterPatterns(length);
@@ -809,7 +860,7 @@ namespace Crosswords
                 retained.Sort();
                 foreach (var wd in retained)
                 {
-                    TemplateListBox.Items.Add(wd);                    
+                    TemplateListBox.Items.Add(wd);             
                 }
             }
             else
