@@ -13,7 +13,7 @@ public partial class CreationWindow
     public CreationWindow()
     {
         InitializeComponent();
-        _puzzle = new CrosswordGrid(BlankGridSpecification(8,8));  // arbitrary size, not to be used
+        _puzzle = new CrosswordGrid(BlankGridSpecification(8, 8)); // arbitrary size, not to be used
     }
 
     private const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -154,8 +154,9 @@ public partial class CreationWindow
 
         }
     }
+
     private bool Symmetrical => (SymmCheckBox.IsChecked.HasValue) && (SymmCheckBox.IsChecked.Value);
-    
+
     private string Coords(int x, int y)
     {
         string rv = Alphabet.Substring(x, 1);
@@ -178,25 +179,37 @@ public partial class CreationWindow
         if (ans ?? false)
         {
             _gamePath = sdw.PuzzleFileSpecification();
-            FileStream fs = new FileStream(_gamePath, FileMode.Create);
+            if (File.Exists(_gamePath))
+            {
+                MessageBoxResult result = MessageBox.Show("File already exists. Overwrite?", "Save puzzle grid"
+                    , MessageBoxButton.OKCancel
+                    , MessageBoxImage.Question);
+                if (result == MessageBoxResult.Cancel)
+                {
+                    return;
+                }
+            }
+
+            FileStream fs = new FileStream(_gamePath, FileMode.Create);  // create or overwrite
             using (var wri = new StreamWriter(fs, Clue.JbhEncoding))
             {
                 wri.WriteLine(_puzzle.Specification);
                 foreach (string tk in _puzzle.ClueKeyList)
                 {
-                    wri.WriteLine($"{tk}%{_puzzle.ClueOf(tk).Content.Specification()}" );
+                    wri.WriteLine($"{tk}%{_puzzle.ClueOf(tk).Content.Specification()}");
                 }
             }
+
             DialogResult = true;
         }
-        
+
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e)
     {
         DialogResult = false;
     }
-   
+
     private string BlankGridSpecification(int width, int height)
     {
         int sq = width * height;
@@ -206,8 +219,10 @@ public partial class CreationWindow
         {
             builder.Append(CrosswordGrid.WhiteChar);
         }
+
         return builder.ToString();
     }
+
     private string StarterGridSpecification(int width, int height)
     {
         StringBuilder builder = new StringBuilder();
@@ -226,13 +241,15 @@ public partial class CreationWindow
                 }
             }
         }
+
         return builder.ToString();
     }
-    
-    public string NameOfTheGame => _gamePath; 
+
+    public string NameOfTheGame => _gamePath;
+
     private void StartPatternButton_OnClick(object sender, RoutedEventArgs e)
     {
-        string specification =StarterGridSpecification(_puzzle.Width, _puzzle.Height);
+        string specification = StarterGridSpecification(_puzzle.Width, _puzzle.Height);
         _puzzle = new CrosswordGrid(specification);
         DisplayGrid();
     }

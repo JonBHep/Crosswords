@@ -170,10 +170,10 @@
                               ToolTip="Only words which make another word when reversed">Reversible only</CheckBox>
                 </StackPanel>
                 
-                <ListBox x:Name="AnagramListBox" Margin="0 4 2 0" FontFamily="Lucida Console" Grid.Row="1" Grid.RowSpan="2" Grid.Column="0"
+                <ListBox x:Name="AnagramListBox" Margin="0 4 2 0" FontFamily="Lucida Console" FontSize="14" Grid.Row="1" Grid.RowSpan="2" Grid.Column="0"
                          MouseDoubleClick="AnagramBox_OnMouseDoubleClick">
                 </ListBox>
-                <ListBox x:Name="TemplateListBox" Margin="2 4 2 0" FontFamily="Lucida Console" Grid.Row="2" Grid.Column="1"
+                <ListBox x:Name="TemplateListBox" Margin="2 4 2 0" FontFamily="Lucida Console" FontSize="14" Grid.Row="2" Grid.Column="1"
                          MouseDoubleClick="TemplateBox_OnMouseDoubleClick">
                 </ListBox>
             </Grid>

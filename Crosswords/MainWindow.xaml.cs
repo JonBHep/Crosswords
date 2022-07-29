@@ -19,8 +19,6 @@ namespace Crosswords
     {
         // https://www.crosswordunclued.com/2009/09/crossword-grid-symmetry.html
 
-        // TODO Signal when anagram length does not match selected clue
-        
         public MainWindow()
         {
             InitializeComponent();
@@ -37,7 +35,6 @@ namespace Crosswords
         private Brush _barBrush = Brushes.DarkBlue;
         private string _selectedClueKey = string.Empty;
         private bool _disableCheckBoxesTrigger;
-        //private List<Canvas> _cellCanvasList = new(); // NOTE to enable referring to cell canvases for clue highlighting
         private Canvas[,] _cellPaper = new Canvas[0,0];
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -86,9 +83,6 @@ namespace Crosswords
             // Indices are inserted in the cell Canvas as a TextBlock
             // Bars and hyphens are added directly to the Grid cells not to the Canvases - they are sourced from Clue.PatternedWord
 
-            //var cellCanvas = new Canvas[_puzzle.Width, _puzzle.Height];
-            
-            //_cellCanvasList.Clear();
             _cellPaper = new Canvas[_puzzle.Width, _puzzle.Height];
             
             const double gapSize = 2;
@@ -120,12 +114,12 @@ namespace Crosswords
             {
                 for (int y = 0; y < _puzzle.Height; y++)
                 {
-              _cellPaper[x, y] = new Canvas()
+                    _cellPaper[x, y] = new Canvas()
                     {
                         Tag = Coords(x, y)
                     };
 
-                   _cellPaper[x, y].MouseDown += Cell_MouseDown;
+                    _cellPaper[x, y].MouseDown += Cell_MouseDown;
 
                     if (_puzzle.Cell(new GridPoint(x, y)) == CrosswordGrid.BlackChar)
                     {
@@ -417,7 +411,12 @@ namespace Crosswords
                 ClueDListBox.Items.Add(new ListBoxItem() {Content = spl, Tag = clu.Key});
                 
                 // Display progress
-                ProgressTextBlock.Text =(cluesDone == clueCount) ? "COMPLETE": $"Completed {cluesDone} of {clueCount} clues";
+                ProgressTextBlock.Inlines.Clear();
+                ProgressTextBlock.Inlines.Add(new Run(){Text =(cluesDone == clueCount) ? "COMPLETE": $"Completed {cluesDone} of {clueCount} clues"});
+                if (cluesDone < clueCount)
+                {
+                    ProgressTextBlock.Inlines.Add(new Run(){Text =$" [{clueCount-cluesDone}]", Foreground = Brushes.Tomato});    
+                }
             }
 
             if (cluesDone==clueCount)
