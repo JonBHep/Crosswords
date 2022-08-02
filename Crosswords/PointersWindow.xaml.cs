@@ -103,7 +103,6 @@ public partial class PointersWindow
             }
         }
 
-        //list.Sort();
         return list;
     }
 
@@ -127,11 +126,7 @@ public partial class PointersWindow
 
         return null;
     }
-    private void DeleteButton_OnClick(object sender, RoutedEventArgs e)
-    {
-        MessageBox.Show("Not implemented", "Delete item", MessageBoxButton.OK, MessageBoxImage.Information);
-    }
-
+    
     private void AddButton_OnClick(object sender, RoutedEventArgs e)
     {
         var p = PointerTextBox.Text.Trim().ToLower(CultureInfo.CurrentCulture);
@@ -175,5 +170,25 @@ public partial class PointersWindow
         }
     }
  
-    // TODO Implement deletion based on Tag of item in second ListBox which is whole pointer string
+    private void DeleteButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (TargetListBox.SelectedItem is ListBoxItem {Tag: string a})
+        {
+            if (_pointerList.Contains(a))
+            {
+                var b = FirstOf(a);
+                var c = SecondOf(a);
+                if (b is { } && c is { })
+                {
+                    MessageBoxResult result = MessageBox.Show($"Remove '{b} : {c.ToUpper(CultureInfo.CurrentCulture)}'?", "Delete pointer", MessageBoxButton.OKCancel
+                        , MessageBoxImage.Question);
+                    if (result == MessageBoxResult.OK)
+                    {
+                        _pointerList.Remove(a);
+                        RefreshList();
+                    }        
+                }
+            }
+        } 
+    }
 }

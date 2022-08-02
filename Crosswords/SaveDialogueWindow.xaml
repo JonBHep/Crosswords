@@ -24,7 +24,7 @@
             </Grid.ColumnDefinitions>
             <TextBlock FontWeight="Bold" Text="Save new crossword" VerticalAlignment="Center" FontSize="16"></TextBlock>
             <TextBlock Grid.Row="1" Grid.Column="0" Text="Select book" VerticalAlignment="Center" FontSize="14"></TextBlock>
-            <ComboBox  Grid.Row="1" Grid.Column="1" x:Name="BooksCombo" VerticalAlignment="Center" SelectionChanged="BooksCombo_OnSelectionChanged"></ComboBox>
+            <ComboBox  Grid.Row="1" Grid.Column="1" x:Name="BooksCombo" VerticalAlignment="Center" FontFamily="Consolas" SelectionChanged="BooksCombo_OnSelectionChanged"></ComboBox>
             <Button Grid.Row="2" Grid.Column="1" x:Name="SelectBookButton" VerticalAlignment="Center" HorizontalAlignment="Right" Width="72" Height="24" Click="SelectBookButton_OnClick">Select</Button>
             <TextBlock Grid.Row="3" Grid.Column="0" Text="Add new book" VerticalAlignment="Center" FontSize="14"></TextBlock>
             <TextBox Grid.Row="3" Grid.Column="1" x:Name="NewBookTitleTextBox" HorizontalAlignment="Stretch" VerticalAlignment="Center" TextChanged="NewBookTitleTextBox_OnTextChanged"></TextBox>
