@@ -587,14 +587,14 @@ namespace Crosswords
         {
             Clue cloo = _puzzle.ClueOf(clueCode);
             HighLightClueInGrid(cloo);
-            string dirn = (cloo.Direction == 'A') ? "Across" : "Down";
+            string dirn = cloo.Direction == 'A' ? "Across" : "Down";
             ClueTitleTextBlock.Text = $"{cloo.Number} {dirn}";
             _selectedClueKey = clueCode;
             SwitchClueControls(true);
             FormatEntryTextBox.Text = cloo.Content.Format;
             FillCluePatternCombo(cloo.WordLength);
             PatternTextBox.Text = TemplateTextBox.Text = _puzzle.PatternedWordConstrained(clueCode);
-            LettersConflictWarningTextBlock.Text = string.Empty;
+            WarnLettersVsClue();
             TemplateBlindMatchCount();
         }
 
@@ -653,6 +653,11 @@ namespace Crosswords
         
         private void ClueEntryTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            WarnLettersVsClue();
+        }
+
+        private void WarnLettersVsClue()
+        {
             if (!string.IsNullOrWhiteSpace(_selectedClueKey))
             {
                 SolidColorBrush warning = Brushes.IndianRed;
@@ -662,35 +667,51 @@ namespace Crosswords
                 LettersEntryTextBox.Text = given;
                 LettersEntryTextBox.CaretIndex = p;
                 char q = Matches(pattern, given);
-                // X, L or A
+                // Z, X, L or A
+                // Z = nothing given
                 // X = wrong length or illegal character
                 // L = letter conflicts with previously entered letter
                 // A = OK
-                if (q == 'X')
+                switch (q)
                 {
-                    LettersEntryTextBox.Foreground = Brushes.Red;
-                    LettersApplyButton.IsEnabled = false; // impossible string (wrong length or illegal character)
-                    LettersConflictWarningTextBlock.Visibility = Visibility.Visible;
-                    LettersConflictWarningTextBlock.Text = "Wrong length or bad characters";
+                    case 'Z':
+                    {
+                        //LettersEntryTextBox.Foreground = Brushes.Red;
+                        LettersApplyButton.IsEnabled = false; // impossible string (empty)
+                        //LettersConflictWarningTextBlock.Visibility = Visibility.Visible;
+                        LettersConflictWarningTextBlock.Text = string.Empty;
+                        break;
+                    }
+                    case 'X':
+                    {
+                        LettersEntryTextBox.Foreground = Brushes.Red;
+                        LettersApplyButton.IsEnabled = false; // impossible string (wrong length or illegal character)
+                        LettersConflictWarningTextBlock.Visibility = Visibility.Visible;
+                        LettersConflictWarningTextBlock.Text = "Wrong length or bad characters";
+                        break;
+                    }
+                    case 'L':
+                    {
+                        LettersEntryTextBox.Foreground = warning; // allowable but conflicts with letters given in pattern
+                        LettersApplyButton.IsEnabled = true;
+                        LettersApplyButton.IsDefault = true;
+                        LettersConflictWarningTextBlock.Visibility = Visibility.Visible;
+                        LettersConflictWarningTextBlock.Text = "OK but conflicts with existing letters";
+                        break;
+                    }
+                    default:
+                    {
+                        LettersEntryTextBox.Foreground = Brushes.Black;
+                        LettersApplyButton.IsEnabled = true;
+                        LettersApplyButton.IsDefault = true;
+                        LettersConflictWarningTextBlock.Visibility = Visibility.Hidden;
+                        break;
+                    }
                 }
-                else if (q == 'L')
-                {
-                    LettersEntryTextBox.Foreground = warning; // allowable but conflicts with letters given in pattern
-                    LettersApplyButton.IsEnabled = true;
-                    LettersApplyButton.IsDefault = true;
-                    LettersConflictWarningTextBlock.Visibility = Visibility.Visible;
-                    LettersConflictWarningTextBlock.Text = "OK but conflicts with existing letters";
-                }
-                else
-                {
-                    LettersEntryTextBox.Foreground = Brushes.Black;
-                    LettersApplyButton.IsEnabled = true;
-                    LettersApplyButton.IsDefault = true;
-                    LettersConflictWarningTextBlock.Visibility = Visibility.Hidden;
-                }
+                
             }
         }
-
+        
         /// <summary>
         /// Converts content of TextBox to upper case
         /// </summary>
@@ -708,6 +729,12 @@ namespace Crosswords
 
         private char Matches(string patternString, string offeredString)
         {
+            // empty offered string
+            if (string.IsNullOrWhiteSpace(offeredString))
+            {
+                return 'Z';
+            }
+            
             // check offered word length against pattern
             if (patternString.Length != offeredString.Length)
             {
@@ -1314,6 +1341,12 @@ namespace Crosswords
         {
             if (_disableCheckBoxesTrigger){return;}
             GetTemplateMatches();
+        }
+
+        private void PointersButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var win = new PointersWindow() {Owner = this};
+            win.ShowDialog();
         }
     }
     

@@ -32,8 +32,7 @@
                 </ComboBox>
                 <Button Width="80" Height="26" Margin="6 0 0 0" Click="LoadButton_Click">More</Button>
                 <Button DockPanel.Dock="Right" Width="80" Height="26" FontWeight="Bold" Click="CloseButton_Click">Close</Button>
-                <Button DockPanel.Dock="Right" Width="80" Height="26" Margin="6 0 6 0" Click="ListButton_OnClick">Word list</Button>
-                <Button DockPanel.Dock="Right" x:Name="VocabButton" Margin=" 6 0 0 0" Width="80" Height="26"
+                <Button DockPanel.Dock="Right" x:Name="VocabButton" Margin=" 0 0 6 0" Width="80" Height="26"
                         ToolTip="Check all answers against word list"
                         Click="CheckVocabButton_Click">
                     Check
@@ -41,6 +40,8 @@
             </DockPanel>
 
             <DockPanel Grid.Row="2" Margin="12 12 12 0" VerticalAlignment="Center">
+                <Button DockPanel.Dock="Right" Width="80" Height="26" Margin="6 0 0 0" ToolTip="List of clue words and possible indications" Click="PointersButton_OnClick">Pointers</Button>
+                <Button DockPanel.Dock="Right" Width="80" Height="26" Margin="6 0 0 0" Click="ListButton_OnClick">Word list</Button>
                 <TextBlock VerticalAlignment="Center" >Crossword:</TextBlock>
                 <TextBlock x:Name="NameTextBlock" Margin="8 0 0 0" FontSize="16" FontWeight="Bold">default</TextBlock>
             </DockPanel>
