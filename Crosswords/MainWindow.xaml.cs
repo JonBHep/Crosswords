@@ -791,7 +791,7 @@ namespace Crosswords
         private static string CrosswordsPath => System.IO.Path.Combine(Jbh.AppManager.DataPath, "Crosswords");
 
         private string WordListFile =>
-            System.IO.Path.Combine(Jbh.AppManager.DataPath, "CrosswordLists", "wordlist.txt");
+            System.IO.Path.Combine(Jbh.AppManager.DataPath, "Lists", "wordlist.txt");
 
         private void AnagramButton_OnClick(object sender, RoutedEventArgs e)
         {

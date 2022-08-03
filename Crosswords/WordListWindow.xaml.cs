@@ -12,8 +12,8 @@ public partial class WordListWindow
     public WordListWindow()
     {
         InitializeComponent();
-        _filePath = Path.Combine(Jbh.AppManager.DataPath, "CrosswordLists", "wordlist.txt");
-        _tempPath = Path.Combine(Jbh.AppManager.DataPath, "CrosswordLists", "tempcopy.txt");
+        _filePath = Path.Combine(Jbh.AppManager.DataPath, "Lists", "wordlist.txt");
+        _tempPath = Path.Combine(Jbh.AppManager.DataPath, "Lists", "tempcopy.txt");
     }
 
     private readonly string _filePath;
