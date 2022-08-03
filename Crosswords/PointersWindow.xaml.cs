@@ -14,7 +14,7 @@ public partial class PointersWindow
     public PointersWindow()
     {
         InitializeComponent();
-        _filePath = Path.Combine(Jbh.AppManager.DataPath, "CrosswordLists", "pointers.txt");
+        _filePath = Path.Combine(Jbh.AppManager.DataPath, "Lists", "pointers.txt");
     }
 
     private readonly string _filePath;
