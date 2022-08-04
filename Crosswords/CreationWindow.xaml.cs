@@ -19,16 +19,16 @@ public partial class CreationWindow
     private const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private readonly double _squareSide = 36;
     private CrosswordGrid _puzzle;
-    private string _gamePath = String.Empty;
+    private string _gamePath = string.Empty;
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        double scrX = SystemParameters.PrimaryScreenWidth;
-        double scrY = SystemParameters.PrimaryScreenHeight;
-        double winX = scrX * .98;
-        double winY = scrY * .94;
-        double xm = (scrX - winX) / 2;
-        double ym = (scrY - winY) / 4;
+        var scrX = SystemParameters.PrimaryScreenWidth;
+        var scrY = SystemParameters.PrimaryScreenHeight;
+        var winX = scrX * .98;
+        var winY = scrY * .94;
+        var xm = (scrX - winX) / 2;
+        var ym = (scrY - winY) / 4;
         Width = winX;
         Height = winY;
         Left = xm;
@@ -58,15 +58,15 @@ public partial class CreationWindow
         // Constructing a rectangular Grid with rows and columns
         // Each cell contains a Canvas enclosed in a Border
         // Indices are inserted in the cell Canvas as a TextBlock
-        // Bars and hyphens are added directly to the Grid cells not to the Canvases - they are sourced from Clue.PatternedWord
 
         Canvas[,] cellCanvas = new Canvas[_puzzle.Width, _puzzle.Height];
-        double gapSize = 2;
-        Brush blackBrush = Brushes.Sienna;
+        const double gapSize = 2;
+        Brush blackBrush = Brushes.DarkSlateGray;
         XwordGrid.Children.Clear();
         XwordGrid.ColumnDefinitions.Clear();
         XwordGrid.RowDefinitions.Clear();
-        for (int x = 0; x < _puzzle.Width; x++)
+        
+        for (var x = 0; x < _puzzle.Width; x++)
         {
             ColumnDefinition col = new ColumnDefinition() {Width = new GridLength(_squareSide)};
             XwordGrid.ColumnDefinitions.Add(col);
@@ -74,10 +74,9 @@ public partial class CreationWindow
             XwordGrid.ColumnDefinitions.Add(gap);
         }
 
-        ColumnDefinition lastcol = new ColumnDefinition();
-        XwordGrid.ColumnDefinitions.Add(lastcol);
+        XwordGrid.ColumnDefinitions.Add(new ColumnDefinition());
 
-        for (int y = 0; y < _puzzle.Height; y++)
+        for (var y = 0; y < _puzzle.Height; y++)
         {
             RowDefinition row = new RowDefinition() {Height = new GridLength(_squareSide)};
             XwordGrid.RowDefinitions.Add(row);
@@ -85,12 +84,11 @@ public partial class CreationWindow
             XwordGrid.RowDefinitions.Add(gap);
         }
 
-        RowDefinition lastrow = new RowDefinition();
-        XwordGrid.RowDefinitions.Add(lastrow);
+        XwordGrid.RowDefinitions.Add(new RowDefinition());
 
-        for (int x = 0; x < _puzzle.Width; x++)
+        for (var x = 0; x < _puzzle.Width; x++)
         {
-            for (int y = 0; y < _puzzle.Height; y++)
+            for (var y = 0; y < _puzzle.Height; y++)
             {
                 cellCanvas[x, y] = new Canvas()
                 {
@@ -109,10 +107,9 @@ public partial class CreationWindow
                     int i = _puzzle.Index(x, y);
                     if (i > 0)
                     {
-                        TextBlock indexBlock = new TextBlock() {FontSize = 8, Text = i.ToString()};
+                        TextBlock indexBlock = new TextBlock() {FontSize = 12, Text = i.ToString(), Margin = new Thickness(2,0,0,0)};
                         cellCanvas[x, y].Children.Add(indexBlock);
                     }
-
                 }
 
                 Border b = new Border()
@@ -210,7 +207,7 @@ public partial class CreationWindow
         DialogResult = false;
     }
 
-    private string BlankGridSpecification(int width, int height)
+    private static string BlankGridSpecification(int width, int height)
     {
         int sq = width * height;
         StringBuilder builder = new StringBuilder();
@@ -223,7 +220,7 @@ public partial class CreationWindow
         return builder.ToString();
     }
 
-    private string StarterGridSpecification(int width, int height)
+    private static string StarterGridSpecification(int width, int height)
     {
         StringBuilder builder = new StringBuilder();
         builder.Append(width.ToString().PadRight(2));
