@@ -22,7 +22,8 @@ namespace Crosswords
         public MainWindow()
         {
             InitializeComponent();
-            const string defaultSpecification = "15......#........#.#.#.#.#.#.#.#........#......#.#.#.#.#.#.#.####............#.#.#.#.#.###.#....###........#.#.#.#.#.#.#.#........###....#.###.#.#.#.#.#............####.#.#.#.#.#.#.#......#........#.#.#.#.#.#.#.#........#......";
+            const string defaultSpecification
+                = "15......#........#.#.#.#.#.#.#.#........#......#.#.#.#.#.#.#.####............#.#.#.#.#.###.#....###........#.#.#.#.#.#.#.#........###....#.###.#.#.#.#.#............####.#.#.#.#.#.#.#......#........#.#.#.#.#.#.#.#........#......";
             _puzzle = new CrosswordGrid(defaultSpecification);
         }
 
@@ -35,7 +36,8 @@ namespace Crosswords
         private Brush _barBrush = Brushes.DarkBlue;
         private string _selectedClueKey = string.Empty;
         private bool _disableCheckBoxesTrigger;
-        private Canvas[,] _cellPaper = new Canvas[0,0];
+        private Canvas[,] _cellPaper = new Canvas[0, 0];
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             double scrX = SystemParameters.PrimaryScreenWidth;
@@ -84,18 +86,20 @@ namespace Crosswords
             // Bars and hyphens are added directly to the Grid cells not to the Canvases - they are sourced from Clue.PatternedWord
 
             _cellPaper = new Canvas[_puzzle.Width, _puzzle.Height];
-            
+
             const double gapSize = 2;
             var ff = new FontFamily("Times New Roman");
 
             XwordGrid.Children.Clear(); // clear Grid
             XwordGrid.ColumnDefinitions.Clear();
             XwordGrid.RowDefinitions.Clear();
-            
+
             for (int x = 0; x < _puzzle.Width; x++) // add column definitions
             {
-                XwordGrid.ColumnDefinitions.Add(new ColumnDefinition() {Width = new GridLength(_squareSide)}); // column of letter squares
-                XwordGrid.ColumnDefinitions.Add(new ColumnDefinition() {Width = new GridLength(gapSize)}); // gap between columns
+                XwordGrid.ColumnDefinitions.Add(new ColumnDefinition()
+                    {Width = new GridLength(_squareSide)}); // column of letter squares
+                XwordGrid.ColumnDefinitions.Add(new ColumnDefinition()
+                    {Width = new GridLength(gapSize)}); // gap between columns
             }
 
             ColumnDefinition lastcol = new ColumnDefinition();
@@ -103,8 +107,10 @@ namespace Crosswords
 
             for (int y = 0; y < _puzzle.Height; y++) // add row definitions
             {
-                XwordGrid.RowDefinitions.Add(new RowDefinition() {Height = new GridLength(_squareSide)}); // row of letter squares
-                XwordGrid.RowDefinitions.Add(new RowDefinition() {Height = new GridLength(gapSize)}); // gap between rows
+                XwordGrid.RowDefinitions.Add(new RowDefinition()
+                    {Height = new GridLength(_squareSide)}); // row of letter squares
+                XwordGrid.RowDefinitions.Add(new RowDefinition()
+                    {Height = new GridLength(gapSize)}); // gap between rows
             }
 
             RowDefinition lastrow = new RowDefinition();
@@ -145,7 +151,6 @@ namespace Crosswords
                     Grid.SetColumn(b, x * 2);
                     Grid.SetRow(b, y * 2);
                     XwordGrid.Children.Add(b);
-                    //_cellCanvasList.Add(cellCanvas[x,y]);
                 }
             }
 
@@ -178,9 +183,9 @@ namespace Crosswords
                                 TextBlock letterBlock = new TextBlock()
                                 {
                                     FontFamily = ff, FontSize = 22, Text = t.ToString(), FontWeight = FontWeights.Bold
-                                    , Foreground =_barBrush, Width = _letterWidth, TextAlignment = TextAlignment.Center
+                                    , Foreground = _barBrush, Width = _letterWidth, TextAlignment = TextAlignment.Center
                                 };
-                                Canvas.SetLeft(letterBlock, 2); 
+                                Canvas.SetLeft(letterBlock, 2);
                                 Canvas.SetTop(letterBlock, 6);
                                 _cellPaper[px, py].Children.Add(letterBlock);
                             }
@@ -208,9 +213,9 @@ namespace Crosswords
                                 TextBlock letterBlock = new TextBlock()
                                 {
                                     FontFamily = ff, FontSize = 22, Text = t.ToString(), FontWeight = FontWeights.Bold
-                                    , Foreground =_barBrush, Width = _letterWidth, TextAlignment = TextAlignment.Center
+                                    , Foreground = _barBrush, Width = _letterWidth, TextAlignment = TextAlignment.Center
                                 };
-                                Canvas.SetLeft(letterBlock, 2); 
+                                Canvas.SetLeft(letterBlock, 2);
                                 Canvas.SetTop(letterBlock, 6);
                                 _cellPaper[px, py].Children.Add(letterBlock);
                             }
@@ -219,66 +224,66 @@ namespace Crosswords
                 }
             }
         }
-        
+
         private void Cell_MouseDown(object sender, MouseButtonEventArgs e)
         {
-           if (sender is Canvas { Tag: string q})
-           {
-               // get coordinates
-               GridPoint locus = CoordPoint(q);
+            if (sender is Canvas {Tag: string q})
+            {
+                // get coordinates
+                GridPoint locus = CoordPoint(q);
 
-               var t = string.Empty;
-               ClueAListBox.SelectedIndex = -1;
-               ClueDListBox.SelectedIndex = -1;
-               foreach (var s in _puzzle.ClueKeyList)
-               {
-                   if (_puzzle.ClueOf(s).IncludesCell(locus) is not null)
-                   {
-                       t = s;
-                       break;
-                   }
-               }
+                var t = string.Empty;
+                ClueAListBox.SelectedIndex = -1;
+                ClueDListBox.SelectedIndex = -1;
+                foreach (var s in _puzzle.ClueKeyList)
+                {
+                    if (_puzzle.ClueOf(s).IncludesCell(locus) is not null)
+                    {
+                        t = s;
+                        break;
+                    }
+                }
 
-               // Select the corresponding clue in the Across or Down clue ListBox 
-               int r = -1;
-               for (var z = 1; z < ClueAListBox.Items.Count; z++) // don't take first item which is the heading
-               {
-                   if (ClueAListBox.Items[z] is ListBoxItem {Tag: string j})
-                   {
-                       if (j == t)
-                       {
-                           r = z;
-                           break;
-                       }    
-                   }
-               }
+                // Select the corresponding clue in the Across or Down clue ListBox 
+                int r = -1;
+                for (var z = 1; z < ClueAListBox.Items.Count; z++) // don't take first item which is the heading
+                {
+                    if (ClueAListBox.Items[z] is ListBoxItem {Tag: string j})
+                    {
+                        if (j == t)
+                        {
+                            r = z;
+                            break;
+                        }
+                    }
+                }
 
-               if (r >= 0)
-               {
-                   ClueAListBox.SelectedIndex = r;
-                   return;
-               }
+                if (r >= 0)
+                {
+                    ClueAListBox.SelectedIndex = r;
+                    return;
+                }
 
-               for (int z = 1; z < ClueDListBox.Items.Count; z++) // don't take first item which is the heading
-               {
-                   if (ClueDListBox.Items[z] is ListBoxItem {Tag: string j})
-                   {
-                       if (j == t)
-                       {
-                           r = z;
-                           break;
-                       }
-                   }
-               }
+                for (int z = 1; z < ClueDListBox.Items.Count; z++) // don't take first item which is the heading
+                {
+                    if (ClueDListBox.Items[z] is ListBoxItem {Tag: string j})
+                    {
+                        if (j == t)
+                        {
+                            r = z;
+                            break;
+                        }
+                    }
+                }
 
-               if (r >= 0)
-               {
-                   ClueDListBox.SelectedIndex = r;
-                   return;
-               }
+                if (r >= 0)
+                {
+                    ClueDListBox.SelectedIndex = r;
+                    return;
+                }
 
-               SwitchClueControls(false);
-           }
+                SwitchClueControls(false);
+            }
         }
 
         private void MakeRightBar(GridPoint point)
@@ -341,7 +346,7 @@ namespace Crosswords
             r = new Run() {Text = $"{clueList.Count} clues", Foreground = abrush};
             block.Inlines.Add(r);
             ClueAListBox.Items.Add(new ListBoxItem() {Content = block, IsHitTestVisible = false});
-            
+
             foreach (Clue clu in clueList)
             {
                 pinceau = abrush;
@@ -350,7 +355,7 @@ namespace Crosswords
                     pinceau = dimbrush;
                     cluesDone++;
                 }
-                
+
                 StackPanel spl = new StackPanel() {Orientation = Orientation.Horizontal};
 
                 block = new TextBlock()
@@ -369,8 +374,8 @@ namespace Crosswords
                 block = new TextBlock()
                     {FontFamily = _fixedFont, Foreground = pinceau, Text = wd, Padding = new Thickness(0, 3, 0, 0)};
                 spl.Children.Add(block);
-                
-                ClueAListBox.Items.Add(new ListBoxItem() {Content =spl, Tag = clu.Key});
+
+                ClueAListBox.Items.Add(new ListBoxItem() {Content = spl, Tag = clu.Key});
             }
 
             clueList = _puzzle.CluesDown;
@@ -390,6 +395,7 @@ namespace Crosswords
                     pinceau = dimbrush;
                     cluesDone++;
                 }
+
                 StackPanel spl = new StackPanel() {Orientation = Orientation.Horizontal};
 
                 block = new TextBlock()
@@ -409,17 +415,19 @@ namespace Crosswords
                     {FontFamily = _fixedFont, Foreground = pinceau, Text = wd, Padding = new Thickness(0, 3, 0, 0)};
                 spl.Children.Add(block);
                 ClueDListBox.Items.Add(new ListBoxItem() {Content = spl, Tag = clu.Key});
-                
+
                 // Display progress
                 ProgressTextBlock.Inlines.Clear();
-                ProgressTextBlock.Inlines.Add(new Run(){Text =(cluesDone == clueCount) ? "COMPLETE": $"Completed {cluesDone} of {clueCount} clues"});
+                ProgressTextBlock.Inlines.Add(new Run()
+                    {Text = (cluesDone == clueCount) ? "COMPLETE" : $"Completed {cluesDone} of {clueCount} clues"});
                 if (cluesDone < clueCount)
                 {
-                    ProgressTextBlock.Inlines.Add(new Run(){Text =$" [{clueCount-cluesDone}]", Foreground = Brushes.Tomato});    
+                    ProgressTextBlock.Inlines.Add(new Run()
+                        {Text = $" [{clueCount - cluesDone}]", Foreground = Brushes.Tomato});
                 }
             }
 
-            if (cluesDone==clueCount)
+            if (cluesDone == clueCount)
             {
                 VocabButton.IsEnabled = true;
             }
@@ -575,6 +583,7 @@ namespace Crosswords
                 }
             }
         }
+
         private void ClueListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (sender is ListBox {SelectedItem: ListBoxItem {Tag: string k}})
@@ -595,13 +604,11 @@ namespace Crosswords
             FillCluePatternCombo(cloo.WordLength);
             PatternTextBox.Text = TemplateTextBox.Text = _puzzle.PatternedWordConstrained(clueCode);
             WarnLettersVsClue();
-            TemplateBlindMatchCount();
+            CountTemplateMatches();
         }
 
         private void HighLightClueInGrid(Clue indice)
         {
-            // TODO highlight clue cells in crossword grid
-
             for (int xx = 0; xx < _puzzle.Width; xx++)
             {
                 for (int yy = 0; yy < _puzzle.Height; yy++)
@@ -609,11 +616,11 @@ namespace Crosswords
 
                     if (_puzzle.Cell(new GridPoint(xx, yy)) != CrosswordGrid.BlackChar)
                     {
-                        _cellPaper[xx,yy].Background=Brushes.White;
+                        _cellPaper[xx, yy].Background = Brushes.White;
                     }
                 }
             }
-            
+
             int sx = indice.Xstart;
             int sy = indice.Ystart;
             for (int a = 0; a < indice.WordLength; a++)
@@ -628,13 +635,13 @@ namespace Crosswords
                 else
                 {
                     px = sx;
-                    py = sy+a;
+                    py = sy + a;
                 }
 
-                _cellPaper[px, py].Background= Brushes.NavajoWhite;
+                _cellPaper[px, py].Background = Brushes.NavajoWhite;
             }
         }
-        
+
         private void FillCluePatternCombo(int length)
         {
             List<string> patterns = ClueContent.LetterPatterns(length);
@@ -650,7 +657,7 @@ namespace Crosswords
 
             CluePatternCombo.SelectedIndex = -1;
         }
-        
+
         private void ClueEntryTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             WarnLettersVsClue();
@@ -676,9 +683,7 @@ namespace Crosswords
                 {
                     case 'Z':
                     {
-                        //LettersEntryTextBox.Foreground = Brushes.Red;
                         LettersApplyButton.IsEnabled = false; // impossible string (empty)
-                        //LettersConflictWarningTextBlock.Visibility = Visibility.Visible;
                         LettersConflictWarningTextBlock.Text = string.Empty;
                         break;
                     }
@@ -692,7 +697,8 @@ namespace Crosswords
                     }
                     case 'L':
                     {
-                        LettersEntryTextBox.Foreground = warning; // allowable but conflicts with letters given in pattern
+                        LettersEntryTextBox.Foreground
+                            = warning; // allowable but conflicts with letters given in pattern
                         LettersApplyButton.IsEnabled = true;
                         LettersApplyButton.IsDefault = true;
                         LettersConflictWarningTextBlock.Visibility = Visibility.Visible;
@@ -708,10 +714,10 @@ namespace Crosswords
                         break;
                     }
                 }
-                
+
             }
         }
-        
+
         /// <summary>
         /// Converts content of TextBox to upper case
         /// </summary>
@@ -734,7 +740,7 @@ namespace Crosswords
             {
                 return 'Z';
             }
-            
+
             // check offered word length against pattern
             if (patternString.Length != offeredString.Length)
             {
@@ -776,7 +782,7 @@ namespace Crosswords
 
             return 'A';
         }
-        
+
         private void ClueClearButton_OnClick(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrWhiteSpace(_selectedClueKey))
@@ -789,9 +795,7 @@ namespace Crosswords
         }
 
         private static string CrosswordsPath => System.IO.Path.Combine(Jbh.AppManager.DataPath, "Crosswords");
-
-        private string WordListFile =>
-            System.IO.Path.Combine(Jbh.AppManager.DataPath, "Lists", "wordlist.txt");
+       
 
         private void AnagramButton_OnClick(object sender, RoutedEventArgs e)
         {
@@ -803,118 +807,60 @@ namespace Crosswords
             Cursor = Cursors.Wait;
             AnagramListBox.Items.Clear();
             string source = AnagramTextBox.Text.Trim();
-            string ordered = CrosswordWordTemplate.AnagramString(source);
-            using StreamReader reader = new(WordListFile, Clue.JbhEncoding);
-            while (!reader.EndOfStream)
+            var known = new Connu();
+            List<string> mixes = known.GetAnagrams(source);
+            foreach (var a in mixes)
             {
-                string? mot = reader.ReadLine();
-                if (mot is { } word)
-                {
-                    string bien = CrosswordWordTemplate.AnagramString(word);
-                    if (bien == ordered)
-                    {
-                        AnagramListBox.Items.Add(word);
-                    }
-                }
+                AnagramListBox.Items.Add(a);
             }
 
             int g = AnagramListBox.Items.Count;
             AnagramCountBlock.Text = (g < 1) ? "No matches" : g > 1 ? $"{g:#,0} matches" : "1 match";
             Cursor = Cursors.Arrow;
         }
-        private void TemplateButton_OnClick(object sender, RoutedEventArgs e)
+
+        private void TemplateListButton_OnClick(object sender, RoutedEventArgs e)
         {
-            GetTemplateMatches();
+            ListTemplateMatches();
         }
-
-        private void GetTemplateMatches()
+        private void TemplateCountButton_OnClick(object sender, RoutedEventArgs e)
         {
-            // TODO For multiple-word clues find the words individually as well as in phrases
+            CountTemplateMatches();
+        }
+        
+        private void ListTemplateMatches()
+        {
             Cursor = Cursors.Wait;
+            List<string> hits = TemplateMatchesList();
             TemplateListBox.Items.Clear();
-            bool onlyCaps = CapitalsCheckBox.IsChecked ?? false;
-            bool onlyRevs = ReversibleCheckBox.IsChecked ?? false;
-            string source = TemplateTextBox.Text;
-            CrosswordWordTemplate template = new CrosswordWordTemplate(source);
-            List<string> matches = new();
-
-            using StreamReader reader = new(WordListFile, Clue.JbhEncoding);
-            while (!reader.EndOfStream)
+            foreach (var wd in hits)
             {
-                string? mot = reader.ReadLine();
-                if (mot is {} word)
-                {
-                    CrosswordWordTemplate wordTemplate = new CrosswordWordTemplate(word);
-                    if (wordTemplate.MatchesTemplate(template))
-                    {
-                        if (char.IsUpper(word[0]) || !onlyCaps)
-                        {
-                            matches.Add(word);
-
-                        }
-                    }
-                }
+                TemplateListBox.Items.Add(wd);
             }
-
-            if (onlyRevs)
-            {
-                var retained = new List<string>();
-                reader.BaseStream.Position = 0; // reset read position to start
-                while (!reader.EndOfStream)
-                {
-                    string? mot = reader.ReadLine();
-                    if (mot is {} )
-                    {
-                        string back = ClueContent.Backwards(mot);
-                        if (matches.Contains(back))
-                        {
-                            retained.Add(back);
-                        }
-                    }
-                }   
-                retained.Sort();
-                foreach (var wd in retained)
-                {
-                    TemplateListBox.Items.Add(wd);             
-                }
-            }
-            else
-            {
-                foreach (var wd in matches)
-                {
-                    TemplateListBox.Items.Add(wd);                    
-                }
-            }
-            
-            int g = TemplateListBox.Items.Count;
+            var g = TemplateListBox.Items.Count;
             TemplateCountBlock.Text = (g < 1) ? "No matches" : g > 1 ? $"{g:#,0} matches" : "1 match";
             Cursor = Cursors.Arrow;
         }
         
-        private void TemplateBlindMatchCount()
+        private List<string> TemplateMatchesList()
+        {
+            // TODO For multiple-word clues find the words individually as well as in phrases
+            bool onlyCaps = CapitalsCheckBox.IsChecked ?? false;
+            bool onlyRevs = ReversibleCheckBox.IsChecked ?? false;
+            string source = TemplateTextBox.Text;
+            var known = new Connu();
+            return known.GetTemplateMatches(source, onlyCaps, onlyRevs);
+        }
+        
+        private void CountTemplateMatches()
         {
             Cursor = Cursors.Wait;
-            int counter = 0;
             TemplateListBox.Items.Clear();
-            string source = TemplateTextBox.Text;
-            CrosswordWordTemplate template = new CrosswordWordTemplate(source);
-            using StreamReader reader = new(WordListFile, Clue.JbhEncoding);
-            while (!reader.EndOfStream && counter < 1000)
-            {
-                string? mot = reader.ReadLine();
-                if (mot is { } word)
-                {
-                    CrosswordWordTemplate wordTemplate = new CrosswordWordTemplate(word);
-                    if (wordTemplate.MatchesTemplate(template))
-                    {
-                        counter++;
-                    }
-                }
-            }
-
-            TemplateCountBlock.Text = (counter > 999) ? "1,000+ matches" :
-                (counter < 1) ? "No matches" :
-                counter > 1 ? $"{counter:#,0} matches" : "1 match";
+            List<string> hits = TemplateMatchesList();
+            int count = hits.Count;
+            TemplateCountBlock.Text = (count > 999) ? "1,000+ matches" :
+                (count < 1) ? "No matches" :
+                count > 1 ? $"{count:#,0} matches" : "1 match";
             Cursor = Cursors.Arrow;
         }
 
@@ -925,7 +871,7 @@ namespace Crosswords
                 if (SelectedClueGrid.IsVisible)
                 {
                     LettersEntryTextBox.Text = Constrain(word);
-                    TemplateTextBox.Clear();    
+                    TemplateTextBox.Clear();
                 }
             }
         }
@@ -945,21 +891,7 @@ namespace Crosswords
                 }
             }
         }
-        // private void WordListBox_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
-        // {
-        //     if (sender is ListBox box)
-        //     {
-        //         if (box.SelectedItem is string word)
-        //         {
-        //             string constrained = Constrain(word);
-        //             if (SelectedClueGrid.IsVisible)
-        //             {
-        //                 LettersEntryTextBox.Text = constrained;
-        //                 box.Items.Clear();
-        //             }
-        //         }
-        //     }
-        // }
+
         private static string Constrain(string input)
         {
             StringBuilder builder = new StringBuilder();
@@ -1146,7 +1078,7 @@ namespace Crosswords
             TemplateListBox.Items.Clear();
             TemplateCountBlock.Text = string.Empty;
             MakeUpperTextBoxText(TemplateTextBox);
-            
+
             _disableCheckBoxesTrigger = true;
             CapitalsCheckBox.IsChecked = false;
             ReversibleCheckBox.IsChecked = false;
@@ -1155,7 +1087,7 @@ namespace Crosswords
 
         private void CheckVocabButton_Click(object sender, RoutedEventArgs e)
         {
-            Cursor=Cursors.Wait;
+            Cursor = Cursors.Wait;
             SolidColorBrush dimbrush = Brushes.Silver;
             SolidColorBrush abrush = Brushes.RoyalBlue;
             SolidColorBrush dbrush = Brushes.DarkViolet;
@@ -1196,7 +1128,9 @@ namespace Crosswords
                 spl.Children.Add(blk);
 
                 string wd = _puzzle.PatternedWordConstrained(clu.Key);
-                bool whether = FoundInWordList(wd);
+                Connu known = new Connu();
+                bool whether =known.FoundInWordList(wd);
+                
                 Brush brosse = whether ? Brushes.DarkGreen : Brushes.Red;
 
                 blk = new TextBlock()
@@ -1240,7 +1174,8 @@ namespace Crosswords
                 spl.Children.Add(blk);
 
                 string wd = _puzzle.PatternedWordConstrained(clu.Key);
-                bool whether = FoundInWordList(wd);
+                Connu known = new Connu();
+                bool whether =known.FoundInWordList(wd);
                 Brush brosse = whether ? Brushes.DarkGreen : Brushes.Red;
 
                 blk = new TextBlock()
@@ -1250,30 +1185,31 @@ namespace Crosswords
                 itm = new ListBoxItem() {Content = spl, Tag = clu.Key};
                 ClueDListBox.Items.Add(itm);
             }
-            Cursor=Cursors.Arrow;
+
+            Cursor = Cursors.Arrow;
         }
 
-        private bool FoundInWordList(string verba)
-        {
-            CrosswordWordTemplate verbaTemplate = new CrosswordWordTemplate(verba);
-            bool flag = false;
-            using StreamReader reader = new(WordListFile, Clue.JbhEncoding);
-            while (!reader.EndOfStream)
-            {
-                string? mot = reader.ReadLine();
-                if (mot is { } word)
-                {
-                    CrosswordWordTemplate wordTemplate = new CrosswordWordTemplate(word);
-                    if (wordTemplate.MatchesTemplate(verbaTemplate))
-                    {
-                        flag = true;
-                        break;
-                    }
-                }
-            }
-
-            return flag;
-        }
+        // private bool FoundInWordList(string verba)
+        // {
+        //     CrosswordWordTemplate verbaTemplate = new CrosswordWordTemplate(verba);
+        //     bool flag = false;
+        //     using StreamReader reader = new(WordListFile, Clue.JbhEncoding);
+        //     while (!reader.EndOfStream)
+        //     {
+        //         string? mot = reader.ReadLine();
+        //         if (mot is { } word)
+        //         {
+        //             CrosswordWordTemplate wordTemplate = new CrosswordWordTemplate(word);
+        //             if (wordTemplate.MatchesTemplate(verbaTemplate))
+        //             {
+        //                 flag = true;
+        //                 break;
+        //             }
+        //         }
+        //     }
+        //
+        //     return flag;
+        // }
 
         private void ColourComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -1308,7 +1244,7 @@ namespace Crosswords
                 }
                 else if (TemplateTextBox.IsFocused)
                 {
-                    GetTemplateMatches();
+                    ListTemplateMatches();
                 }
             }
         }
@@ -1336,11 +1272,14 @@ namespace Crosswords
                 FormatEntryTextBox.Text = format;
             }
         }
-        
+
         private void Capitals_Toggled(object sender, RoutedEventArgs e)
         {
-            if (_disableCheckBoxesTrigger){return;}
-            GetTemplateMatches();
+            if (_disableCheckBoxesTrigger)
+            {
+                return;
+            }
+            CountTemplateMatches();
         }
 
         private void PointersButton_OnClick(object sender, RoutedEventArgs e)
@@ -1349,5 +1288,5 @@ namespace Crosswords
             win.ShowDialog();
         }
     }
-    
 }
+    

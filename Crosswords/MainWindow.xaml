@@ -145,8 +145,11 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30"></RowDefinition>
                     <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
                     <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
+                
                 <DockPanel>
                     <TextBox x:Name="AnagramTextBox" Margin="4 2 0 4" Width="200" FontSize="16"
                              FontFamily="Lucida Console" Padding="4" TextChanged="AnagramTextBox_OnTextChanged">
@@ -158,28 +161,40 @@
                     </Button>
                     <TextBlock x:Name="AnagramCountBlock" VerticalAlignment="Center" Margin="4 0 0 0"></TextBlock>
                 </DockPanel>
-                <DockPanel Grid.Row="0" Grid.Column="1">
+                
+                <DockPanel Grid.Row="0" Grid.Column="1" LastChildFill="False">
                     <TextBox x:Name="TemplateTextBox" Margin="4 2 2 4" Width="200" FontSize="16"
                              FontFamily="Lucida Console" Padding="4" TextChanged="TemplateTextBox_OnTextChanged">
                     </TextBox>
-                    <Button Margin="12 0" Width="80" Height="26" VerticalAlignment="Center"
-                            Click="TemplateButton_OnClick">
-                        Match
-                    </Button>
-                    <TextBlock x:Name="TemplateCountBlock" VerticalAlignment="Center"></TextBlock>
+                    <Button Margin="12 0 0 0" Width="72" Height="26" VerticalAlignment="Center"
+                            Click="TemplateCountButton_OnClick" ToolTip="Count template matches">Count</Button>
                 </DockPanel>
-                <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
+                
+                <DockPanel Grid.Column="1" Grid.Row="1">
                     <CheckBox x:Name="CapitalsCheckBox" VerticalAlignment="Center" Margin="4 0 0 0" 
-                              Checked="Capitals_Toggled" Unchecked="Capitals_Toggled">Capitalised only</CheckBox>
+                              Checked="Capitals_Toggled" Unchecked="Capitals_Toggled" ToolTip="Only words listed with an initial capital">Capitalised</CheckBox>
                     <CheckBox x:Name="ReversibleCheckBox" VerticalAlignment="Center" Margin="4 0 0 0"
                               Checked="Capitals_Toggled" Unchecked="Capitals_Toggled" 
-                              ToolTip="Only words which make another word when reversed">Reversible only</CheckBox>
-                </StackPanel>
+                              ToolTip="Only words which make another word when reversed">Reversible</CheckBox>
+                </DockPanel>
                 
-                <ListBox x:Name="AnagramListBox" Margin="0 4 2 0" FontFamily="Lucida Console" FontSize="14" Grid.Row="1" Grid.RowSpan="2" Grid.Column="0"
+                <DockPanel Grid.Column="1" Grid.Row="2">
+                    <TextBlock VerticalAlignment="Center" Margin="4 0 4 0" >Also including</TextBlock>
+                    <TextBox Margin="0 2 0 2" FontSize="16"
+                             FontFamily="Lucida Console" ToolTip="Additional letters to be included" ></TextBox>
+                </DockPanel>
+                
+                <DockPanel Grid.Column="1" Grid.Row="3">
+                    <Button DockPanel.Dock="Right" Margin="4 0 0 0" Width="80" Height="26" VerticalAlignment="Center"
+                            Click="TemplateListButton_OnClick" ToolTip="List template matches">List</Button>
+                    <TextBlock x:Name="TemplateCountBlock" Margin="6 0 0 0" VerticalAlignment="Center">Matches: 0</TextBlock>    
+                </DockPanel>
+                
+                <ListBox x:Name="AnagramListBox" Margin="0 4 2 0" FontFamily="Lucida Console" FontSize="14" Grid.Row="1" Grid.RowSpan="4" Grid.Column="0"
                          MouseDoubleClick="AnagramBox_OnMouseDoubleClick">
                 </ListBox>
-                <ListBox x:Name="TemplateListBox" Margin="2 4 2 0" FontFamily="Lucida Console" FontSize="14" Grid.Row="2" Grid.Column="1"
+                
+                <ListBox x:Name="TemplateListBox" Margin="2 4 2 0" FontFamily="Lucida Console" FontSize="14" Grid.Row="4" Grid.Column="1"
                          MouseDoubleClick="TemplateBox_OnMouseDoubleClick">
                 </ListBox>
             </Grid>
