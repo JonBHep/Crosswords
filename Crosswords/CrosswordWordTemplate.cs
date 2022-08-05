@@ -149,6 +149,82 @@ public class CrosswordWordTemplate
         return !unmatchedFlag;
     }
 
+    public bool MatchesTemplateWithExtraChars(CrosswordWordTemplate template, string extras)
+    {
+        // Assuming that this CrosswordWordTemplate (to be compared with template parameter) contains no wildcards
+        
+        // Wildcard is full stop, not question mark, and there is no variable-length wildcard '*'
+       
+        if (template.Formatted == Formatted)
+        {
+            return true; // trivially
+        }
+
+        if (template.UnSpacedLength != UnSpacedLength)
+        {
+            return false;
+        }
+
+        if (template.Gaps != Gaps)
+        {
+            // whether the pattern of gaps between words matches (ignoring whether the gaps are spaces or hyphens)
+            return false;
+        }
+        
+        // Find letters in this word not used in matching the given letters in the template
+        
+    
+        string onlyWildCards = Stringy(UnSpacedLength, '.');
+        
+        if (template.UnSpaced == onlyWildCards)
+        {
+            // TODO Check extras as well
+            return true; // the template parameter is all wildcards and the same length and spacing as this word
+        }
+
+        // Check whether all literal letters in template match this word
+        StringBuilder unmatchedLetters =new StringBuilder();
+        bool mismatch = false;
+        for (int n = 0; n < UnSpacedLength; n++)
+        {
+            char moi = UnSpaced[n];
+            char toi = template.UnSpaced[n];
+            if (toi == '.') // template character is a wildcard
+            {
+                unmatchedLetters.Append(UnAccent(moi));
+            }
+            else // template character is an actual letter, not a wildcard
+            {
+                char moiPlain = UnAccent(moi); // ignore accents on characters - convert to plain character
+                char toiPlain = UnAccent(toi);
+                if (moiPlain != toiPlain) // word and matching template both specify a letter in this position but they are different
+                {
+                    mismatch = true;
+                    break;
+                }
+            }
+        }
+
+        if (mismatch)
+        {
+            return false;
+        }
+
+        // TODO Amend to cope with repeated letters e.g. if needs to include SS don't just check for S once
+        var unconsumedLetters = unmatchedLetters.ToString().ToUpper(CultureInfo.CurrentCulture);
+        
+        foreach (var extra in extras)
+        {
+            var u = UnAccent(extra);
+            if (!unconsumedLetters.Contains(u))
+            {
+                mismatch = true;
+                break;
+            }
+        }
+        return !mismatch;
+    }
+    
     private static char UnAccent(char quoi)
     {
         char sub = quoi;

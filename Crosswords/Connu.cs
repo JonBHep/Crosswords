@@ -163,13 +163,13 @@ public class Connu
 
         return anagrams;
     }
-
-    public List<string> GetTemplateMatches(string source, bool onlyCapitalised, bool onlyReversibles)
+    
+    public List<string> GetTemplateMatches(string pattern, bool onlyCapitalised, bool onlyReversibles, string extras)
     {
         // TODO For multiple-word clues find the words individually as well as in phrases
 
         var results = new List<string>();
-        var template = new CrosswordWordTemplate(source);
+        var template = new CrosswordWordTemplate(pattern);
         List<string> matches = new();
         using StreamReader reader = new(_filePath, Clue.JbhEncoding);
         while (!reader.EndOfStream)
@@ -178,7 +178,7 @@ public class Connu
             if (mot is { } word)
             {
                 var wordTemplate = new CrosswordWordTemplate(word);
-                if (wordTemplate.MatchesTemplate(template))
+                if (wordTemplate.MatchesTemplateWithExtraChars(template, extras))
                 {
                     if (char.IsUpper(word[0]) || !onlyCapitalised)
                     {
@@ -187,7 +187,7 @@ public class Connu
                 }
             }
         }
-
+     
         if (onlyReversibles)
         {
             var retained = new List<string>();
@@ -221,22 +221,6 @@ public class Connu
 
         return results;
     }
-    public int TemplateBlindMatchCount(string source)
-    {
-        var counter = 0;
-        var template = new CrosswordWordTemplate(source);
-        using StreamReader reader = new(_filePath, Clue.JbhEncoding);
-        while (!reader.EndOfStream && counter < 1000)
-        {
-            var mot = reader.ReadLine();
-            if (mot == null) continue;
-            var wordTemplate = new CrosswordWordTemplate(mot);
-            if (wordTemplate.MatchesTemplate(template))
-            {
-                counter++;
-            }
-        }
 
-        return counter;
-    }
+    
 }

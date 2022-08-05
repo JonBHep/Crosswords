@@ -847,9 +847,10 @@ namespace Crosswords
             // TODO For multiple-word clues find the words individually as well as in phrases
             bool onlyCaps = CapitalsCheckBox.IsChecked ?? false;
             bool onlyRevs = ReversibleCheckBox.IsChecked ?? false;
-            string source = TemplateTextBox.Text;
+            string pattern = TemplateTextBox.Text;
+            string extras = ExtraLettersTextBox.Text.Trim();
             var known = new Connu();
-            return known.GetTemplateMatches(source, onlyCaps, onlyRevs);
+            return known.GetTemplateMatches(pattern, onlyCaps, onlyRevs, extras);
         }
         
         private void CountTemplateMatches()
@@ -1286,6 +1287,11 @@ namespace Crosswords
         {
             var win = new PointersWindow() {Owner = this};
             win.ShowDialog();
+        }
+
+        private void ExtraLettersTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            MakeUpperTextBoxText(ExtraLettersTextBox);
         }
     }
 }

@@ -105,13 +105,9 @@
                              Padding="4" TextChanged="FormatEntryTextBox_OnTextChanged">
                     </TextBox>
                     <Button x:Name="FormatApplyButton" Margin="12 0" Width="80" Height="26" VerticalAlignment="Center"
-                            Click="FormatApplyButton_OnClick">
-                        Apply
-                    </Button>
+                            Click="FormatApplyButton_OnClick">Apply</Button>
                     <TextBlock x:Name="FormatConflictWarningTextBlock" Foreground="Red" VerticalAlignment="Center"
-                               FontWeight="Medium">
-                        Invalid format
-                    </TextBlock>
+                               FontWeight="Medium">Invalid format</TextBlock>
                     <TextBlock Foreground="Black" VerticalAlignment="Center" FontWeight="Medium" Margin="8 0 4 0">Pick word lengths</TextBlock>
                     <ComboBox x:Name="CluePatternCombo" Width="128" VerticalAlignment="Center" FontSize="16" FontFamily="Lucida Console" SelectionChanged="CluePatternCombo_OnSelectionChanged"></ComboBox>
                     <TextBlock Foreground="Black" VerticalAlignment="Center" FontWeight="Medium" Margin="8 0 4 0">Pick format</TextBlock>
@@ -178,10 +174,10 @@
                               ToolTip="Only words which make another word when reversed">Reversible</CheckBox>
                 </DockPanel>
                 
-                <DockPanel Grid.Column="1" Grid.Row="2">
-                    <TextBlock VerticalAlignment="Center" Margin="4 0 4 0" >Also including</TextBlock>
-                    <TextBox Margin="0 2 0 2" FontSize="16"
-                             FontFamily="Lucida Console" ToolTip="Additional letters to be included" ></TextBox>
+                <DockPanel Grid.Column="1" Grid.Row="2" LastChildFill="False">
+                    <TextBlock VerticalAlignment="Center" Margin="4 0 4 0" >Must also include</TextBlock>
+                    <TextBox x:Name="ExtraLettersTextBox" Margin="4 2 4 2" Padding="4" FontSize="16" Width="200"
+                             FontFamily="Lucida Console" ToolTip="Additional letters to be included" TextChanged="ExtraLettersTextBox_OnTextChanged" ></TextBox>
                 </DockPanel>
                 
                 <DockPanel Grid.Column="1" Grid.Row="3">
