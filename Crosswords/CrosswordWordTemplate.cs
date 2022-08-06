@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 
 namespace Crosswords;
@@ -149,7 +150,7 @@ public class CrosswordWordTemplate
         return !unmatchedFlag;
     }
 
-    public bool MatchesTemplateWithExtraChars(CrosswordWordTemplate template, string extras)
+    public bool MatchesTemplateWithExtraCharsToBeIncluded(CrosswordWordTemplate template, string extras)
     {
         // Assuming that this CrosswordWordTemplate (to be compared with template parameter) contains no wildcards
         
@@ -171,32 +172,21 @@ public class CrosswordWordTemplate
             return false;
         }
         
-        // Find letters in this word not used in matching the given letters in the template
-        
-    
-        string onlyWildCards = Stringy(UnSpacedLength, '.');
-        
-        if (template.UnSpaced == onlyWildCards)
-        {
-            // TODO Check extras as well
-            return true; // the template parameter is all wildcards and the same length and spacing as this word
-        }
-
         // Check whether all literal letters in template match this word
-        StringBuilder unmatchedLetters =new StringBuilder();
-        bool mismatch = false;
-        for (int n = 0; n < UnSpacedLength; n++)
+        var unmatchedLetters =new StringBuilder(); // Find letters in this word not used in matching the given letters in the template
+        var mismatch = false;
+        for (var n = 0; n < UnSpacedLength; n++)
         {
-            char moi = UnSpaced[n];
-            char toi = template.UnSpaced[n];
+            var moi = UnSpaced[n];
+            var toi = template.UnSpaced[n];
             if (toi == '.') // template character is a wildcard
             {
                 unmatchedLetters.Append(UnAccent(moi));
             }
             else // template character is an actual letter, not a wildcard
             {
-                char moiPlain = UnAccent(moi); // ignore accents on characters - convert to plain character
-                char toiPlain = UnAccent(toi);
+                var moiPlain = UnAccent(moi); // ignore accents on characters - convert to plain character
+                var toiPlain = UnAccent(toi);
                 if (moiPlain != toiPlain) // word and matching template both specify a letter in this position but they are different
                 {
                     mismatch = true;
@@ -209,14 +199,17 @@ public class CrosswordWordTemplate
         {
             return false;
         }
-
-        // TODO Amend to cope with repeated letters e.g. if needs to include SS don't just check for S once
-        var unconsumedLetters = unmatchedLetters.ToString().ToUpper(CultureInfo.CurrentCulture);
         
+        var unconsumedLetters = unmatchedLetters.ToString().ToUpper(CultureInfo.CurrentCulture);
+        var unconsumed = unconsumedLetters.ToCharArray().ToList();
         foreach (var extra in extras)
         {
             var u = UnAccent(extra);
-            if (!unconsumedLetters.Contains(u))
+            if (unconsumed.Contains(u))
+            {
+                unconsumed.Remove(u); // In case more than one copy of the same letter is included in extras
+            }
+            else
             {
                 mismatch = true;
                 break;

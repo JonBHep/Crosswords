@@ -178,7 +178,7 @@ public class Connu
             if (mot is { } word)
             {
                 var wordTemplate = new CrosswordWordTemplate(word);
-                if (wordTemplate.MatchesTemplateWithExtraChars(template, extras))
+                if (wordTemplate.MatchesTemplateWithExtraCharsToBeIncluded(template, extras))
                 {
                     if (char.IsUpper(word[0]) || !onlyCapitalised)
                     {

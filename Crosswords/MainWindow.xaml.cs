@@ -603,6 +603,7 @@ namespace Crosswords
             FormatEntryTextBox.Text = cloo.Content.Format;
             FillCluePatternCombo(cloo.WordLength);
             PatternTextBox.Text = TemplateTextBox.Text = _puzzle.PatternedWordConstrained(clueCode);
+            ExtraLettersTextBox.Clear();
             WarnLettersVsClue();
             CountTemplateMatches();
         }
