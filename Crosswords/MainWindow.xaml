@@ -58,9 +58,9 @@
                     Clear
                 </Button>    
                 
-                <ComboBox Margin="6 0 0 0" VerticalAlignment="Center" Width="140" Height="24" x:Name="ColourComboBox"
-                          SelectionChanged="ColourComboBox_OnSelectionChanged">
-                </ComboBox>
+                <!-- <ComboBox Margin="6 0 0 0" VerticalAlignment="Center" Width="140" Height="24" x:Name="ColourComboBox" -->
+                <!--           SelectionChanged="ColourComboBox_OnSelectionChanged"> -->
+                <!-- </ComboBox> -->
                 <TextBlock x:Name="ProgressTextBlock" VerticalAlignment="Center" Margin="20 0 0 0" FontSize="16" FontWeight="Bold" Text="[progress]"></TextBlock>
             </DockPanel>
             
