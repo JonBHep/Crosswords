@@ -147,6 +147,7 @@
                 </Grid.RowDefinitions>
                 
                 <DockPanel>
+                    <TextBlock FontWeight="Medium" Margin="4 0 4 0" TextAlignment="Center" VerticalAlignment="Center">Anagrams</TextBlock>
                     <TextBox x:Name="AnagramTextBox" Margin="4 2 0 4" Width="200" FontSize="16"
                              FontFamily="Lucida Console" Padding="4" TextChanged="AnagramTextBox_OnTextChanged">
                     </TextBox>
@@ -159,6 +160,7 @@
                 </DockPanel>
                 
                 <DockPanel Grid.Row="0" Grid.Column="1" LastChildFill="False">
+                    <TextBlock FontWeight="Medium" Margin="4 0 4 0" TextAlignment="Center" VerticalAlignment="Center">Pattern matching</TextBlock>
                     <TextBox x:Name="TemplateTextBox" Margin="4 2 2 4" Width="200" FontSize="16"
                              FontFamily="Lucida Console" Padding="4" TextChanged="TemplateTextBox_OnTextChanged">
                     </TextBox>
@@ -181,6 +183,8 @@
                 </DockPanel>
                 
                 <DockPanel Grid.Column="1" Grid.Row="3">
+                    <Button x:Name="ListEachButton" DockPanel.Dock="Right" Margin="4 0 0 0" Width="80" Height="26" VerticalAlignment="Center"
+                            Click="TemplateListEachButton_OnClick" ToolTip="List matches for individual words">List all</Button>
                     <Button DockPanel.Dock="Right" Margin="4 0 0 0" Width="80" Height="26" VerticalAlignment="Center"
                             Click="TemplateListButton_OnClick" ToolTip="List template matches">List</Button>
                     <TextBlock x:Name="TemplateCountBlock" Margin="6 0 0 0" VerticalAlignment="Center">Matches: 0</TextBlock>    
@@ -190,7 +194,7 @@
                          MouseDoubleClick="AnagramBox_OnMouseDoubleClick">
                 </ListBox>
                 
-                <ListBox x:Name="TemplateListBox" Margin="2 4 2 0" FontFamily="Lucida Console" FontSize="14" Grid.Row="4" Grid.Column="1"
+                <ListBox x:Name="TemplateListBox" Margin="2 4 0 0" FontFamily="Lucida Console" FontSize="14" Grid.Row="4" Grid.Column="1"
                          MouseDoubleClick="TemplateBox_OnMouseDoubleClick">
                 </ListBox>
             </Grid>

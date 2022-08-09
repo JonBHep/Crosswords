@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Windows.Input;
 
 namespace Crosswords;
 
@@ -110,7 +109,7 @@ public class CrosswordGrid
         LocateIndices();
     }
 
-    public string? ClueSharingCell(GridPoint point, string clueKey, out char otherClueLetter)
+    private string? ClueSharingCell(GridPoint point, string clueKey, out char otherClueLetter)
     {
         string? retVal = null;
         otherClueLetter = '.'; // arbitrary default value
@@ -314,23 +313,16 @@ public class CrosswordGrid
 
         StringBuilder aliens = new StringBuilder();
         List<GridPoint> cellList = clu.IncludedCells();
-        for (int z = 0; z < cellList.Count; z++)
+        foreach (var t in cellList)
         {
-            string? autreClef = ClueSharingCell(cellList[z], clueKey, out char alienChar);
+            string? autreClef = ClueSharingCell(t, clueKey, out char alienChar);
             if (autreClef is null)
             {
                 aliens.Append(Clue.UnknownLetterChar);
             }
             else
             {
-                if (_clus[autreClef].IsComplete())
-                {
-                    aliens.Append(alienChar);
-                }
-                else
-                {
-                    aliens.Append(Clue.UnknownLetterChar);
-                }
+                aliens.Append(_clus[autreClef].IsComplete() ? alienChar : Clue.UnknownLetterChar);
             }
         }
 
@@ -377,23 +369,16 @@ public class CrosswordGrid
 
         StringBuilder aliens = new StringBuilder();
         List<GridPoint> cellList = clu.IncludedCells();
-        for (int z = 0; z < cellList.Count; z++)
+        foreach (var t in cellList)
         {
-            string? autreClef = ClueSharingCell(cellList[z], clueKey, out char alienChar);
+            string? autreClef = ClueSharingCell(t, clueKey, out char alienChar);
             if (autreClef is null)
             {
                 aliens.Append(Clue.UnknownLetterChar);
             }
             else
             {
-                if (_clus[autreClef].IsComplete())
-                {
-                    aliens.Append(alienChar);
-                }
-                else
-                {
-                    aliens.Append(Clue.UnknownLetterChar);
-                }
+                aliens.Append(_clus[autreClef].IsComplete() ? alienChar : Clue.UnknownLetterChar);
             }
         }
 

@@ -57,7 +57,6 @@ namespace Crosswords
             ProgressTextBlock.Text = string.Empty;
             SwitchClueControls(false);
             FillGamesComboBox();
-            // FillColourComboBox();
         }
 
         private void SwitchClueControls(bool on)
@@ -80,6 +79,7 @@ namespace Crosswords
             NameTextBlock.Text = "Choose Open or New";
             SwitchClueControls(false);
             VocabButton.IsEnabled = false;
+            ListEachButton.IsEnabled = false;
         }
 
         private void DisplayGrid()
@@ -607,6 +607,7 @@ namespace Crosswords
             FormatEntryTextBox.Text = cloo.Content.Format;
             FillCluePatternCombo(cloo.WordLength);
             PatternTextBox.Text = TemplateTextBox.Text = _puzzle.PatternedWordConstrained(clueCode);
+            ListEachButton.IsEnabled = false;
             ExtraLettersTextBox.Clear();
             WarnLettersVsClue();
             CountTemplateMatches();
@@ -827,11 +828,13 @@ namespace Crosswords
         private void TemplateListButton_OnClick(object sender, RoutedEventArgs e)
         {
             ListTemplateMatches();
+            
         }
         private void TemplateCountButton_OnClick(object sender, RoutedEventArgs e)
         {
             CountTemplateMatches();
         }
+       
         
         private void ListTemplateMatches()
         {
@@ -844,18 +847,75 @@ namespace Crosswords
             }
             var g = TemplateListBox.Items.Count;
             TemplateCountBlock.Text = (g < 1) ? "No matches" : g > 1 ? $"{g:#,0} matches" : "1 match";
+            
+            var pattern =TemplateTextBox.Text.Trim().Replace('-', ' '); // make all word breaks spaces (no hyphens)
+            var words = pattern.Split(" ");
+            ListEachButton.IsEnabled = words.Length > 1;
+            
             Cursor = Cursors.Arrow;
         }
         
         private List<string> TemplateMatchesList()
         {
-            // TODO For multiple-word clues find the words individually as well as in phrases
-            bool onlyCaps = CapitalsCheckBox.IsChecked ?? false;
-            bool onlyRevs = ReversibleCheckBox.IsChecked ?? false;
-            string pattern = TemplateTextBox.Text;
-            string extras = ExtraLettersTextBox.Text.Trim();
+            var onlyCaps = CapitalsCheckBox.IsChecked ?? false;
+            var onlyRevs = ReversibleCheckBox.IsChecked ?? false;
+            var pattern = TemplateTextBox.Text;
+            var extras = ExtraLettersTextBox.Text.Trim();
             var known = new Connu();
             return known.GetTemplateMatches(pattern, onlyCaps, onlyRevs, extras);
+        }
+        
+        // private List<string> TemplateMatchesIndividualWordsList()
+        // {
+        //     var onlyCaps =false;
+        //     var onlyRevs = false;
+        //     var pattern = TemplateTextBox.Text.Trim();
+        //     var extras =string.Empty;
+        //     var known = new Connu();
+        //     pattern = pattern.Replace('-', ' '); // make all word breaks spaces (no hyphens)
+        //     string[] words = pattern.Split(" ");
+        //     var splitList = new List<string>();
+        //     if (words.Length < 2)
+        //     {
+        //         return splitList;
+        //     }
+        //     foreach (var word in words)
+        //     {
+        //         splitList.AddRange(known.GetTemplateMatches(word, onlyCaps, onlyRevs, extras));    
+        //     }
+        //
+        //     return splitList;
+        // }
+        private void DisplayTemplateMatchesIndividualWordsList()
+        {
+            var onlyCaps =false;
+            var onlyRevs = false;
+            var pattern = TemplateTextBox.Text.Trim();
+            var extras =string.Empty;
+            var known = new Connu();
+            pattern = pattern.Replace('-', ' '); // make all word breaks spaces (no hyphens)
+            string[] words = pattern.Split(" ");
+            if (words.Length < 2)
+            {
+                return;
+            }
+
+            int w = 1;
+            foreach (var word in words)
+            {
+                TemplateListBox.Items.Add(new ListBoxItem()
+                {
+                    IsHitTestVisible = false
+                    , Content = new TextBlock()
+                        {Text = $"WORD {w}", FontWeight = FontWeights.Bold, Foreground = Brushes.Blue}
+                });
+                
+                var splitList = known.GetTemplateMatches(word, onlyCaps, onlyRevs, extras);
+                foreach (string s in splitList)
+                {
+                    TemplateListBox.Items.Add(s);
+                }
+            }
         }
         
         private void CountTemplateMatches()
@@ -940,36 +1000,7 @@ namespace Crosswords
                 LoadPuzzleFromFile(path);
             }
         }
-
-        // private void FillColourComboBox()
-        // {
-        //     ColourComboBox.Items.Clear();
-        //     ColourComboBox.Items.Add(new ListBoxItem()
-        //         {Tag = Brushes.Black, Content = new Rectangle() {Width = 128, Height = 16, Fill = Brushes.Black}});
-        //     ColourComboBox.Items.Add(new ListBoxItem()
-        //     {
-        //         Tag = Brushes.RoyalBlue, Content = new Rectangle() {Width = 128, Height = 16, Fill = Brushes.RoyalBlue}
-        //     });
-        //     ColourComboBox.Items.Add(new ListBoxItem()
-        //     {
-        //         Tag = Brushes.SaddleBrown
-        //         , Content = new Rectangle() {Width = 128, Height = 16, Fill = Brushes.SaddleBrown}
-        //     });
-        //     ColourComboBox.Items.Add(new ListBoxItem()
-        //     {
-        //         Tag = Brushes.ForestGreen
-        //         , Content = new Rectangle() {Width = 128, Height = 16, Fill = Brushes.ForestGreen}
-        //     });
-        //     ColourComboBox.Items.Add(new ListBoxItem()
-        //     {
-        //         Tag = Brushes.DarkViolet
-        //         , Content = new Rectangle() {Width = 128, Height = 16, Fill = Brushes.DarkViolet}
-        //     });
-        //     ColourComboBox.Items.Add(new ListBoxItem()
-        //         {Tag = Brushes.Crimson, Content = new Rectangle() {Width = 128, Height = 16, Fill = Brushes.Crimson}});
-        //     ColourComboBox.SelectedIndex = 0;
-        // }
-
+       
         private void FillGamesComboBox()
         {
             GamesComboBox.Items.Clear();
@@ -1275,6 +1306,15 @@ namespace Crosswords
         private void ExtraLettersTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
         {
             MakeUpperTextBoxText(ExtraLettersTextBox);
+        }
+
+        private void TemplateListEachButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            Cursor= Cursors.Wait;
+            ListEachButton.IsEnabled = false;
+            TemplateListBox.Items.Clear();
+            DisplayTemplateMatchesIndividualWordsList();
+            Cursor = Cursors.Arrow;
         }
     }
 }
