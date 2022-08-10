@@ -456,6 +456,7 @@ namespace Crosswords
 
             NameTextBlock.Text = _xWordTitle;
             LoadPuzzleFromFile(cwin.NameOfTheGame);
+            
             DisplayGrid();
             SwitchClueControls(false);
         }
@@ -513,6 +514,8 @@ namespace Crosswords
         {
             SaveCrossword();
             VocabButton.IsEnabled = false;
+            AnagramTextBox.Clear();
+            TemplateTextBox.Clear();
             using (StreamReader rdr = new StreamReader(puzzlePath, Clue.JbhEncoding))
             {
                 // load puzzle grid

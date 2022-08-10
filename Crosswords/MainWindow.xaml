@@ -25,7 +25,7 @@
             <Border Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" Margin="256,16,0,0" Background="SandyBrown" Height="28" Width="64" CornerRadius="8">
                 <TextBlock FontSize="14" Foreground="PapayaWhip" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium">NET6.0</TextBlock>
             </Border>
-            <TextBlock Margin="17,17,0,0" FontFamily="AR Julian" FontSize="32" Foreground="SaddleBrown">CROSSWORDS</TextBlock>
+            <TextBlock Grid.Row="0" Margin="17,17,0,0" FontFamily="AR Julian" FontSize="32" Foreground="SaddleBrown">CROSSWORDS</TextBlock>
             <TextBlock Grid.Row="0" Margin="16,16,0,0" FontFamily="AR Julian" FontSize="32" Foreground="SandyBrown">CROSSWORDS</TextBlock>
             
 
@@ -58,9 +58,6 @@
                     Clear
                 </Button>    
                 
-                <!-- <ComboBox Margin="6 0 0 0" VerticalAlignment="Center" Width="140" Height="24" x:Name="ColourComboBox" -->
-                <!--           SelectionChanged="ColourComboBox_OnSelectionChanged"> -->
-                <!-- </ComboBox> -->
                 <TextBlock x:Name="ProgressTextBlock" VerticalAlignment="Center" Margin="20 0 0 0" FontSize="16" FontWeight="Bold" Text="[progress]"></TextBlock>
             </DockPanel>
             
