@@ -27,6 +27,8 @@ namespace Crosswords
             _puzzle = new CrosswordGrid(defaultSpecification);
         }
 
+        // TODO Limit chars that can be entered in word entry box (letters only no spaces)
+
         private const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         private readonly double _squareSide = 36;
         private readonly double _letterWidth = 30;
@@ -54,7 +56,7 @@ namespace Crosswords
             Height = winY;
             Left = xm;
             Top = ym;
-            ProgressTextBlock.Text = string.Empty;
+            PuzzleHeaderDockPanel.Visibility = Visibility.Hidden;
             SwitchClueControls(false);
             FillGamesComboBox();
         }
@@ -429,6 +431,9 @@ namespace Crosswords
                     ProgressTextBlock.Inlines.Add(new Run()
                         {Text = $" [{clueCount - cluesDone}]", Foreground = Brushes.Tomato});
                 }
+
+                PuzzleProgressBar.Maximum = clueCount;
+                PuzzleProgressBar.Value = cluesDone;
             }
 
             if (cluesDone == clueCount)
@@ -455,6 +460,7 @@ namespace Crosswords
             }
 
             NameTextBlock.Text = _xWordTitle;
+            PuzzleHeaderDockPanel.Visibility = Visibility.Visible;
             LoadPuzzleFromFile(cwin.NameOfTheGame);
             
             DisplayGrid();
@@ -667,18 +673,36 @@ namespace Crosswords
             CluePatternCombo.SelectedIndex = -1;
         }
 
-        private void ClueEntryTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void LettersEntryTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            CleanGivenLetters();
             WarnLettersVsClue();
         }
 
+        private void CleanGivenLetters()
+        {
+            string given = LettersEntryTextBox.Text.ToUpper();
+            string reformed = string.Empty;
+            int p = LettersEntryTextBox.CaretIndex;
+            for (int x = 0; x < given.Length; x++)
+            {
+                if (char.IsLetter(given[x]))
+                {
+                    reformed += given[x];
+                }
+            }
+
+            LettersEntryTextBox.Text = reformed;
+            LettersEntryTextBox.CaretIndex = p; 
+        }
+        
         private void WarnLettersVsClue()
         {
             if (!string.IsNullOrWhiteSpace(_selectedClueKey))
             {
                 SolidColorBrush warning = Brushes.IndianRed;
                 string pattern = _puzzle.UnPatternedWordConstrained(_selectedClueKey);
-                string given = LettersEntryTextBox.Text.ToUpper();
+                string given = LettersEntryTextBox.Text.ToUpper().Trim();
                 int p = LettersEntryTextBox.CaretIndex;
                 LettersEntryTextBox.Text = given;
                 LettersEntryTextBox.CaretIndex = p;
@@ -868,27 +892,7 @@ namespace Crosswords
             return known.GetTemplateMatches(pattern, onlyCaps, onlyRevs, extras);
         }
         
-        // private List<string> TemplateMatchesIndividualWordsList()
-        // {
-        //     var onlyCaps =false;
-        //     var onlyRevs = false;
-        //     var pattern = TemplateTextBox.Text.Trim();
-        //     var extras =string.Empty;
-        //     var known = new Connu();
-        //     pattern = pattern.Replace('-', ' '); // make all word breaks spaces (no hyphens)
-        //     string[] words = pattern.Split(" ");
-        //     var splitList = new List<string>();
-        //     if (words.Length < 2)
-        //     {
-        //         return splitList;
-        //     }
-        //     foreach (var word in words)
-        //     {
-        //         splitList.AddRange(known.GetTemplateMatches(word, onlyCaps, onlyRevs, extras));    
-        //     }
-        //
-        //     return splitList;
-        // }
+        
         private void DisplayTemplateMatchesIndividualWordsList()
         {
             var onlyCaps =false;
@@ -914,10 +918,12 @@ namespace Crosswords
                 });
                 
                 var splitList = known.GetTemplateMatches(word, onlyCaps, onlyRevs, extras);
-                foreach (string s in splitList)
+                foreach (var s in splitList)
                 {
                     TemplateListBox.Items.Add(s);
                 }
+
+                w++;
             }
         }
         
@@ -1000,6 +1006,7 @@ namespace Crosswords
             if (GamesComboBox.SelectedItem is ComboBoxItem {Tag: string path})
             {
                 OpenButton.IsEnabled = false;
+                PuzzleHeaderDockPanel.Visibility = Visibility.Visible;
                 LoadPuzzleFromFile(path);
             }
         }

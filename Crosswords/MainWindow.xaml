@@ -51,14 +51,14 @@
                 <TextBlock x:Name="NameTextBlock" Margin="8 0 0 0" FontSize="16" FontWeight="Bold">default</TextBlock>
             </DockPanel>
             
-            <DockPanel Grid.Row="3" Margin="12 12 12 0" LastChildFill="False">
+            <DockPanel x:Name="PuzzleHeaderDockPanel" Grid.Row="3" Margin="12 12 12 0" LastChildFill="False">
                 <Button HorizontalAlignment="Left" Width="80" Height="26"
                         ToolTip="Clear letters (the grid and clue letter patterns are not affected)"
                         Click="ClearAllButton_Click">
                     Clear
-                </Button>    
-                
-                <TextBlock x:Name="ProgressTextBlock" VerticalAlignment="Center" Margin="20 0 0 0" FontSize="16" FontWeight="Bold" Text="[progress]"></TextBlock>
+                </Button>
+                <ProgressBar DockPanel.Dock="Right" x:Name="PuzzleProgressBar" Width="166" Height="12" Margin="12 0 0 0" Foreground="RoyalBlue" Background="Gray" BorderBrush="Gray"></ProgressBar>
+                <TextBlock x:Name="ProgressTextBlock" VerticalAlignment="Center" Margin="12 0 0 0" FontSize="16" FontWeight="Bold" Text="[progress]"></TextBlock>
             </DockPanel>
             
             <Border Grid.Row="4" BorderBrush="Tan" BorderThickness="1.5" CornerRadius="8" Margin="4">
@@ -84,7 +84,7 @@
                 <DockPanel Grid.Row="0" Grid.Column="0" Margin="12 6">
                     <TextBlock x:Name="LettersCaption" VerticalAlignment="Center" FontWeight="Medium" Width="72">Letters:</TextBlock>
                     <TextBox x:Name="LettersEntryTextBox" AcceptsReturn="False" Width="200" FontSize="16" VerticalAlignment="Center"
-                             FontFamily="Lucida Console" Padding="4" TextChanged="ClueEntryTextBox_TextChanged">
+                             FontFamily="Lucida Console" Padding="4" TextChanged="LettersEntryTextBox_TextChanged">
                     </TextBox>
                     <Button x:Name="LettersApplyButton" Margin="12 0" Width="80" Height="26" VerticalAlignment="Center"
                             Click="LettersApplyButton_Click">
