@@ -19,8 +19,7 @@ namespace Crosswords
     {
         // https://www.crosswordunclued.com/2009/09/crossword-grid-symmetry.html
 
-        // TODO Find airlift when looking for air lift
-        
+       
         public MainWindow()
         {
             InitializeComponent();

@@ -5,6 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         mc:Ignorable="d"
         Title="Crosswords" ShowInTaskbar="False" Height="650" Width="1200" Loaded="Window_Loaded" ContentRendered="Window_ContentRendered" Background="Moccasin" >
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
@@ -27,10 +28,14 @@
                 <Button x:Name="ApplyDimensionsButton" Width="80" Height="26" Margin="8 0 0 0" Click="ApplyDimensionsButton_OnClick">Apply</Button>
             </DockPanel>
             
-            
             <DockPanel  DockPanel.Dock="Top" Margin="12 12 12 0" LastChildFill="False">
                 <Button x:Name="StartButton" Width="80" Height="26" Click="StartPatternButton_OnClick" IsEnabled="False">Start</Button>
-                <TextBlock VerticalAlignment="Center" Margin="8 0 0 0" FontFamily="Lucida Console">add a starting pattern</TextBlock>
+                <TextBlock VerticalAlignment="Center" Margin="8 0 0 0" FontFamily="Lucida Console">add a starting pattern, staring at X=1, Y=1</TextBlock>
+            </DockPanel>
+            
+            <DockPanel  DockPanel.Dock="Top" Margin="12 12 12 0" LastChildFill="False">
+                <Button x:Name="StartButtonTwo" Width="80" Height="26" Click="StartPatternTwoButton_OnClick" IsEnabled="False">Start</Button>
+                <TextBlock VerticalAlignment="Center" Margin="8 0 0 0" FontFamily="Lucida Console">add a starting pattern, staring at X=2, Y=2</TextBlock>
             </DockPanel>
             
             <CheckBox DockPanel.Dock="Top" Margin="12" x:Name="SymmCheckBox" FontFamily="Lucida Console" VerticalContentAlignment="Center" IsChecked="True" >Apply rotational symmetry</CheckBox>
