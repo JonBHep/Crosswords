@@ -166,8 +166,6 @@ public class Connu
     
     public List<string> GetTemplateMatches(string pattern, bool onlyCapitalised, bool onlyReversibles, string extras)
     {
-        // TODO For multiple-word clues find the words individually as well as in phrases
-
         var results = new List<string>();
         var template = new CrosswordWordTemplate(pattern);
         List<string> matches = new();

@@ -19,6 +19,8 @@ namespace Crosswords
     {
         // https://www.crosswordunclued.com/2009/09/crossword-grid-symmetry.html
 
+        // TODO Find airlift when looking for air lift
+        
         public MainWindow()
         {
             InitializeComponent();
@@ -27,18 +29,16 @@ namespace Crosswords
             _puzzle = new CrosswordGrid(defaultSpecification);
         }
 
-        // TODO Limit chars that can be entered in word entry box (letters only no spaces)
-
         private const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        private readonly double _squareSide = 36;
-        private readonly double _letterWidth = 30;
+        private const double SquareSide = 36;
+        private const double LetterWidth = 30;
         private readonly FontFamily _fixedFont = new("Liberation Mono");
         private CrosswordGrid _puzzle;
         private string _xWordTitle = "default";
         
-        private Brush _barBrush = Brushes.Blue;
-        private Brush _letterBrush = Brushes.Black;
-        private Brush _blackSquareBrush = Brushes.DimGray;
+        private readonly Brush _barBrush = Brushes.Blue;
+        private readonly Brush _letterBrush = Brushes.Black;
+        private readonly Brush _blackSquareBrush = Brushes.DimGray;
         
         private string _selectedClueKey = string.Empty;
         private bool _disableCheckBoxesTrigger;
@@ -46,12 +46,12 @@ namespace Crosswords
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            double scrX = SystemParameters.PrimaryScreenWidth;
-            double scrY = SystemParameters.PrimaryScreenHeight;
-            double winX = scrX * .98;
-            double winY = scrY * .94;
-            double xm = (scrX - winX) / 2;
-            double ym = (scrY - winY) / 4;
+            var scrX = SystemParameters.PrimaryScreenWidth;
+            var scrY = SystemParameters.PrimaryScreenHeight;
+            var winX = scrX * .98;
+            var winY = scrY * .94;
+            var xm = (scrX - winX) / 2;
+            var ym = (scrY - winY) / 4;
             Width = winX;
             Height = winY;
             Left = xm;
@@ -103,7 +103,7 @@ namespace Crosswords
             for (int x = 0; x < _puzzle.Width; x++) // add column definitions
             {
                 XwordGrid.ColumnDefinitions.Add(new ColumnDefinition()
-                    {Width = new GridLength(_squareSide)}); // column of letter squares
+                    {Width = new GridLength(SquareSide)}); // column of letter squares
                 XwordGrid.ColumnDefinitions.Add(new ColumnDefinition()
                     {Width = new GridLength(gapSize)}); // gap between columns
             }
@@ -114,7 +114,7 @@ namespace Crosswords
             for (int y = 0; y < _puzzle.Height; y++) // add row definitions
             {
                 XwordGrid.RowDefinitions.Add(new RowDefinition()
-                    {Height = new GridLength(_squareSide)}); // row of letter squares
+                    {Height = new GridLength(SquareSide)}); // row of letter squares
                 XwordGrid.RowDefinitions.Add(new RowDefinition()
                     {Height = new GridLength(gapSize)}); // gap between rows
             }
@@ -189,7 +189,7 @@ namespace Crosswords
                                 TextBlock letterBlock = new TextBlock()
                                 {
                                     FontFamily = ff, FontSize = 22, Text = t.ToString(), FontWeight = FontWeights.Bold
-                                    , Foreground = _letterBrush, Width = _letterWidth, TextAlignment = TextAlignment.Center
+                                    , Foreground = _letterBrush, Width = LetterWidth, TextAlignment = TextAlignment.Center
                                 };
                                 Canvas.SetLeft(letterBlock, 2);
                                 Canvas.SetTop(letterBlock, 6);
@@ -219,7 +219,7 @@ namespace Crosswords
                                 var letterBlock = new TextBlock()
                                 {
                                     FontFamily = ff, FontSize = 22, Text = t.ToString(), FontWeight = FontWeights.Bold
-                                    , Foreground = _letterBrush, Width = _letterWidth, TextAlignment = TextAlignment.Center
+                                    , Foreground = _letterBrush, Width = LetterWidth, TextAlignment = TextAlignment.Center
                                 };
                                 Canvas.SetLeft(letterBlock, 2);
                                 Canvas.SetTop(letterBlock, 6);
@@ -599,9 +599,9 @@ namespace Crosswords
 
         private void ClueListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (sender is ListBox {SelectedItem: ListBoxItem {Tag: string k}})
+            if (sender is ListBox {SelectedItem: ListBoxItem {Tag: string k} })
             {
-                ShowClueDetails(k);
+               ShowClueDetails(k);
             }
         }
 
@@ -681,14 +681,14 @@ namespace Crosswords
 
         private void CleanGivenLetters()
         {
-            string given = LettersEntryTextBox.Text.ToUpper();
-            string reformed = string.Empty;
-            int p = LettersEntryTextBox.CaretIndex;
-            for (int x = 0; x < given.Length; x++)
+            var given = LettersEntryTextBox.Text.ToUpper();
+            var reformed = string.Empty;
+            var p = LettersEntryTextBox.CaretIndex;
+            foreach (var t in given)
             {
-                if (char.IsLetter(given[x]))
+                if (char.IsLetter(t))
                 {
-                    reformed += given[x];
+                    reformed += t;
                 }
             }
 
