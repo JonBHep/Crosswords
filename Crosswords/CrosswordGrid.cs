@@ -384,8 +384,8 @@ public class CrosswordGrid
 
         return aliens.ToString();
     }
-    public void AddClue(Clue cloo)
-    {
-        _clus.Add(cloo.Key, cloo);
-    }
+    // public void AddClue(Clue cloo)
+    // {
+    //     _clus.Add(cloo.Key, cloo);
+    // }
 }

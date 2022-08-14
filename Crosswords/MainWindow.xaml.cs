@@ -615,12 +615,21 @@ namespace Crosswords
             FormatEntryTextBox.Text = cloo.Content.Format;
             FillCluePatternCombo(cloo.WordLength);
             PatternTextBox.Text = TemplateTextBox.Text = _puzzle.PatternedWordConstrained(clueCode);
+            ShowUnspacedCheckBox();
             ListEachButton.IsEnabled = false;
             ExtraLettersTextBox.Clear();
             WarnLettersVsClue();
             CountTemplateMatches();
         }
 
+        private void ShowUnspacedCheckBox()
+        {
+            var enable = TemplateTextBox.Text.Contains(' ') || TemplateTextBox.Text.Contains('-');
+
+            UnspacedCheckBox.IsChecked = false;
+            UnspacedCheckBox.Visibility = enable  ? Visibility.Visible: Visibility.Hidden;
+        }
+        
         private void HighLightClueInGrid(Clue indice)
         {
             for (int xx = 0; xx < _puzzle.Width; xx++)

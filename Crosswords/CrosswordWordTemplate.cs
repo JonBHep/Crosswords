@@ -167,8 +167,8 @@ public class CrosswordWordTemplate
         }
         
         
-        // NOTE If specified by parameter, allow match with an unspaced word so that search for 'air field' finds 'airfield';
-        // so we reject a differently spaced word but not an unspaced word
+        // NOTE If specified by parameter, allow match with an un-spaced word so that search for 'air field' finds 'airfield';
+        // so we reject a differently spaced word but not an un-spaced word
         if (includeUnSpacedWords)
         {
             if (Gaps != "")
