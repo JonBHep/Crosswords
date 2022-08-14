@@ -172,6 +172,9 @@
                     <CheckBox x:Name="ReversibleCheckBox" VerticalAlignment="Center" Margin="4 0 0 0"
                               Checked="Capitals_Toggled" Unchecked="Capitals_Toggled" 
                               ToolTip="Only include words which make another word when reversed">Reversible</CheckBox>
+                    <CheckBox x:Name="UnspacedCheckBox" VerticalAlignment="Center" Margin="4 0 0 0"
+                              Checked="Capitals_Toggled" Unchecked="Capitals_Toggled" 
+                              ToolTip="Also include matching words without spaces or hyphens">Include un-spaced matches</CheckBox>
                 </DockPanel>
                 
                 <DockPanel Grid.Column="1" Grid.Row="2" LastChildFill="False">

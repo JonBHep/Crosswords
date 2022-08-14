@@ -150,7 +150,7 @@ public class CrosswordWordTemplate
         return !unmatchedFlag;
     }
 
-    public bool MatchesTemplateWithExtraCharsToBeIncluded(CrosswordWordTemplate template, string extras)
+    public bool MatchesTemplateWithExtraCharsToBeIncluded(CrosswordWordTemplate template, string extras, bool includeUnSpacedWords)
     {
         // Assuming that this CrosswordWordTemplate (to be compared with pattern in template parameter) contains no wildcards
         
@@ -167,8 +167,20 @@ public class CrosswordWordTemplate
         }
         
         
-        // NOTE Experimentally, always allow match with unspaced word so that search for 'air field' finds 'airfield'; so we reject a differently spaced word but not an unspaced word
-        if (Gaps != "")
+        // NOTE If specified by parameter, allow match with an unspaced word so that search for 'air field' finds 'airfield';
+        // so we reject a differently spaced word but not an unspaced word
+        if (includeUnSpacedWords)
+        {
+            if (Gaps != "")
+            {
+                if (template.Gaps != Gaps)
+                {
+                    // whether the pattern of gaps between words matches (ignoring whether the gaps are spaces or hyphens)
+                    return false;
+                }
+            }    
+        }
+        else
         {
             if (template.Gaps != Gaps)
             {
@@ -176,12 +188,6 @@ public class CrosswordWordTemplate
                 return false;
             }
         }
-        
-        // if (template.Gaps != Gaps)
-        // {
-        //     // whether the pattern of gaps between words matches (ignoring whether the gaps are spaces or hyphens)
-        //     return false;
-        // }
         
         // Check whether all literal letters in template match this word
         var unmatchedLetters =new StringBuilder(); // Find letters in this word not used in matching the given letters in the template

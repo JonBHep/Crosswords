@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Text;
 using System.Windows;
@@ -232,20 +231,12 @@ public partial class CreationWindow
             {
                 if (x % 2 == offset)
                 {
-                    if (y % 2 == offset)
-                    {
-                        builder.Append(CrosswordGrid.BlackChar);
-                    }
-                    else
-                    {
-                        builder.Append(CrosswordGrid.WhiteChar);                    
-                    }
+                    builder.Append(y % 2 == offset ? CrosswordGrid.BlackChar : CrosswordGrid.WhiteChar);
                 }
                 else
                 {
                     builder.Append(CrosswordGrid.WhiteChar);
                 }
-                
             }
         }
 
@@ -260,9 +251,8 @@ public partial class CreationWindow
         {
             if (YDimensionComboBox.SelectedItem is ComboBoxItem {Tag: int y})
             {
-                var dx = x;
                 var dy = y == 0 ? x : y;
-                var specification = BlankGridSpecification(dx, dy);
+                var specification = BlankGridSpecification(x, dy);
                 _puzzle = new CrosswordGrid(specification);
                 DisplayGrid();
                 StartButton.IsEnabled = true;

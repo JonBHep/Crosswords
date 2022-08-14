@@ -164,7 +164,7 @@ public class Connu
         return anagrams;
     }
     
-    public List<string> GetTemplateMatches(string pattern, bool onlyCapitalised, bool onlyReversibles, string extras)
+    public List<string> GetTemplateMatches(string pattern, bool onlyCapitalised, bool onlyReversibles, bool alsoUnSpaced, string extras)
     {
         var results = new List<string>();
         var template = new CrosswordWordTemplate(pattern);
@@ -176,7 +176,7 @@ public class Connu
             if (mot is { } word)
             {
                 var wordTemplate = new CrosswordWordTemplate(word);
-                if (wordTemplate.MatchesTemplateWithExtraCharsToBeIncluded(template, extras))
+                if (wordTemplate.MatchesTemplateWithExtraCharsToBeIncluded(template, extras, alsoUnSpaced))
                 {
                     if (char.IsUpper(word[0]) || !onlyCapitalised)
                     {

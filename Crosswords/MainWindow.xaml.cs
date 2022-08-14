@@ -885,10 +885,11 @@ namespace Crosswords
         {
             var onlyCaps = CapitalsCheckBox.IsChecked ?? false;
             var onlyRevs = ReversibleCheckBox.IsChecked ?? false;
+            var alsoWhole = UnspacedCheckBox.IsChecked ?? false;
             var pattern = TemplateTextBox.Text;
             var extras = ExtraLettersTextBox.Text.Trim();
             var known = new Connu();
-            return known.GetTemplateMatches(pattern, onlyCaps, onlyRevs, extras);
+            return known.GetTemplateMatches(pattern, onlyCaps, onlyRevs, alsoWhole, extras);
         }
         
         
@@ -916,7 +917,7 @@ namespace Crosswords
                         {Text = $"WORD {w}", FontWeight = FontWeights.Bold, Foreground = Brushes.Blue}
                 });
                 
-                var splitList = known.GetTemplateMatches(word, onlyCaps, onlyRevs, extras);
+                var splitList = known.GetTemplateMatches(word, onlyCaps, onlyRevs, false, extras);
                 foreach (var s in splitList)
                 {
                     TemplateListBox.Items.Add(s);
