@@ -116,9 +116,10 @@
                 
                 <DockPanel Grid.Row="4" Grid.Column="0" Margin="12 6" LastChildFill="False">
                     <TextBlock x:Name="PatternCaption" VerticalAlignment="Center" FontWeight="Medium" Width="72">Formatted:</TextBlock>
-                    <TextBox x:Name="PatternTextBox" Width="200" VerticalAlignment="Center" FontSize="16"
-                             FontFamily="Lucida Console" IsReadOnly="True" Padding="4">
-                    </TextBox>
+                    <!-- <TextBox x:Name="PatternTextBox" Width="200" VerticalAlignment="Center" FontSize="18" -->
+                    <!--          FontFamily="Lucida Console" IsReadOnly="True" Padding="4" Background="Transparent"> -->
+                    <!-- </TextBox> -->
+                    <TextBlock x:Name="PatternTextBlock" VerticalAlignment="Center" FontSize="18" FontFamily="Lucida Console" Padding="4 0 0 0"></TextBlock>
                 </DockPanel>
                 
                 <TextBlock Grid.Row="1" Grid.Column="0" Margin="12 6" x:Name="ClueRubricBTextBlock" FontFamily="Arial">Letters only; no hyphens, spaces or unknown letters.</TextBlock>

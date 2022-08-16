@@ -345,8 +345,8 @@ namespace Crosswords
             SolidColorBrush pinceau;
             List<Clue> clueList = _puzzle.CluesAcross;
             var clueCount = clueList.Count;
-            TextBlock block = new TextBlock();
-            Run r = new Run() {Text = $"ACROSS: ", FontWeight = FontWeights.Bold, Foreground = abrush};
+            var block = new TextBlock();
+            var r = new Run() {Text = $"ACROSS: ", FontWeight = FontWeights.Bold, Foreground = abrush};
             block.Inlines.Add(r);
             r = new Run() {Text = $"{clueList.Count} clues", Foreground = abrush};
             block.Inlines.Add(r);
@@ -614,7 +614,7 @@ namespace Crosswords
             SwitchClueControls(true);
             FormatEntryTextBox.Text = cloo.Content.Format;
             FillCluePatternCombo(cloo.WordLength);
-            PatternTextBox.Text = TemplateTextBox.Text = _puzzle.PatternedWordConstrained(clueCode);
+            PatternTextBlock.Text = TemplateTextBox.Text = _puzzle.PatternedWordConstrained(clueCode);
             ShowUnspacedCheckBox();
             ListEachButton.IsEnabled = false;
             ExtraLettersTextBox.Clear();
@@ -830,7 +830,7 @@ namespace Crosswords
             {
                 Clue cloo = _puzzle.ClueOf(_selectedClueKey);
                 cloo.Content.Letters = CrosswordWordTemplate.Stringy(cloo.WordLength, Clue.UnknownLetterChar);
-                PatternTextBox.Text = _puzzle.PatternedWordConstrained(_selectedClueKey);
+                PatternTextBlock.Text = _puzzle.PatternedWordConstrained(_selectedClueKey);
                 DisplayGrid();
             }
         }
