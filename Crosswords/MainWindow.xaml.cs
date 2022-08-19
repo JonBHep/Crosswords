@@ -444,6 +444,7 @@ namespace Crosswords
 
         private void NewButton_Click(object sender, RoutedEventArgs e)
         {
+            SaveCrossword();
             CreationWindow cwin = new CreationWindow() {Owner = this};
 
             bool? q = cwin.ShowDialog();
@@ -517,7 +518,7 @@ namespace Crosswords
 
         private void LoadPuzzleFromFile(string puzzlePath)
         {
-            SaveCrossword();
+            // SaveCrossword();
             VocabButton.IsEnabled = false;
             AnagramTextBox.Clear();
             TemplateTextBox.Clear();
@@ -1012,6 +1013,7 @@ namespace Crosswords
 
         private void OpenButton_Click(object sender, RoutedEventArgs e)
         {
+            SaveCrossword();
             if (GamesComboBox.SelectedItem is ComboBoxItem {Tag: string path})
             {
                 OpenButton.IsEnabled = false;

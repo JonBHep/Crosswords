@@ -185,10 +185,10 @@ public partial class CreationWindow
                 {
                     return;
                 }
-                File.Delete(_gamePath); // because overwriting doesn't seem to work
+                // File.Delete(_gamePath); 
             }
 
-            FileStream fs = new FileStream(_gamePath, FileMode.Create);  // create (or overwrite - doesn't seem to work)
+            FileStream fs = new FileStream(_gamePath, FileMode.Create);  // create or overwrite
             using (var wri = new StreamWriter(fs, Clue.JbhEncoding))
             {
                 wri.WriteLine(_puzzle.Specification);
