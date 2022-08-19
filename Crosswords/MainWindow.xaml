@@ -32,10 +32,10 @@
             <DockPanel Grid.Row="1" Margin="12 12 12 0" LastChildFill="False">
                 <Button Width="80" Height="26" Click="NewButton_Click">New</Button>
                 <Button Width="80" Height="26" Margin="6 0 0 0" x:Name="OpenButton" Click="OpenButton_Click">Open</Button>
-                <ComboBox Margin="6 0 0 0" VerticalAlignment="Center" MinWidth="256" Height="24" x:Name="GamesComboBox"
-                          SelectionChanged="GamesComboBox_OnSelectionChanged">
-                </ComboBox>
-                <Button Width="80" Height="26" Margin="6 0 0 0" Click="LoadButton_Click">More</Button>
+                <!-- <ComboBox Margin="6 0 0 0" VerticalAlignment="Center" MinWidth="256" Height="24" x:Name="GamesComboBox" -->
+                <!--           SelectionChanged="GamesComboBox_OnSelectionChanged"> -->
+                <!-- </ComboBox> -->
+                <!-- <Button Width="80" Height="26" Margin="6 0 0 0" Click="LoadButton_Click">More</Button> -->
                 <Button DockPanel.Dock="Right" Width="80" Height="26" FontWeight="Bold" Click="CloseButton_Click">Close</Button>
                 <Button DockPanel.Dock="Right" x:Name="VocabButton" Margin=" 0 0 6 0" Width="80" Height="26"
                         ToolTip="Check all answers against word list"

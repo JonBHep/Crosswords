@@ -24,10 +24,10 @@ namespace Crosswords
         public MainWindow()
         {
             InitializeComponent();
-            _puzzle = new CrosswordGrid(defaultSpecification);
+            _puzzle = new CrosswordGrid(DefaultSpecification);
         }
         
-        private const string defaultSpecification
+        private const string DefaultSpecification
             = "15......#........#.#.#.#.#.#.#.#........#......#.#.#.#.#.#.#.####............#.#.#.#.#.###.#....###........#.#.#.#.#.#.#.#........###....#.###.#.#.#.#.#............####.#.#.#.#.#.#.#......#........#.#.#.#.#.#.#.#........#......";
         private const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         private const double SquareSide = 36;
@@ -58,7 +58,7 @@ namespace Crosswords
             Top = ym;
             PuzzleHeaderDockPanel.Visibility = Visibility.Hidden;
             SwitchClueControls(false);
-            FillGamesComboBox();
+            // FillGamesComboBox();
         }
 
         private void SwitchClueControls(bool on)
@@ -82,7 +82,7 @@ namespace Crosswords
             SwitchClueControls(false);
             VocabButton.IsEnabled = false;
             ListEachButton.IsEnabled = false;
-            OpenButton.IsEnabled = false;
+            // OpenButton.IsEnabled = false;
             PuzzleHeaderDockPanel.Visibility = Visibility.Visible;
             string? path = MostRecentlySavedGamePath();
             if (path is { })
@@ -563,18 +563,18 @@ namespace Crosswords
             SwitchClueControls(false);
         }
 
-        private void LoadButton_Click(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog dlg = new OpenFileDialog()
-            {
-                Filter = "Crossword files (*.cwd)|*.cwd", InitialDirectory = CrosswordsPath, Title = "Open crossword"
-            };
-            bool? ans = dlg.ShowDialog();
-            if ((ans.HasValue) && (ans.Value))
-            {
-                LoadPuzzleFromFile(dlg.FileName);
-            }
-        }
+        // private void LoadButton_Click(object sender, RoutedEventArgs e)
+        // {
+        //     OpenFileDialog dlg = new OpenFileDialog()
+        //     {
+        //         Filter = "Crossword files (*.cwd)|*.cwd", InitialDirectory = CrosswordsPath, Title = "Open crossword"
+        //     };
+        //     bool? ans = dlg.ShowDialog();
+        //     if ((ans.HasValue) && (ans.Value))
+        //     {
+        //         LoadPuzzleFromFile(dlg.FileName);
+        //     }
+        // }
 
         private void LettersApplyButton_Click(object sender, RoutedEventArgs e)
         {
@@ -1026,54 +1026,63 @@ namespace Crosswords
         private void OpenButton_Click(object sender, RoutedEventArgs e)
         {
             SaveCrossword();
-            if (GamesComboBox.SelectedItem is ComboBoxItem {Tag: string path})
+            OpenFileDialog dlg = new OpenFileDialog()
             {
-                OpenButton.IsEnabled = false;
-                PuzzleHeaderDockPanel.Visibility = Visibility.Visible;
-                LoadPuzzleFromFile(path);
+                Filter = "Crossword files (*.cwd)|*.cwd", InitialDirectory = CrosswordsPath, Title = "Open crossword"
+            };
+            bool? ans = dlg.ShowDialog();
+            if (ans ?? false)
+            {
+                LoadPuzzleFromFile(dlg.FileName);
             }
+            // if (GamesComboBox.SelectedItem is ComboBoxItem {Tag: string path})
+            // {
+            //     OpenButton.IsEnabled = false;
+            //     PuzzleHeaderDockPanel.Visibility = Visibility.Visible;
+            //     LoadPuzzleFromFile(path);
+            // }
         }
        
-        private void FillGamesComboBox()
-        {
-            GamesComboBox.Items.Clear();
-            OpenButton.IsEnabled = false;
-            string[] gameFiles = Directory.GetFiles(CrosswordsPath, "*.cwd");
-
-            List<Tuple<DateTime, string>> history = new();
-            foreach (string fileSpec in gameFiles)
-            {
-                DateTime d = File.GetLastWriteTime(fileSpec);
-                Tuple<DateTime, string> jeu = new Tuple<DateTime, string>(d, fileSpec);
-                history.Add(jeu);
-            }
-
-            history.Sort();
-            history.Reverse();
-            int top = Math.Min(10, history.Count);
-            for (int x = 0; x < top; x++)
-            {
-                string caption = System.IO.Path.GetFileNameWithoutExtension(history[x].Item2);
-                if (caption != "default")
-                {
-                    ComboBoxItem item = new ComboBoxItem
-                    {
-                        Tag = history[x].Item2
-                        , Content = new TextBlock()
-                        {
-                            FontFamily = new FontFamily("Lucida Console")
-                            , Text = caption
-                        }
-                    };
-                    GamesComboBox.Items.Add(item);
-                }
-            }
-
-            if (GamesComboBox.Items.Count > 0)
-            {
-                GamesComboBox.SelectedIndex = 0;
-            }
-        }
+        // private void FillGamesComboBox()
+        // {
+        //     GamesComboBox.Items.Clear();
+        //     OpenButton.IsEnabled = false;
+        //     string[] gameFiles = Directory.GetFiles(CrosswordsPath, "*.cwd");
+        //
+        //     List<Tuple<DateTime, string>> history = new();
+        //     foreach (string fileSpec in gameFiles)
+        //     {
+        //         DateTime d = File.GetLastWriteTime(fileSpec);
+        //         Tuple<DateTime, string> jeu = new Tuple<DateTime, string>(d, fileSpec);
+        //         history.Add(jeu);
+        //     }
+        //
+        //     history.Sort();
+        //     history.Reverse();
+        //     int top = Math.Min(10, history.Count);
+        //     for (int x = 0; x < top; x++)
+        //     {
+        //         string caption = System.IO.Path.GetFileNameWithoutExtension(history[x].Item2);
+        //         if (caption != "default")
+        //         {
+        //             ComboBoxItem item = new ComboBoxItem
+        //             {
+        //                 Tag = history[x].Item2
+        //                 , Content = new TextBlock()
+        //                 {
+        //                     FontFamily = new FontFamily("Lucida Console")
+        //                     , Text = caption
+        //                 }
+        //             };
+        //             GamesComboBox.Items.Add(item);
+        //         }
+        //     }
+        //
+        //     if (GamesComboBox.Items.Count > 0)
+        //     {
+        //         GamesComboBox.SelectedIndex = 0;
+        //     }
+        // }
         private string? MostRecentlySavedGamePath()
         {
             var gameFiles = Directory.GetFiles(CrosswordsPath, "*.cwd");
@@ -1095,10 +1104,10 @@ namespace Crosswords
             return newest.Item2;
         }
 
-        private void GamesComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            OpenButton.IsEnabled = GamesComboBox.SelectedItem is { };
-        }
+        // private void GamesComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        // {
+        //     OpenButton.IsEnabled = GamesComboBox.SelectedItem is { };
+        // }
 
         private void AnagramTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
         {
