@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,11 +24,11 @@ namespace Crosswords
         public MainWindow()
         {
             InitializeComponent();
-            const string defaultSpecification
-                = "15......#........#.#.#.#.#.#.#.#........#......#.#.#.#.#.#.#.####............#.#.#.#.#.###.#....###........#.#.#.#.#.#.#.#........###....#.###.#.#.#.#.#............####.#.#.#.#.#.#.#......#........#.#.#.#.#.#.#.#........#......";
             _puzzle = new CrosswordGrid(defaultSpecification);
         }
-
+        
+        private const string defaultSpecification
+            = "15......#........#.#.#.#.#.#.#.#........#......#.#.#.#.#.#.#.####............#.#.#.#.#.###.#....###........#.#.#.#.#.#.#.#........###....#.###.#.#.#.#.#............####.#.#.#.#.#.#.#......#........#.#.#.#.#.#.#.#........#......";
         private const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         private const double SquareSide = 36;
         private const double LetterWidth = 30;
@@ -81,6 +82,17 @@ namespace Crosswords
             SwitchClueControls(false);
             VocabButton.IsEnabled = false;
             ListEachButton.IsEnabled = false;
+            OpenButton.IsEnabled = false;
+            PuzzleHeaderDockPanel.Visibility = Visibility.Visible;
+            string? path = MostRecentlySavedGamePath();
+            if (path is { })
+            {
+                LoadPuzzleFromFile(path);    
+            }
+            else
+            {
+                DisplayGrid(); // using default specification
+            }
         }
 
         private void DisplayGrid()
@@ -1061,6 +1073,26 @@ namespace Crosswords
             {
                 GamesComboBox.SelectedIndex = 0;
             }
+        }
+        private string? MostRecentlySavedGamePath()
+        {
+            var gameFiles = Directory.GetFiles(CrosswordsPath, "*.cwd");
+            if (gameFiles.Length < 1)
+            {
+                return null;
+            }
+            List<Tuple<DateTime, string>> history = new();
+            foreach (string fileSpec in gameFiles)
+            {
+                DateTime d = File.GetLastWriteTime(fileSpec);
+                Tuple<DateTime, string> jeu = new Tuple<DateTime, string>(d, fileSpec);
+                history.Add(jeu);
+            }
+
+            history.Sort();
+            Tuple<DateTime, string> newest = history.Last();
+        
+            return newest.Item2;
         }
 
         private void GamesComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
