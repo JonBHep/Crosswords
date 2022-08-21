@@ -738,21 +738,7 @@ namespace Crosswords
             WarnLettersVsClue();
         }
         
-        // /// <summary>
-        // /// Converts content of TextBox to upper case
-        // /// </summary>
-        // private void MakeUpperTextBoxText(TextBox box)
-        // {
-        //     string letters = box.Text.Trim();
-        //     string lettersU = letters.ToUpper();
-        //     if (lettersU != letters)
-        //     {
-        //         int pt = box.CaretIndex;
-        //         box.Text = lettersU;
-        //         box.CaretIndex = pt;
-        //     }
-        // }
-        private static void CleanGivenLetters(TextBox box, bool allowWildcard)
+        private static void CleanGivenLetters(TextBox box, bool allowFormatting)
         {
             var given = box.Text.ToUpper();
             var reformed = string.Empty;
@@ -765,9 +751,12 @@ namespace Crosswords
                 }
                 else
                 {
-                    if (allowWildcard && t == '.')
+                    if (allowFormatting)
                     {
-                        reformed += t;
+                        if ( t is '.' or ' ')
+                        {
+                            reformed += t;
+                        }    
                     }
                 }
             }
@@ -1079,55 +1068,9 @@ namespace Crosswords
             {
                 LoadPuzzleFromFile(dlg.FileName);
             }
-            // if (GamesComboBox.SelectedItem is ComboBoxItem {Tag: string path})
-            // {
-            //     OpenButton.IsEnabled = false;
-            //     PuzzleHeaderDockPanel.Visibility = Visibility.Visible;
-            //     LoadPuzzleFromFile(path);
-            // }
         }
        
-        // private void FillGamesComboBox()
-        // {
-        //     GamesComboBox.Items.Clear();
-        //     OpenButton.IsEnabled = false;
-        //     string[] gameFiles = Directory.GetFiles(CrosswordsPath, "*.cwd");
-        //
-        //     List<Tuple<DateTime, string>> history = new();
-        //     foreach (string fileSpec in gameFiles)
-        //     {
-        //         DateTime d = File.GetLastWriteTime(fileSpec);
-        //         Tuple<DateTime, string> jeu = new Tuple<DateTime, string>(d, fileSpec);
-        //         history.Add(jeu);
-        //     }
-        //
-        //     history.Sort();
-        //     history.Reverse();
-        //     int top = Math.Min(10, history.Count);
-        //     for (int x = 0; x < top; x++)
-        //     {
-        //         string caption = System.IO.Path.GetFileNameWithoutExtension(history[x].Item2);
-        //         if (caption != "default")
-        //         {
-        //             ComboBoxItem item = new ComboBoxItem
-        //             {
-        //                 Tag = history[x].Item2
-        //                 , Content = new TextBlock()
-        //                 {
-        //                     FontFamily = new FontFamily("Lucida Console")
-        //                     , Text = caption
-        //                 }
-        //             };
-        //             GamesComboBox.Items.Add(item);
-        //         }
-        //     }
-        //
-        //     if (GamesComboBox.Items.Count > 0)
-        //     {
-        //         GamesComboBox.SelectedIndex = 0;
-        //     }
-        // }
-        private string? MostRecentlySavedGamePath()
+        private static string? MostRecentlySavedGamePath()
         {
             var gameFiles = Directory.GetFiles(CrosswordsPath, "*.cwd");
             if (gameFiles.Length < 1)
@@ -1147,16 +1090,7 @@ namespace Crosswords
         
             return newest.Item2;
         }
-
-        // private void AnagramTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
-        // {
-        //     AnagramLengthBlock.Text = $"({AnagramTextBox.Text.Trim().Length})";
-        //     AnagramListBox.Items.Clear();
-        //     AnagramCountBlock.Text = String.Empty;
-        //     MakeUpperTextBoxText(AnagramTextBox);
-        //     AnagramButton.IsEnabled = AnagramTextBox.Text.Trim().Length > 0;
-        // }
-
+       
         private void FormatApplyButton_OnClick(object sender, RoutedEventArgs e)
         {
             ApplyFormat();
@@ -1184,32 +1118,6 @@ namespace Crosswords
                 }
             }
         }
-
-        // private void FormatEntryTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
-        // {
-        //     if (FormatEntryTextBox.Text.Trim().Length > 0)
-        //     {
-        //         string fmt = FormatEntryTextBox.Text.Trim();
-        //         if (!string.IsNullOrWhiteSpace(_selectedClueKey))
-        //         {
-        //             if (ClueContent.GoodFormatSpecification(fmt, _puzzle.ClueOf(_selectedClueKey).WordLength))
-        //             {
-        //                 FormatApplyButton.IsEnabled = true;
-        //                 FormatConflictWarningTextBlock.Text = string.Empty;
-        //                 FormatApplyButton.IsDefault = true;
-        //             }
-        //             else
-        //             {
-        //                 FormatApplyButton.IsEnabled = false;
-        //                 FormatConflictWarningTextBlock.Text = "Not a valid format for this clue length";
-        //             }
-        //         }
-        //     }
-        //     else
-        //     {
-        //         FormatApplyButton.IsEnabled = false;
-        //     }
-        // }
 
         private void TemplateTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
         {
