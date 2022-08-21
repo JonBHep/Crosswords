@@ -693,28 +693,87 @@ namespace Crosswords
 
             CluePatternCombo.SelectedIndex = -1;
         }
-
+        private void AnagramTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            CleanGivenLetters(AnagramTextBox, false);
+            AnagramLengthBlock.Text = $"({AnagramTextBox.Text.Trim().Length})";
+            AnagramListBox.Items.Clear();
+            AnagramCountBlock.Text = string.Empty;
+            AnagramButton.IsEnabled = AnagramTextBox.Text.Trim().Length > 0;
+        }
+        
+        private void ExtraLettersTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            CleanGivenLetters(ExtraLettersTextBox, false);
+        }
+        
+        private void FormatEntryTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (FormatEntryTextBox.Text.Trim().Length > 0)
+            {
+                var fmt = FormatEntryTextBox.Text.Trim();
+                if (!string.IsNullOrWhiteSpace(_selectedClueKey))
+                {
+                    if (ClueContent.GoodFormatSpecification(fmt, _puzzle.ClueOf(_selectedClueKey).WordLength))
+                    {
+                        FormatApplyButton.IsEnabled = true;
+                        FormatConflictWarningTextBlock.Text = string.Empty;
+                        FormatApplyButton.IsDefault = true;
+                    }
+                    else
+                    {
+                        FormatApplyButton.IsEnabled = false;
+                        FormatConflictWarningTextBlock.Text = "Not a valid format for this clue length";
+                    }
+                }
+            }
+            else
+            {
+                FormatApplyButton.IsEnabled = false;
+            }
+        }
         private void LettersEntryTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            CleanGivenLetters();
+            CleanGivenLetters(LettersEntryTextBox, false);
             WarnLettersVsClue();
         }
-
-        private void CleanGivenLetters()
+        
+        // /// <summary>
+        // /// Converts content of TextBox to upper case
+        // /// </summary>
+        // private void MakeUpperTextBoxText(TextBox box)
+        // {
+        //     string letters = box.Text.Trim();
+        //     string lettersU = letters.ToUpper();
+        //     if (lettersU != letters)
+        //     {
+        //         int pt = box.CaretIndex;
+        //         box.Text = lettersU;
+        //         box.CaretIndex = pt;
+        //     }
+        // }
+        private static void CleanGivenLetters(TextBox box, bool allowWildcard)
         {
-            var given = LettersEntryTextBox.Text.ToUpper();
+            var given = box.Text.ToUpper();
             var reformed = string.Empty;
-            var p = LettersEntryTextBox.CaretIndex;
+            var p = box.CaretIndex;
             foreach (var t in given)
             {
                 if (char.IsLetter(t))
                 {
                     reformed += t;
                 }
+                else
+                {
+                    if (allowWildcard && t == '.')
+                    {
+                        reformed += t;
+                    }
+                }
             }
 
-            LettersEntryTextBox.Text = reformed;
-            LettersEntryTextBox.CaretIndex = p; 
+            box.Text = reformed;
+            box.CaretIndex = p; 
         }
         
         private void WarnLettersVsClue()
@@ -769,21 +828,6 @@ namespace Crosswords
                     }
                 }
 
-            }
-        }
-
-        /// <summary>
-        /// Converts content of TextBox to upper case
-        /// </summary>
-        private void MakeUpperTextBoxText(TextBox box)
-        {
-            string letters = box.Text.Trim();
-            string lettersU = letters.ToUpper();
-            if (lettersU != letters)
-            {
-                int pt = box.CaretIndex;
-                box.Text = lettersU;
-                box.CaretIndex = pt;
             }
         }
 
@@ -1104,19 +1148,14 @@ namespace Crosswords
             return newest.Item2;
         }
 
-        // private void GamesComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        // private void AnagramTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
         // {
-        //     OpenButton.IsEnabled = GamesComboBox.SelectedItem is { };
+        //     AnagramLengthBlock.Text = $"({AnagramTextBox.Text.Trim().Length})";
+        //     AnagramListBox.Items.Clear();
+        //     AnagramCountBlock.Text = String.Empty;
+        //     MakeUpperTextBoxText(AnagramTextBox);
+        //     AnagramButton.IsEnabled = AnagramTextBox.Text.Trim().Length > 0;
         // }
-
-        private void AnagramTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
-        {
-            AnagramLengthBlock.Text = $"({AnagramTextBox.Text.Trim().Length})";
-            AnagramListBox.Items.Clear();
-            AnagramCountBlock.Text = String.Empty;
-            MakeUpperTextBoxText(AnagramTextBox);
-            AnagramButton.IsEnabled = AnagramTextBox.Text.Trim().Length > 0;
-        }
 
         private void FormatApplyButton_OnClick(object sender, RoutedEventArgs e)
         {
@@ -1146,37 +1185,37 @@ namespace Crosswords
             }
         }
 
-        private void FormatEntryTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (FormatEntryTextBox.Text.Trim().Length > 0)
-            {
-                string fmt = FormatEntryTextBox.Text.Trim();
-                if (!string.IsNullOrWhiteSpace(_selectedClueKey))
-                {
-                    if (ClueContent.GoodFormatSpecification(fmt, _puzzle.ClueOf(_selectedClueKey).WordLength))
-                    {
-                        FormatApplyButton.IsEnabled = true;
-                        FormatConflictWarningTextBlock.Text = string.Empty;
-                        FormatApplyButton.IsDefault = true;
-                    }
-                    else
-                    {
-                        FormatApplyButton.IsEnabled = false;
-                        FormatConflictWarningTextBlock.Text = "Not a valid format for this clue length";
-                    }
-                }
-            }
-            else
-            {
-                FormatApplyButton.IsEnabled = false;
-            }
-        }
+        // private void FormatEntryTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
+        // {
+        //     if (FormatEntryTextBox.Text.Trim().Length > 0)
+        //     {
+        //         string fmt = FormatEntryTextBox.Text.Trim();
+        //         if (!string.IsNullOrWhiteSpace(_selectedClueKey))
+        //         {
+        //             if (ClueContent.GoodFormatSpecification(fmt, _puzzle.ClueOf(_selectedClueKey).WordLength))
+        //             {
+        //                 FormatApplyButton.IsEnabled = true;
+        //                 FormatConflictWarningTextBlock.Text = string.Empty;
+        //                 FormatApplyButton.IsDefault = true;
+        //             }
+        //             else
+        //             {
+        //                 FormatApplyButton.IsEnabled = false;
+        //                 FormatConflictWarningTextBlock.Text = "Not a valid format for this clue length";
+        //             }
+        //         }
+        //     }
+        //     else
+        //     {
+        //         FormatApplyButton.IsEnabled = false;
+        //     }
+        // }
 
         private void TemplateTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
         {
+            CleanGivenLetters(TemplateTextBox, true);
             TemplateListBox.Items.Clear();
             TemplateCountBlock.Text = string.Empty;
-            MakeUpperTextBoxText(TemplateTextBox);
 
             _disableCheckBoxesTrigger = true;
             CapitalsCheckBox.IsChecked = false;
@@ -1365,10 +1404,10 @@ namespace Crosswords
             win.ShowDialog();
         }
 
-        private void ExtraLettersTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
-        {
-            MakeUpperTextBoxText(ExtraLettersTextBox);
-        }
+        // private void ExtraLettersTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
+        // {
+        //     MakeUpperTextBoxText(ExtraLettersTextBox);
+        // }
 
         private void TemplateListEachButton_OnClick(object sender, RoutedEventArgs e)
         {

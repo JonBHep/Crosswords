@@ -4,38 +4,38 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Crosswords" Height="650" Width="1600" Loaded="Window_Loaded" ContentRendered="Window_ContentRendered" PreviewKeyDown="MainWindow_OnPreviewKeyDown"
-        Background="PapayaWhip">
-    <Grid>
+        Title="Crosswords" Height="650" Width="1600" WindowStyle="None" AllowsTransparency="True" Loaded="Window_Loaded" ContentRendered="Window_ContentRendered" PreviewKeyDown="MainWindow_OnPreviewKeyDown"
+        Background="Transparent">
+    <Border Background="PapayaWhip" CornerRadius="8" BorderBrush="DarkRed" BorderThickness="1.5">
+    <Grid Margin="6">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition></RowDefinition>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
             </Grid.RowDefinitions>
             
-            <Border Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" Margin="256,16,0,0" Background="SandyBrown" Height="28" Width="64" CornerRadius="8">
-                <TextBlock FontSize="14" Foreground="PapayaWhip" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium">NET6.0</TextBlock>
-            </Border>
-            <TextBlock Grid.Row="0" Margin="17,17,0,0" FontFamily="AR Julian" FontSize="32" Foreground="SaddleBrown">CROSSWORDS</TextBlock>
-            <TextBlock Grid.Row="0" Margin="16,16,0,0" FontFamily="AR Julian" FontSize="32" Foreground="SandyBrown">CROSSWORDS</TextBlock>
+            <Canvas Height="48" >
+                    <TextBlock Margin="17,7,0,0" FontFamily="AR Julian" FontSize="32" Foreground="SaddleBrown">CROSSWORDS</TextBlock>
+                    <TextBlock Margin="16,6,0,0" FontFamily="AR Julian" FontSize="32" Foreground="SandyBrown">CROSSWORDS</TextBlock>
+                <Border Canvas.Left="256" Canvas.Top="11" VerticalAlignment="Center" Background="SandyBrown" Height="28" Width="64" CornerRadius="8">
+                    <TextBlock FontSize="14" Foreground="PapayaWhip" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium">NET6.0</TextBlock>
+                </Border>
+                <TextBlock x:Name="NameTextBlock" Canvas.Left="360" Canvas.Top="14" FontSize="16" FontWeight="Bold">default</TextBlock>
+                </Canvas>
             
-
             <DockPanel Grid.Row="1" Margin="12 12 12 0" LastChildFill="False">
                 <Button Width="80" Height="26" Click="NewButton_Click">New</Button>
                 <Button Width="80" Height="26" Margin="6 0 0 0" x:Name="OpenButton" Click="OpenButton_Click">Open</Button>
-                <!-- <ComboBox Margin="6 0 0 0" VerticalAlignment="Center" MinWidth="256" Height="24" x:Name="GamesComboBox" -->
-                <!--           SelectionChanged="GamesComboBox_OnSelectionChanged"> -->
-                <!-- </ComboBox> -->
-                <!-- <Button Width="80" Height="26" Margin="6 0 0 0" Click="LoadButton_Click">More</Button> -->
+                
                 <Button DockPanel.Dock="Right" Width="80" Height="26" FontWeight="Bold" Click="CloseButton_Click">Close</Button>
                 <Button DockPanel.Dock="Right" x:Name="VocabButton" Margin=" 0 0 6 0" Width="80" Height="26"
                         ToolTip="Check all answers against word list"
@@ -44,11 +44,9 @@
                 </Button>
             </DockPanel>
 
-            <DockPanel Grid.Row="2" Margin="12 12 12 0" VerticalAlignment="Center">
+            <DockPanel Grid.Row="2" Margin="12 12 12 0" VerticalAlignment="Center" LastChildFill="False">
                 <Button DockPanel.Dock="Right" Width="80" Height="26" Margin="6 0 0 0" ToolTip="List of clue words and possible indications" Click="PointersButton_OnClick">Pointers</Button>
                 <Button DockPanel.Dock="Right" Width="80" Height="26" Margin="6 0 0 0" Click="ListButton_OnClick">Word list</Button>
-                <TextBlock VerticalAlignment="Center" >Crossword:</TextBlock>
-                <TextBlock x:Name="NameTextBlock" Margin="8 0 0 0" FontSize="16" FontWeight="Bold">default</TextBlock>
             </DockPanel>
             
             <DockPanel x:Name="PuzzleHeaderDockPanel" Grid.Row="3" Margin="12 12 12 0" LastChildFill="False">
@@ -57,23 +55,23 @@
                         Click="ClearAllButton_Click">
                     Clear
                 </Button>
-                <ProgressBar DockPanel.Dock="Right" x:Name="PuzzleProgressBar" Value="20" Width="166" Height="12" Margin="12 0 0 0" Foreground="PaleGreen" Background="SeaGreen" BorderBrush="Gray"></ProgressBar>
-                <TextBlock x:Name="ProgressTextBlock" VerticalAlignment="Center" Margin="12 0 0 0" FontSize="16" FontWeight="Bold" Text="[progress]"></TextBlock>
+                <ProgressBar DockPanel.Dock="Right" x:Name="PuzzleProgressBar" Value="20" Width="166" Height="12" Margin="12 0 0 0" Foreground="PaleGreen" Background="SeaGreen" BorderBrush="Gray" />
+                <TextBlock x:Name="ProgressTextBlock" VerticalAlignment="Center" Margin="12 0 0 0" FontSize="16" FontWeight="Bold" Text="[progress]" />
             </DockPanel>
             
             <Border Grid.Row="4" BorderBrush="Tan" BorderThickness="1.5" CornerRadius="8" Margin="4">
             <Grid  x:Name="SelectedClueGrid">
                 <Grid.RowDefinitions>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Border Grid.Column="1" Grid.Row="0" BorderThickness="1" BorderBrush="Green" CornerRadius="6" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="4 0 1 0" Background="MintCream">
                 <TextBlock Margin="6 0 6 0" x:Name="ClueTitleTextBlock"
@@ -85,8 +83,7 @@
                 <DockPanel Grid.Row="0" Grid.Column="0" Margin="12 6">
                     <TextBlock x:Name="LettersCaption" VerticalAlignment="Center" FontWeight="Medium" Width="72">Letters:</TextBlock>
                     <TextBox x:Name="LettersEntryTextBox" AcceptsReturn="False" Width="200" FontSize="16" VerticalAlignment="Center"
-                             FontFamily="Lucida Console" Padding="4" TextChanged="LettersEntryTextBox_TextChanged">
-                    </TextBox>
+                             FontFamily="Lucida Console" Padding="4" TextChanged="LettersEntryTextBox_TextChanged" />
                     <Button x:Name="LettersApplyButton" Margin="12 0" Width="80" Height="26" VerticalAlignment="Center"
                             Click="LettersApplyButton_Click">
                         Apply
@@ -100,16 +97,15 @@
                 <DockPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="11 6" LastChildFill="False">
                     <TextBlock x:Name="FormatCaption" VerticalAlignment="Center" FontWeight="Medium" Width="72">Format:</TextBlock>
                     <TextBox x:Name="FormatEntryTextBox" AcceptsReturn="False" Width="200" FontSize="16" FontFamily="Lucida Console"
-                             Padding="4" TextChanged="FormatEntryTextBox_OnTextChanged">
-                    </TextBox>
+                             Padding="4" TextChanged="FormatEntryTextBox_OnTextChanged" />
                     <Button x:Name="FormatApplyButton" Margin="12 0" Width="80" Height="26" VerticalAlignment="Center"
                             Click="FormatApplyButton_OnClick">Apply</Button>
                     <TextBlock x:Name="FormatConflictWarningTextBlock" Foreground="Red" VerticalAlignment="Center"
                                FontWeight="Medium">Invalid format</TextBlock>
                     <TextBlock Foreground="Black" VerticalAlignment="Center" FontWeight="Medium" Margin="8 0 4 0">Pick word lengths</TextBlock>
-                    <ComboBox x:Name="CluePatternCombo" Width="128" VerticalAlignment="Center" FontSize="16" FontFamily="Lucida Console" SelectionChanged="CluePatternCombo_OnSelectionChanged"></ComboBox>
+                    <ComboBox x:Name="CluePatternCombo" Width="128" VerticalAlignment="Center" FontSize="16" FontFamily="Lucida Console" SelectionChanged="CluePatternCombo_OnSelectionChanged" />
                     <TextBlock Foreground="Black" VerticalAlignment="Center" FontWeight="Medium" Margin="8 0 4 0">Pick format</TextBlock>
-                    <ComboBox x:Name="ClueVariantCombo" Width="128" VerticalAlignment="Center" FontSize="16" FontFamily="Lucida Console" SelectionChanged="ClueVariantCombo_OnSelectionChanged"></ComboBox>
+                    <ComboBox x:Name="ClueVariantCombo" Width="128" VerticalAlignment="Center" FontSize="16" FontFamily="Lucida Console" SelectionChanged="ClueVariantCombo_OnSelectionChanged" />
                 </DockPanel>
                 
                 <TextBlock Grid.Row="3" Grid.Column="0" Margin="12 6" x:Name="ClueRubricATextBlock" FontFamily="Arial">To set the format of the clue, separate word lengths with a comma or a hyphen e.g. '5,5-4'.</TextBlock>
@@ -119,7 +115,7 @@
                     <!-- <TextBox x:Name="PatternTextBox" Width="200" VerticalAlignment="Center" FontSize="18" -->
                     <!--          FontFamily="Lucida Console" IsReadOnly="True" Padding="4" Background="Transparent"> -->
                     <!-- </TextBox> -->
-                    <TextBlock x:Name="PatternTextBlock" VerticalAlignment="Center" FontSize="18" FontFamily="Lucida Console" Padding="4 0 0 0"></TextBlock>
+                    <TextBlock x:Name="PatternTextBlock" VerticalAlignment="Center" FontSize="18" FontFamily="Lucida Console" Padding="4 0 0 0" />
                 </DockPanel>
                 
                 <TextBlock Grid.Row="1" Grid.Column="0" Margin="12 6" x:Name="ClueRubricBTextBlock" FontFamily="Arial">Letters only; no hyphens, spaces or unknown letters.</TextBlock>
@@ -134,35 +130,33 @@
             
             <Grid Grid.Row="5" Margin="6">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="30"></RowDefinition>
-                    <RowDefinition Height="30"></RowDefinition>
-                    <RowDefinition Height="30"></RowDefinition>
-                    <RowDefinition Height="30"></RowDefinition>
-                    <RowDefinition></RowDefinition>
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
                 
                 <DockPanel>
                     <TextBlock FontWeight="Medium" Margin="4 0 4 0" TextAlignment="Center" VerticalAlignment="Center">Anagrams</TextBlock>
                     <TextBox x:Name="AnagramTextBox" Margin="4 2 0 4" Width="200" FontSize="16"
-                             FontFamily="Lucida Console" Padding="4" TextChanged="AnagramTextBox_OnTextChanged">
-                    </TextBox>
+                             FontFamily="Lucida Console" Padding="4" TextChanged="AnagramTextBox_OnTextChanged" />
                     <TextBlock x:Name="AnagramLengthBlock" FontWeight="Medium" Width="32" Margin="4 0 4 0" TextAlignment="Center" VerticalAlignment="Center">0</TextBlock>
                     <Button x:Name="AnagramButton" Width="80" Height="26" VerticalAlignment="Center"
                             Click="AnagramButton_OnClick">
                         Anagrams
                     </Button>
-                    <TextBlock x:Name="AnagramCountBlock" VerticalAlignment="Center" Margin="4 0 0 0"></TextBlock>
+                    <TextBlock x:Name="AnagramCountBlock" VerticalAlignment="Center" Margin="4 0 0 0" />
                 </DockPanel>
                 
                 <DockPanel Grid.Row="0" Grid.Column="1" LastChildFill="False">
                     <TextBlock FontWeight="Medium" Margin="4 0 4 0" TextAlignment="Center" VerticalAlignment="Center">Pattern matching</TextBlock>
                     <TextBox x:Name="TemplateTextBox" Margin="4 2 2 4" Width="200" FontSize="16"
-                             FontFamily="Lucida Console" Padding="4" TextChanged="TemplateTextBox_OnTextChanged">
-                    </TextBox>
+                             FontFamily="Lucida Console" Padding="4" TextChanged="TemplateTextBox_OnTextChanged" />
                     <Button Margin="12 0 0 0" Width="72" Height="26" VerticalAlignment="Center"
                             Click="TemplateCountButton_OnClick" ToolTip="Count template matches">Count</Button>
                 </DockPanel>
@@ -181,7 +175,7 @@
                 <DockPanel Grid.Column="1" Grid.Row="2" LastChildFill="False">
                     <TextBlock VerticalAlignment="Center" Margin="4 0 4 0" >Additional letters to be included</TextBlock>
                     <TextBox x:Name="ExtraLettersTextBox" Margin="4 2 4 2" Padding="4" FontSize="16" Width="128"
-                             FontFamily="Lucida Console" ToolTip="Additional letters to be included" TextChanged="ExtraLettersTextBox_OnTextChanged" ></TextBox>
+                             FontFamily="Lucida Console" ToolTip="Additional letters to be included" TextChanged="ExtraLettersTextBox_OnTextChanged" />
                 </DockPanel>
                 
                 <DockPanel Grid.Column="1" Grid.Row="3">
@@ -193,12 +187,10 @@
                 </DockPanel>
                 
                 <ListBox x:Name="AnagramListBox" Margin="0 4 2 0" FontFamily="Lucida Console" FontSize="14" Grid.Row="1" Grid.RowSpan="4" Grid.Column="0"
-                         MouseDoubleClick="AnagramBox_OnMouseDoubleClick">
-                </ListBox>
-                
+                         MouseDoubleClick="AnagramBox_OnMouseDoubleClick" />
+
                 <ListBox x:Name="TemplateListBox" Margin="2 4 0 0" FontFamily="Lucida Console" FontSize="14" Grid.Row="4" Grid.Column="1"
-                         MouseDoubleClick="TemplateBox_OnMouseDoubleClick">
-                </ListBox>
+                         MouseDoubleClick="TemplateBox_OnMouseDoubleClick" />
             </Grid>
         </Grid>
 
@@ -210,13 +202,12 @@
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <ListBox x:Name="ClueAListBox" Margin="4" SelectionChanged="ClueListBox_SelectionChanged">
-                </ListBox>
+                <ListBox x:Name="ClueAListBox" Margin="4" SelectionChanged="ClueListBox_SelectionChanged" />
                 <ListBox x:Name="ClueDListBox" Margin="4" Grid.Column="1"
-                         SelectionChanged="ClueListBox_SelectionChanged">
-                </ListBox>
+                         SelectionChanged="ClueListBox_SelectionChanged" />
             </Grid>
         </DockPanel>
 
     </Grid>
+    </Border>
 </Window>
