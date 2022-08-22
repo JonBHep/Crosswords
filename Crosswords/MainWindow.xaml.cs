@@ -753,7 +753,7 @@ namespace Crosswords
                 {
                     if (allowFormatting)
                     {
-                        if ( t is '.' or ' ')
+                        if ( t is '.' or ' ' or '-')
                         {
                             reformed += t;
                         }    
