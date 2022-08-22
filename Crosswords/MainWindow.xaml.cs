@@ -19,7 +19,6 @@ namespace Crosswords
     public partial class MainWindow
     {
         // https://www.crosswordunclued.com/2009/09/crossword-grid-symmetry.html
-
        
         public MainWindow()
         {
@@ -36,9 +35,11 @@ namespace Crosswords
         private CrosswordGrid _puzzle;
         private string _xWordTitle = "default";
         
-        private readonly Brush _barBrush = Brushes.Blue;
-        private readonly Brush _letterBrush = Brushes.Black;
+        private readonly Brush _barBrush = Brushes.OrangeRed;
+        private readonly Brush _hyphenBrush = Brushes.Crimson;
+        private readonly Brush _letterBrush = Brushes.DarkRed;
         private readonly Brush _blackSquareBrush = Brushes.DimGray;
+        private readonly Brush _highlightSquareBrush = Brushes.Moccasin;
         
         private string _selectedClueKey = string.Empty;
         private bool _disableCheckBoxesTrigger;
@@ -58,7 +59,6 @@ namespace Crosswords
             Top = ym;
             PuzzleHeaderDockPanel.Visibility = Visibility.Hidden;
             SwitchClueControls(false);
-            // FillGamesComboBox();
         }
 
         private void SwitchClueControls(bool on)
@@ -160,7 +160,7 @@ namespace Crosswords
                         }
                     }
 
-                    Border b = new Border()
+                    var b = new Border()
                     {
                         BorderBrush = Brushes.DarkSlateGray, BorderThickness = new Thickness(1)
                         , Child = _cellPaper[x, y]
@@ -317,7 +317,7 @@ namespace Crosswords
         {
             var px = point.X * 2;
             var py = point.Y * 2;
-            var r = new Rectangle() {Fill = _barBrush, Height = 8};
+            var r = new Rectangle() {Fill = _hyphenBrush, Height = 12};
             XwordGrid.Children.Add(r);
             Grid.SetColumn(r, px + 1);
             Grid.SetRow(r, py);
@@ -337,7 +337,7 @@ namespace Crosswords
         {
             var px = point.X * 2;
             var py = point.Y * 2;
-            var r = new Rectangle() {Fill = _barBrush, Width = 8};
+            var r = new Rectangle() {Fill = _hyphenBrush, Width = 12};
             XwordGrid.Children.Add(r);
             Grid.SetColumn(r, px);
             Grid.SetRow(r, py + 1);
@@ -649,7 +649,6 @@ namespace Crosswords
             {
                 for (int yy = 0; yy < _puzzle.Height; yy++)
                 {
-
                     if (_puzzle.Cell(new GridPoint(xx, yy)) != CrosswordGrid.BlackChar)
                     {
                         _cellPaper[xx, yy].Background = Brushes.White;
@@ -674,7 +673,7 @@ namespace Crosswords
                     py = sy + a;
                 }
 
-                _cellPaper[px, py].Background = Brushes.NavajoWhite;
+                _cellPaper[px, py].Background =_highlightSquareBrush;
             }
         }
 
