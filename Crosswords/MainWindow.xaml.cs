@@ -443,8 +443,18 @@ namespace Crosswords
                         {Text = $" [{clueCount - cluesDone}]", Foreground = Brushes.Tomato});
                 }
 
-                PuzzleProgressBar.Maximum = clueCount;
-                PuzzleProgressBar.Value = cluesDone;
+                //PuzzleProgressBar.Maximum = clueCount;
+                //PuzzleProgressBar.Value = cluesDone;
+                ProgressPanel.Children.Clear();
+                for (int n = 0; n < cluesDone; n++)
+                {
+                    //ProgressPanel.Children.Add(new Ellipse() {Fill = Brushes.Green, Height = 12, Width = 12, Margin = new Thickness(2,0,0,0)});
+                    ProgressPanel.Children.Add(ProgressShape(Brushes.SeaGreen));
+                }
+                for (int n = 0; n <clueCount - cluesDone; n++)
+                {
+                    ProgressPanel.Children.Add( ProgressShape(Brushes.IndianRed));
+                }
             }
 
             if (cluesDone == clueCount)
@@ -454,6 +464,22 @@ namespace Crosswords
 
         }
 
+        private Polygon ProgressShape(Brush pinceau)
+        {
+            var form = new Polygon();
+            form.Points.Add(new Point(2,0));
+            form.Points.Add(new Point(10,0));
+            form.Points.Add(new Point(12,2));
+            form.Points.Add(new Point(12,10));
+            form.Points.Add(new Point(10,12));
+            form.Points.Add(new Point(2,12));
+            form.Points.Add(new Point(0,10));
+            form.Points.Add(new Point(0,2));
+            form.Fill = pinceau;
+            form.Margin = new Thickness(1, 0, 1, 0);
+            return form;
+        }
+        
         private void NewButton_Click(object sender, RoutedEventArgs e)
         {
             SaveCrossword();

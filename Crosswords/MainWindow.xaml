@@ -55,8 +55,9 @@
                         Click="ClearAllButton_Click">
                     Clear
                 </Button>
-                <ProgressBar DockPanel.Dock="Right" x:Name="PuzzleProgressBar" Value="20" Width="166" Height="12" Margin="12 0 0 0" Foreground="PaleGreen" Background="SeaGreen" BorderBrush="Gray" />
+                <!-- <ProgressBar DockPanel.Dock="Right" x:Name="PuzzleProgressBar" Value="20" Width="166" Height="12" Margin="12 0 0 0" Foreground="PaleGreen" Background="SeaGreen" BorderBrush="Gray" /> -->
                 <TextBlock x:Name="ProgressTextBlock" VerticalAlignment="Center" Margin="12 0 0 0" FontSize="16" FontWeight="Bold" Text="[progress]" />
+                <StackPanel x:Name="ProgressPanel" Orientation="Horizontal" VerticalAlignment="Center" DockPanel.Dock="Right"></StackPanel>
             </DockPanel>
             
             <Border Grid.Row="4" BorderBrush="Tan" BorderThickness="1.5" CornerRadius="8" Margin="4">
