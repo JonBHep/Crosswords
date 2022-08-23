@@ -128,7 +128,7 @@
             </Grid>
             </Border>
             
-            <Grid Grid.Row="5" Margin="6">
+            <Grid Grid.Row="5" Margin="2 6 2 0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
@@ -194,7 +194,7 @@
             </Grid>
         </Grid>
 
-        <DockPanel Grid.Column="1">
+        <DockPanel Grid.Column="1" Margin="2 0 0 0">
             <Grid x:Name="XwordGrid" DockPanel.Dock="Top" Margin="4" MinHeight="200" />
 
             <Grid>
@@ -202,8 +202,8 @@
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <ListBox x:Name="ClueAListBox" Margin="4" SelectionChanged="ClueListBox_SelectionChanged" />
-                <ListBox x:Name="ClueDListBox" Margin="4" Grid.Column="1"
+                <ListBox x:Name="ClueAListBox" Margin="2 0 2 0" SelectionChanged="ClueListBox_SelectionChanged" />
+                <ListBox x:Name="ClueDListBox" Margin="2 0 0 0" Grid.Column="1"
                          SelectionChanged="ClueListBox_SelectionChanged" />
             </Grid>
         </DockPanel>
