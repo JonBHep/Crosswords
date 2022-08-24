@@ -74,11 +74,14 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <Border Grid.Column="1" Grid.Row="0" BorderThickness="1" BorderBrush="Green" CornerRadius="6" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="4 0 1 0" Background="MintCream">
+                
+                <Border x:Name="ClueTitleTextBorder" Grid.Column="1" Grid.Row="0" BorderThickness="1" BorderBrush="Green" CornerRadius="6" HorizontalAlignment="Right" 
+                        VerticalAlignment="Center" Margin="4 0 1 0" Background="MintCream">
                 <TextBlock Margin="6 0 6 0" x:Name="ClueTitleTextBlock"
                            FontWeight="Bold" FontFamily="Arial" FontSize="32" VerticalAlignment="Center" TextAlignment="Right" Foreground="Green">
                     [clue title]
                 </TextBlock>
+                    
                 </Border>
                 
                 <DockPanel Grid.Row="0" Grid.Column="0" Margin="12 6">

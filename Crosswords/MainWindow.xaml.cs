@@ -443,12 +443,9 @@ namespace Crosswords
                         {Text = $" [{clueCount - cluesDone}]", Foreground = Brushes.Tomato});
                 }
 
-                //PuzzleProgressBar.Maximum = clueCount;
-                //PuzzleProgressBar.Value = cluesDone;
                 ProgressPanel.Children.Clear();
                 for (int n = 0; n < cluesDone; n++)
                 {
-                    //ProgressPanel.Children.Add(new Ellipse() {Fill = Brushes.Green, Height = 12, Width = 12, Margin = new Thickness(2,0,0,0)});
                     ProgressPanel.Children.Add(ProgressShape(Brushes.SeaGreen));
                 }
                 for (int n = 0; n <clueCount - cluesDone; n++)
@@ -464,7 +461,7 @@ namespace Crosswords
 
         }
 
-        private Polygon ProgressShape(Brush pinceau)
+        private static Polygon ProgressShape(Brush pinceau)
         {
             var form = new Polygon();
             form.Points.Add(new Point(2,0));
@@ -647,8 +644,9 @@ namespace Crosswords
         {
             Clue cloo = _puzzle.ClueOf(clueCode);
             HighLightClueInGrid(cloo);
-            string dirn = cloo.Direction == 'A' ? "Across" : "Down";
-            ClueTitleTextBlock.Text = $"{cloo.Number} {dirn}";
+            ShowClueTitle(cloo);
+            //string dirn = cloo.Direction == 'A' ? "Across" : "Down";
+            //ClueTitleTextBlock.Text = $"{cloo.Number} {dirn}";
             _selectedClueKey = clueCode;
             SwitchClueControls(true);
             FormatEntryTextBox.Text = cloo.Content.Format;
@@ -661,6 +659,23 @@ namespace Crosswords
             CountTemplateMatches();
         }
 
+        private void ShowClueTitle(Clue indice)
+        {
+            string dirn = indice.Direction == 'A' ? "Across" : "Down";
+            ClueTitleTextBlock.Text = $"{indice.Number} {dirn}";
+            if (indice.IsComplete())
+            {
+                ClueTitleTextBlock.Foreground=Brushes.Green;
+                ClueTitleTextBorder.Background=Brushes.MintCream;
+                ClueTitleTextBorder.BorderBrush=Brushes.Green;
+            }
+            else
+            {
+                ClueTitleTextBlock.Foreground=Brushes.IndianRed;
+                ClueTitleTextBorder.Background=Brushes.OldLace;
+                ClueTitleTextBorder.BorderBrush=Brushes.IndianRed;
+            }
+        }
         private void ShowUnspacedCheckBox()
         {
             var enable = TemplateTextBox.Text.Contains(' ') || TemplateTextBox.Text.Contains('-');
