@@ -82,7 +82,8 @@ namespace Crosswords
             SwitchClueControls(false);
             VocabButton.IsEnabled = false;
             ListEachButton.IsEnabled = false;
-            // OpenButton.IsEnabled = false;
+            ListWholeButton.IsEnabled = false;
+            
             PuzzleHeaderDockPanel.Visibility = Visibility.Visible;
             string? path = MostRecentlySavedGamePath();
             if (path is { })
@@ -642,7 +643,7 @@ namespace Crosswords
 
         private void ShowClueDetails(string clueCode)
         {
-            Clue cloo = _puzzle.ClueOf(clueCode);
+            var cloo = _puzzle.ClueOf(clueCode);
             HighLightClueInGrid(cloo);
             ShowClueTitle(cloo);
             //string dirn = cloo.Direction == 'A' ? "Across" : "Down";
@@ -652,8 +653,9 @@ namespace Crosswords
             FormatEntryTextBox.Text = cloo.Content.Format;
             FillCluePatternCombo(cloo.WordLength);
             PatternTextBlock.Text = TemplateTextBox.Text = _puzzle.PatternedWordConstrained(clueCode);
-            ShowUnspacedCheckBox();
+            // ShowUnSpacedCheckBox();
             ListEachButton.IsEnabled = false;
+            ListWholeButton.IsEnabled = false;
             ExtraLettersTextBox.Clear();
             WarnLettersVsClue();
             CountTemplateMatches();
@@ -676,19 +678,19 @@ namespace Crosswords
                 ClueTitleTextBorder.BorderBrush=Brushes.IndianRed;
             }
         }
-        private void ShowUnspacedCheckBox()
-        {
-            var enable = TemplateTextBox.Text.Contains(' ') || TemplateTextBox.Text.Contains('-');
-
-            UnspacedCheckBox.IsChecked = false;
-            UnspacedCheckBox.Visibility = enable  ? Visibility.Visible: Visibility.Hidden;
-        }
+        // private void ShowUnSpacedCheckBox()
+        // {
+        //     var enable = TemplateTextBox.Text.Contains(' ') || TemplateTextBox.Text.Contains('-');
+        //
+        //     // UnspacedCheckBox.IsChecked = false;
+        //     // UnspacedCheckBox.Visibility = enable  ? Visibility.Visible: Visibility.Hidden;
+        // }
         
         private void HighLightClueInGrid(Clue indice)
         {
-            for (int xx = 0; xx < _puzzle.Width; xx++)
+            for (var xx = 0; xx < _puzzle.Width; xx++)
             {
-                for (int yy = 0; yy < _puzzle.Height; yy++)
+                for (var yy = 0; yy < _puzzle.Height; yy++)
                 {
                     if (_puzzle.Cell(new GridPoint(xx, yy)) != CrosswordGrid.BlackChar)
                     {
@@ -697,9 +699,9 @@ namespace Crosswords
                 }
             }
 
-            int sx = indice.Xstart;
-            int sy = indice.Ystart;
-            for (int a = 0; a < indice.WordLength; a++)
+            var sx = indice.Xstart;
+            var sy = indice.Ystart;
+            for (var a = 0; a < indice.WordLength; a++)
             {
                 int px;
                 int py;
@@ -972,7 +974,7 @@ namespace Crosswords
             var pattern =TemplateTextBox.Text.Trim().Replace('-', ' '); // make all word breaks spaces (no hyphens)
             var words = pattern.Split(" ");
             ListEachButton.IsEnabled = words.Length > 1;
-            
+            ListWholeButton.IsEnabled = words.Length > 1;
             Cursor = Cursors.Arrow;
         }
         
@@ -980,46 +982,104 @@ namespace Crosswords
         {
             var onlyCaps = CapitalsCheckBox.IsChecked ?? false;
             var onlyRevs = ReversibleCheckBox.IsChecked ?? false;
-            var alsoWhole = UnspacedCheckBox.IsChecked ?? false;
+            // var alsoWhole = UnspacedCheckBox.IsChecked ?? false;
             var pattern = TemplateTextBox.Text;
             var extras = ExtraLettersTextBox.Text.Trim();
             var known = new Connu();
-            return known.GetTemplateMatches(pattern, onlyCaps, onlyRevs, alsoWhole, extras);
+            return known.GetTemplateMatches(pattern, onlyCaps, onlyRevs, extras);
         }
         
+        // private void DisplayTemplateMatchesIndividualWordsList()
+        // {
+        //     var onlyCaps =false;
+        //     var onlyRevs = false;
+        //     var pattern = TemplateTextBox.Text.Trim();
+        //     var extras =string.Empty;
+        //     var known = new Connu();
+        //     pattern = pattern.Replace('-', ' '); // make all word breaks spaces (no hyphens)
+        //     string[] words = pattern.Split(" ");
+        //     if (words.Length < 2)
+        //     {
+        //         return;
+        //     }
+        //
+        //     var w = 1;
+        //     foreach (var word in words)
+        //     {
+        //         TemplateListBox.Items.Add(new ListBoxItem()
+        //         {
+        //             IsHitTestVisible = false
+        //             , Content = new TextBlock()
+        //                 {Text = $"WORD {w}", FontWeight = FontWeights.Bold, Foreground = Brushes.Blue}
+        //         });
+        //         
+        //         var splitList = known.GetTemplateMatches(word, onlyCaps, onlyRevs, false, extras);
+        //         foreach (var s in splitList)
+        //         {
+        //             TemplateListBox.Items.Add(s);
+        //         }
+        //
+        //         w++;
+        //     }
+        // }
         
-        private void DisplayTemplateMatchesIndividualWordsList()
+        private List<string> TemplateMatchesIndividualWordsList(string pattern)
         {
+            var finds = new List<string>();
             var onlyCaps =false;
             var onlyRevs = false;
-            var pattern = TemplateTextBox.Text.Trim();
-            var extras =string.Empty;
+            var extras = string.Empty;
             var known = new Connu();
             pattern = pattern.Replace('-', ' '); // make all word breaks spaces (no hyphens)
             string[] words = pattern.Split(" ");
             if (words.Length < 2)
             {
-                return;
+                return finds;
             }
 
-            int w = 1;
-            foreach (var word in words)
+            for (int w = 0; w < words.Length; w++)
             {
-                TemplateListBox.Items.Add(new ListBoxItem()
+                var partialList = known.GetTemplateMatches(words[w], onlyCaps, onlyRevs,  extras);
+                foreach (var match in partialList)
                 {
-                    IsHitTestVisible = false
-                    , Content = new TextBlock()
-                        {Text = $"WORD {w}", FontWeight = FontWeights.Bold, Foreground = Brushes.Blue}
-                });
-                
-                var splitList = known.GetTemplateMatches(word, onlyCaps, onlyRevs, false, extras);
-                foreach (var s in splitList)
-                {
-                    TemplateListBox.Items.Add(s);
+                    string combi = string.Empty;
+                    for (int u = 0; u < words.Length; u++)
+                    {
+                        if (u == w)
+                        {
+                            combi += $" {match}";
+                        }
+                        else
+                        {
+                            combi += $" {words[u]}";
+                        }
+                    }
+                    
+                    finds.Add(combi[1..]);
                 }
-
-                w++;
             }
+            
+            return finds;
+        }
+        
+        private List<string> TemplateMatchesUnSpacedList(string pattern)
+        {
+            var onlyCaps =false;
+            var onlyRevs = false;
+            var extras = string.Empty;
+            var known = new Connu();
+            var unSpaced = string.Empty;
+            foreach (var ch in pattern)
+            {
+                if (ch != ' ')
+                {
+                    if (ch != '-')
+                    {
+                        unSpaced += ch;
+                    }
+                }
+            }
+            return known.GetTemplateMatches(unSpaced, onlyCaps, onlyRevs,  extras);
         }
         
         private void CountTemplateMatches()
@@ -1275,15 +1335,6 @@ namespace Crosswords
             Cursor = Cursors.Arrow;
         }
        
-        // private void ColourComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        // {
-        //     if (ColourComboBox.SelectedItem is ListBoxItem {Tag: Brush pinceau})
-        //     {
-        //         _barBrush = pinceau;
-        //         ClueTitleTextBlock.Foreground = pinceau;
-        //     }
-        // }
-
         private void MainWindow_OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -1352,17 +1403,32 @@ namespace Crosswords
             win.ShowDialog();
         }
 
-        // private void ExtraLettersTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
-        // {
-        //     MakeUpperTextBoxText(ExtraLettersTextBox);
-        // }
-
         private void TemplateListEachButton_OnClick(object sender, RoutedEventArgs e)
         {
             Cursor= Cursors.Wait;
             ListEachButton.IsEnabled = false;
+            ListWholeButton.IsEnabled = false;
             TemplateListBox.Items.Clear();
-            DisplayTemplateMatchesIndividualWordsList();
+            List<string> finds = TemplateMatchesIndividualWordsList(TemplateTextBox.Text.Trim());
+            foreach (var find in finds)
+            {
+                TemplateListBox.Items.Add(find);
+            }
+            TemplateCountBlock.Text = $"Matches {TemplateListBox.Items.Count}";
+            Cursor = Cursors.Arrow;
+        }
+
+        private void TemplateListWholeButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            Cursor= Cursors.Wait;
+            ListWholeButton.IsEnabled = false;
+            TemplateListBox.Items.Clear();
+            List<string> finds =TemplateMatchesUnSpacedList(TemplateTextBox.Text.Trim());
+            foreach (var find in finds)
+            {
+                TemplateListBox.Items.Add(find);
+            }
+            TemplateCountBlock.Text = $"Matches {TemplateListBox.Items.Count}";
             Cursor = Cursors.Arrow;
         }
     }

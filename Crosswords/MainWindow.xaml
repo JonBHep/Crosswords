@@ -171,9 +171,9 @@
                     <CheckBox x:Name="ReversibleCheckBox" VerticalAlignment="Center" Margin="4 0 0 0"
                               Checked="Capitals_Toggled" Unchecked="Capitals_Toggled" 
                               ToolTip="Only include words which make another word when reversed">Reversible</CheckBox>
-                    <CheckBox x:Name="UnspacedCheckBox" VerticalAlignment="Center" Margin="4 0 0 0"
-                              Checked="Capitals_Toggled" Unchecked="Capitals_Toggled" 
-                              ToolTip="Also include matching words without spaces or hyphens">Include un-spaced matches</CheckBox>
+                    <!-- <CheckBox x:Name="UnspacedCheckBox" VerticalAlignment="Center" Margin="4 0 0 0" -->
+                    <!--           Checked="Capitals_Toggled" Unchecked="Capitals_Toggled"  -->
+                    <!--           ToolTip="Also include matching words without spaces or hyphens">Include un-spaced matches</CheckBox> -->
                 </DockPanel>
                 
                 <DockPanel Grid.Column="1" Grid.Row="2" LastChildFill="False">
@@ -183,8 +183,10 @@
                 </DockPanel>
                 
                 <DockPanel Grid.Column="1" Grid.Row="3">
-                    <Button x:Name="ListEachButton" DockPanel.Dock="Right" Margin="4 0 0 0" Width="80" Height="26" VerticalAlignment="Center"
-                            Click="TemplateListEachButton_OnClick" ToolTip="List matches for individual words">List all</Button>
+                    <Button x:Name="ListEachButton" DockPanel.Dock="Right" Margin="4 0 0 0" Width="120" Height="26" VerticalAlignment="Center"
+                            Click="TemplateListEachButton_OnClick" ToolTip="List matches for individual words">Partial matches</Button>
+                    <Button x:Name="ListWholeButton" DockPanel.Dock="Right" Margin="4 0 0 0" Width="120" Height="26" VerticalAlignment="Center"
+                            Click="TemplateListWholeButton_OnClick" ToolTip="List un-spaced matches">Un-spaced matches</Button>
                     <Button DockPanel.Dock="Right" Margin="4 0 0 0" Width="80" Height="26" VerticalAlignment="Center"
                             Click="TemplateListButton_OnClick" ToolTip="List template matches">List</Button>
                     <TextBlock x:Name="TemplateCountBlock" Margin="6 0 0 0" VerticalAlignment="Center">Matches: 0</TextBlock>    
