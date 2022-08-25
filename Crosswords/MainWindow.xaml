@@ -208,7 +208,8 @@
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <ListBox x:Name="ClueAListBox" Margin="2 0 2 0" SelectionChanged="ClueListBox_SelectionChanged" />
+                <ListBox x:Name="ClueAListBox" Margin="2 0 2 0" 
+                         SelectionChanged="ClueListBox_SelectionChanged" />
                 <ListBox x:Name="ClueDListBox" Margin="2 0 0 0" Grid.Column="1"
                          SelectionChanged="ClueListBox_SelectionChanged" />
             </Grid>

@@ -112,7 +112,7 @@ namespace Crosswords
             XwordGrid.ColumnDefinitions.Clear();
             XwordGrid.RowDefinitions.Clear();
 
-            for (int x = 0; x < _puzzle.Width; x++) // add column definitions
+            for (var x = 0; x < _puzzle.Width; x++) // add column definitions
             {
                 XwordGrid.ColumnDefinitions.Add(new ColumnDefinition()
                     {Width = new GridLength(SquareSide)}); // column of letter squares
@@ -123,7 +123,7 @@ namespace Crosswords
             ColumnDefinition lastcol = new ColumnDefinition();
             XwordGrid.ColumnDefinitions.Add(lastcol);
 
-            for (int y = 0; y < _puzzle.Height; y++) // add row definitions
+            for (var y = 0; y < _puzzle.Height; y++) // add row definitions
             {
                 XwordGrid.RowDefinitions.Add(new RowDefinition()
                     {Height = new GridLength(SquareSide)}); // row of letter squares
@@ -131,12 +131,12 @@ namespace Crosswords
                     {Height = new GridLength(gapSize)}); // gap between rows
             }
 
-            RowDefinition lastrow = new RowDefinition();
-            XwordGrid.RowDefinitions.Add(lastrow);
+            var lastRow = new RowDefinition();
+            XwordGrid.RowDefinitions.Add(lastRow);
 
-            for (int x = 0; x < _puzzle.Width; x++)
+            for (var x = 0; x < _puzzle.Width; x++)
             {
-                for (int y = 0; y < _puzzle.Height; y++)
+                for (var y = 0; y < _puzzle.Height; y++)
                 {
                     _cellPaper[x, y] = new Canvas()
                     {
@@ -155,8 +155,9 @@ namespace Crosswords
                         int i = _puzzle.Index(x, y);
                         if (i > 0)
                         {
-                            TextBlock indexBlock = new TextBlock()
-                                {FontSize = 8, Text = i.ToString(), Margin = new Thickness(2, 0, 0, 0)};
+                            // Display index
+                            var indexBlock = new TextBlock()
+                                {FontSize = 11, Text = i.ToString(), Margin = new Thickness(1, -2, 0, 0)};
                             _cellPaper[x, y].Children.Add(indexBlock);
                         }
                     }
@@ -635,10 +636,18 @@ namespace Crosswords
 
         private void ClueListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (sender is ListBox {SelectedItem: ListBoxItem {Tag: string k} })
+            if (sender is ListBox {SelectedItem: ListBoxItem {Tag: string k}} box )
             {
-               ShowClueDetails(k);
-            }
+                if (box.Equals(ClueAListBox))
+                {
+                    ClueDListBox.SelectedIndex = -1;
+                }
+                else
+                {
+                    ClueAListBox.SelectedIndex = -1;
+                }
+                ShowClueDetails(k);
+            } 
         }
 
         private void ShowClueDetails(string clueCode)
@@ -646,14 +655,11 @@ namespace Crosswords
             var cloo = _puzzle.ClueOf(clueCode);
             HighLightClueInGrid(cloo);
             ShowClueTitle(cloo);
-            //string dirn = cloo.Direction == 'A' ? "Across" : "Down";
-            //ClueTitleTextBlock.Text = $"{cloo.Number} {dirn}";
             _selectedClueKey = clueCode;
             SwitchClueControls(true);
             FormatEntryTextBox.Text = cloo.Content.Format;
             FillCluePatternCombo(cloo.WordLength);
             PatternTextBlock.Text = TemplateTextBox.Text = _puzzle.PatternedWordConstrained(clueCode);
-            // ShowUnSpacedCheckBox();
             ListEachButton.IsEnabled = false;
             ListWholeButton.IsEnabled = false;
             ExtraLettersTextBox.Clear();
@@ -678,13 +684,6 @@ namespace Crosswords
                 ClueTitleTextBorder.BorderBrush=Brushes.IndianRed;
             }
         }
-        // private void ShowUnSpacedCheckBox()
-        // {
-        //     var enable = TemplateTextBox.Text.Contains(' ') || TemplateTextBox.Text.Contains('-');
-        //
-        //     // UnspacedCheckBox.IsChecked = false;
-        //     // UnspacedCheckBox.Visibility = enable  ? Visibility.Visible: Visibility.Hidden;
-        // }
         
         private void HighLightClueInGrid(Clue indice)
         {
