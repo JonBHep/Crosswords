@@ -166,15 +166,17 @@ public partial class SaveDialogueWindow
     }
     private int FirstFree(List<int> set)
     {
-        int vide = -1;
-        int top = set.Max();
-        for (int a = 1; a < top; a++)
+        if (set.Count < 1)
         {
-            if (!set.Contains(a))
-            {
-                vide = a;
-                break;
-            }
+            return 1;
+        }
+        var vide = -1;
+        var top = set.Max();
+        for (var a = 1; a < top; a++)
+        {
+            if (set.Contains(a)) continue;
+            vide = a;
+            break;
         }
 
         if (vide == -1)

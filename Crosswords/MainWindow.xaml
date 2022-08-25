@@ -99,7 +99,7 @@
                 </DockPanel>
                 
                 <DockPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="11 6" LastChildFill="False">
-                    <TextBlock x:Name="FormatCaption" VerticalAlignment="Center" FontWeight="Medium" Width="72">Format:</TextBlock>
+                    <TextBlock VerticalAlignment="Center" FontWeight="Medium" Width="72">Format:</TextBlock>
                     <TextBox x:Name="FormatEntryTextBox" AcceptsReturn="False" Width="200" FontSize="16" FontFamily="Lucida Console"
                              Padding="4" TextChanged="FormatEntryTextBox_OnTextChanged" />
                     <Button x:Name="FormatApplyButton" Margin="12 0" Width="80" Height="26" VerticalAlignment="Center"
@@ -115,11 +115,9 @@
                 <TextBlock Grid.Row="3" Grid.Column="0" Margin="12 6" x:Name="ClueRubricATextBlock" FontFamily="Arial">To set the format of the clue, separate word lengths with a comma or a hyphen e.g. '5,5-4'.</TextBlock>
                 
                 <DockPanel Grid.Row="4" Grid.Column="0" Margin="12 6" LastChildFill="False">
-                    <TextBlock x:Name="PatternCaption" VerticalAlignment="Center" FontWeight="Medium" Width="72">Formatted:</TextBlock>
-                    <!-- <TextBox x:Name="PatternTextBox" Width="200" VerticalAlignment="Center" FontSize="18" -->
-                    <!--          FontFamily="Lucida Console" IsReadOnly="True" Padding="4" Background="Transparent"> -->
-                    <!-- </TextBox> -->
+                    <TextBlock VerticalAlignment="Center" FontWeight="Medium" Width="72">Formatted:</TextBlock>
                     <TextBlock x:Name="PatternTextBlock" VerticalAlignment="Center" FontSize="18" FontFamily="Lucida Console" Padding="4 0 0 0" />
+                    <TextBlock x:Name="LetterCountTextBlock" VerticalAlignment="Center" FontSize="12" FontFamily="Arial" Padding="4 0 0 0" />
                 </DockPanel>
                 
                 <TextBlock Grid.Row="1" Grid.Column="0" Margin="12 6" x:Name="ClueRubricBTextBlock" FontFamily="Arial">Letters only; no hyphens, spaces or unknown letters.</TextBlock>

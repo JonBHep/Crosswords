@@ -658,6 +658,7 @@ namespace Crosswords
             _selectedClueKey = clueCode;
             SwitchClueControls(true);
             FormatEntryTextBox.Text = cloo.Content.Format;
+            LetterCountTextBlock.Text = $"({cloo.WordLength} letters)";
             FillCluePatternCombo(cloo.WordLength);
             PatternTextBlock.Text = TemplateTextBox.Text = _puzzle.PatternedWordConstrained(clueCode);
             ListEachButton.IsEnabled = false;
@@ -755,16 +756,19 @@ namespace Crosswords
                 var fmt = FormatEntryTextBox.Text.Trim();
                 if (!string.IsNullOrWhiteSpace(_selectedClueKey))
                 {
-                    if (ClueContent.GoodFormatSpecification(fmt, _puzzle.ClueOf(_selectedClueKey).WordLength))
+                    int cluelength = _puzzle.ClueOf(_selectedClueKey).WordLength;
+                    if (ClueContent.GoodFormatSpecification(fmt, cluelength))
                     {
                         FormatApplyButton.IsEnabled = true;
                         FormatConflictWarningTextBlock.Text = string.Empty;
                         FormatApplyButton.IsDefault = true;
+                        // LetterCountTextBlock.Text = $"{cluelength}";
                     }
                     else
                     {
                         FormatApplyButton.IsEnabled = false;
                         FormatConflictWarningTextBlock.Text = "Not a valid format for this clue length";
+                        // LetterCountTextBlock.Text = string.Empty;
                     }
                 }
             }

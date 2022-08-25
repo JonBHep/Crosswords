@@ -77,6 +77,7 @@ public class ClueContent
     }
 
     private string _letters;
+
     public string Letters 
     {
         get
