@@ -661,8 +661,6 @@ namespace Crosswords
             LetterCountTextBlock.Text = $"({cloo.WordLength} letters)";
             FillCluePatternCombo(cloo.WordLength);
             PatternTextBlock.Text = TemplateTextBox.Text = _puzzle.PatternedWordConstrained(clueCode);
-            ListEachButton.IsEnabled = false;
-            ListWholeButton.IsEnabled = false;
             ExtraLettersTextBox.Clear();
             WarnLettersVsClue();
             CountTemplateMatches();
@@ -738,7 +736,7 @@ namespace Crosswords
         private void AnagramTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
         {
             CleanGivenLetters(AnagramTextBox, false);
-            AnagramLengthBlock.Text = $"({AnagramTextBox.Text.Trim().Length})";
+            AnagramLengthBlock.Text = $"Length {AnagramTextBox.Text.Trim().Length}";
             AnagramListBox.Items.Clear();
             AnagramCountBlock.Text = string.Empty;
             AnagramButton.IsEnabled = AnagramTextBox.Text.Trim().Length > 0;
@@ -974,10 +972,6 @@ namespace Crosswords
             var g = TemplateListBox.Items.Count;
             TemplateCountBlock.Text = (g < 1) ? "No matches" : g > 1 ? $"{g:#,0} matches" : "1 match";
             
-            var pattern =TemplateTextBox.Text.Trim().Replace('-', ' '); // make all word breaks spaces (no hyphens)
-            var words = pattern.Split(" ");
-            ListEachButton.IsEnabled = words.Length > 1;
-            ListWholeButton.IsEnabled = words.Length > 1;
             Cursor = Cursors.Arrow;
         }
         
@@ -1232,6 +1226,11 @@ namespace Crosswords
             CapitalsCheckBox.IsChecked = false;
             ReversibleCheckBox.IsChecked = false;
             _disableCheckBoxesTrigger = false;
+            
+            // enable list buttons according to whether pattern is multi-word
+            var pattern =TemplateTextBox.Text.Trim().Replace('-', ' '); // make all word breaks spaces (no hyphens)
+            var words = pattern.Split(" ");
+            ListEachButton.IsEnabled = ListWholeButton.IsEnabled = words.Length > 1;
         }
 
         private void CheckVocabButton_Click(object sender, RoutedEventArgs e)
@@ -1409,8 +1408,8 @@ namespace Crosswords
         private void TemplateListEachButton_OnClick(object sender, RoutedEventArgs e)
         {
             Cursor= Cursors.Wait;
-            ListEachButton.IsEnabled = false;
-            ListWholeButton.IsEnabled = false;
+            // ListEachButton.IsEnabled = false;
+            // ListWholeButton.IsEnabled = false;
             TemplateListBox.Items.Clear();
             List<string> finds = TemplateMatchesIndividualWordsList(TemplateTextBox.Text.Trim());
             foreach (var find in finds)
@@ -1424,7 +1423,7 @@ namespace Crosswords
         private void TemplateListWholeButton_OnClick(object sender, RoutedEventArgs e)
         {
             Cursor= Cursors.Wait;
-            ListWholeButton.IsEnabled = false;
+            // ListWholeButton.IsEnabled = false;
             TemplateListBox.Items.Clear();
             List<string> finds =TemplateMatchesUnSpacedList(TemplateTextBox.Text.Trim());
             foreach (var find in finds)

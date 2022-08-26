@@ -55,9 +55,9 @@ public class ClueContent
     public static List<string> FormatList(string q)
     {
         List<string> r = new();
-        StringBuilder builder = new StringBuilder("#");
+        var builder = new StringBuilder("#");
 
-        for (int p = 0; p < q.Length; p++)
+        for (var p = 0; p < q.Length; p++)
         {
             char c = q[p];
             if (char.IsDigit(c))
@@ -93,11 +93,11 @@ public class ClueContent
 
     public ClueContent(string specification)
     {
-        int p = specification.IndexOf(':');
+        var p = specification.IndexOf(':');
         _letters = specification[..p];
         Format = specification[(p + 1)..];
     }
-
+    
     public ClueContent(int sz)
     {
         // called in Clue constructor

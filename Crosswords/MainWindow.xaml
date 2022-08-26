@@ -117,7 +117,7 @@
                 <DockPanel Grid.Row="4" Grid.Column="0" Margin="12 6" LastChildFill="False">
                     <TextBlock VerticalAlignment="Center" FontWeight="Medium" Width="72">Formatted:</TextBlock>
                     <TextBlock x:Name="PatternTextBlock" VerticalAlignment="Center" FontSize="18" FontFamily="Lucida Console" Padding="4 0 0 0" />
-                    <TextBlock x:Name="LetterCountTextBlock" VerticalAlignment="Center" FontSize="12" FontFamily="Arial" Padding="4 0 0 0" />
+                    <TextBlock x:Name="LetterCountTextBlock" VerticalAlignment="Center" FontSize="12" FontFamily="Arial" Margin="16 0 0 0" />
                 </DockPanel>
                 
                 <TextBlock Grid.Row="1" Grid.Column="0" Margin="12 6" x:Name="ClueRubricBTextBlock" FontFamily="Arial">Letters only; no hyphens, spaces or unknown letters.</TextBlock>
@@ -135,66 +135,76 @@
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                
-                <DockPanel>
-                    <TextBlock FontWeight="Medium" Margin="4 0 4 0" TextAlignment="Center" VerticalAlignment="Center">Anagrams</TextBlock>
-                    <TextBox x:Name="AnagramTextBox" Margin="4 2 0 4" Width="200" FontSize="16"
-                             FontFamily="Lucida Console" Padding="4" TextChanged="AnagramTextBox_OnTextChanged" />
-                    <TextBlock x:Name="AnagramLengthBlock" FontWeight="Medium" Width="32" Margin="4 0 4 0" TextAlignment="Center" VerticalAlignment="Center">0</TextBlock>
-                    <Button x:Name="AnagramButton" Width="80" Height="26" VerticalAlignment="Center"
-                            Click="AnagramButton_OnClick">
-                        Anagrams
-                    </Button>
-                    <TextBlock x:Name="AnagramCountBlock" VerticalAlignment="Center" Margin="4 0 0 0" />
-                </DockPanel>
-                
-                <DockPanel Grid.Row="0" Grid.Column="1" LastChildFill="False">
-                    <TextBlock FontWeight="Medium" Margin="4 0 4 0" TextAlignment="Center" VerticalAlignment="Center">Pattern matching</TextBlock>
-                    <TextBox x:Name="TemplateTextBox" Margin="4 2 2 4" Width="200" FontSize="16"
-                             FontFamily="Lucida Console" Padding="4" TextChanged="TemplateTextBox_OnTextChanged" />
-                    <Button Margin="12 0 0 0" Width="72" Height="26" VerticalAlignment="Center"
-                            Click="TemplateCountButton_OnClick" ToolTip="Count template matches">Count</Button>
-                </DockPanel>
-                
-                <DockPanel Grid.Column="1" Grid.Row="1">
-                    <CheckBox x:Name="CapitalsCheckBox" VerticalAlignment="Center" Margin="4 0 0 0" 
-                              Checked="Capitals_Toggled" Unchecked="Capitals_Toggled" ToolTip="Only include words listed with an initial capital">Capitalised</CheckBox>
-                    <CheckBox x:Name="ReversibleCheckBox" VerticalAlignment="Center" Margin="4 0 0 0"
-                              Checked="Capitals_Toggled" Unchecked="Capitals_Toggled" 
-                              ToolTip="Only include words which make another word when reversed">Reversible</CheckBox>
-                    <!-- <CheckBox x:Name="UnspacedCheckBox" VerticalAlignment="Center" Margin="4 0 0 0" -->
-                    <!--           Checked="Capitals_Toggled" Unchecked="Capitals_Toggled"  -->
-                    <!--           ToolTip="Also include matching words without spaces or hyphens">Include un-spaced matches</CheckBox> -->
-                </DockPanel>
-                
-                <DockPanel Grid.Column="1" Grid.Row="2" LastChildFill="False">
-                    <TextBlock VerticalAlignment="Center" Margin="4 0 4 0" >Additional letters to be included</TextBlock>
-                    <TextBox x:Name="ExtraLettersTextBox" Margin="4 2 4 2" Padding="4" FontSize="16" Width="128"
-                             FontFamily="Lucida Console" ToolTip="Additional letters to be included" TextChanged="ExtraLettersTextBox_OnTextChanged" />
-                </DockPanel>
-                
-                <DockPanel Grid.Column="1" Grid.Row="3">
-                    <Button x:Name="ListEachButton" DockPanel.Dock="Right" Margin="4 0 0 0" Width="120" Height="26" VerticalAlignment="Center"
-                            Click="TemplateListEachButton_OnClick" ToolTip="List matches for individual words">Partial matches</Button>
-                    <Button x:Name="ListWholeButton" DockPanel.Dock="Right" Margin="4 0 0 0" Width="120" Height="26" VerticalAlignment="Center"
-                            Click="TemplateListWholeButton_OnClick" ToolTip="List un-spaced matches">Un-spaced matches</Button>
-                    <Button DockPanel.Dock="Right" Margin="4 0 0 0" Width="80" Height="26" VerticalAlignment="Center"
-                            Click="TemplateListButton_OnClick" ToolTip="List template matches">List</Button>
-                    <TextBlock x:Name="TemplateCountBlock" Margin="6 0 0 0" VerticalAlignment="Center">Matches: 0</TextBlock>    
-                </DockPanel>
-                
-                <ListBox x:Name="AnagramListBox" Margin="0 4 2 0" FontFamily="Lucida Console" FontSize="14" Grid.Row="1" Grid.RowSpan="4" Grid.Column="0"
-                         MouseDoubleClick="AnagramBox_OnMouseDoubleClick" />
 
-                <ListBox x:Name="TemplateListBox" Margin="2 4 0 0" FontFamily="Lucida Console" FontSize="14" Grid.Row="4" Grid.Column="1"
-                         MouseDoubleClick="TemplateBox_OnMouseDoubleClick" />
+                <Border  Padding="6" BorderBrush="Tan" BorderThickness="1.5" CornerRadius="8" Margin="0 0 2 0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30" />
+                            <RowDefinition Height="30" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <DockPanel LastChildFill="False">
+                            <TextBlock FontWeight="Medium" Margin="4 0 4 0" TextAlignment="Center" VerticalAlignment="Center">ANAGRAMS</TextBlock>
+                            <TextBox x:Name="AnagramTextBox" Margin="4 2 0 4" Width="200" FontSize="16"
+                                     FontFamily="Lucida Console" Padding="4" TextChanged="AnagramTextBox_OnTextChanged" />
+                            <TextBlock x:Name="AnagramLengthBlock" FontWeight="Medium" Margin="8 0 4 0" TextAlignment="Center" VerticalAlignment="Center">Length 0</TextBlock>
+                        </DockPanel>
+                        <DockPanel Grid.Row="1" Grid.Column="0">
+                            <Button x:Name="AnagramButton" Width="80" Height="26" VerticalAlignment="Center"
+                                    Click="AnagramButton_OnClick">Find</Button>
+                            <TextBlock x:Name="AnagramCountBlock" VerticalAlignment="Center" Margin="4 0 0 0" />
+                        </DockPanel>
+                        <ListBox x:Name="AnagramListBox" Margin="0 4 2 0" FontFamily="Lucida Console" FontSize="14" Grid.Row="2" Grid.Column="0"
+                                 MouseDoubleClick="AnagramBox_OnMouseDoubleClick" />        
+                    </Grid>
+                </Border>
+                
+                <Border Grid.Column="1" Padding="6" BorderBrush="Tan" BorderThickness="1.5" CornerRadius="8" Margin="2 0 0 0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30" />
+                            <RowDefinition Height="30" />
+                            <RowDefinition Height="30" />
+                            <RowDefinition Height="30" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <DockPanel Grid.Row="0" LastChildFill="False">
+                            <TextBlock FontWeight="Medium" Margin="4 0 4 0" TextAlignment="Center" VerticalAlignment="Center">PATTERN MATCHING</TextBlock>
+                            <TextBox x:Name="TemplateTextBox" Margin="4 2 2 4" Width="200" FontSize="16"
+                                     FontFamily="Lucida Console" Padding="4" TextChanged="TemplateTextBox_OnTextChanged" />
+                            <Button Margin="12 0 0 0" Width="72" Height="26" VerticalAlignment="Center"
+                                    Click="TemplateCountButton_OnClick" ToolTip="Count template matches">Count</Button>
+                        </DockPanel>
+                        
+                        <DockPanel Grid.Row="1">
+                            <CheckBox x:Name="CapitalsCheckBox" VerticalAlignment="Center" Margin="4 0 0 0" 
+                                      Checked="Capitals_Toggled" Unchecked="Capitals_Toggled" ToolTip="Only include words listed with an initial capital">Capitalised</CheckBox>
+                            <CheckBox x:Name="ReversibleCheckBox" VerticalAlignment="Center" Margin="4 0 0 0"
+                                      Checked="Capitals_Toggled" Unchecked="Capitals_Toggled" 
+                                      ToolTip="Only include words which make another word when reversed">Reversible</CheckBox>
+                        </DockPanel>
+                        
+                        <DockPanel Grid.Row="2" LastChildFill="False">
+                            <TextBlock VerticalAlignment="Center" Margin="4 0 4 0" >Additional letters to be included</TextBlock>
+                            <TextBox x:Name="ExtraLettersTextBox" Margin="4 2 4 2" Padding="4" FontSize="16" Width="128"
+                                     FontFamily="Lucida Console" ToolTip="Additional letters to be included" TextChanged="ExtraLettersTextBox_OnTextChanged" />
+                        </DockPanel>
+                        
+                        <DockPanel Grid.Row="3">
+                            <Button x:Name="ListEachButton" DockPanel.Dock="Right" Margin="4 0 0 0" Width="120" Height="26" VerticalAlignment="Center"
+                                    Click="TemplateListEachButton_OnClick" ToolTip="List matches for individual words">Partial matches</Button>
+                            <Button x:Name="ListWholeButton" DockPanel.Dock="Right" Margin="4 0 0 0" Width="120" Height="26" VerticalAlignment="Center"
+                                    Click="TemplateListWholeButton_OnClick" ToolTip="List un-spaced matches">Un-spaced matches</Button>
+                            <Button DockPanel.Dock="Right" Margin="4 0 0 0" Width="80" Height="26" VerticalAlignment="Center"
+                                    Click="TemplateListButton_OnClick" ToolTip="List template matches">List</Button>
+                            <TextBlock x:Name="TemplateCountBlock" Margin="6 0 0 0" VerticalAlignment="Center">Matches: 0</TextBlock>    
+                        </DockPanel>
+                        
+                        <ListBox x:Name="TemplateListBox" Margin="2 4 0 0" FontFamily="Lucida Console" FontSize="14" Grid.Row="4" 
+                                 MouseDoubleClick="TemplateBox_OnMouseDoubleClick" />        
+                    </Grid>
+                </Border>
+                
             </Grid>
         </Grid>
 
