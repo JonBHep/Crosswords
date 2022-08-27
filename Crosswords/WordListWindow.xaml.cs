@@ -8,13 +8,15 @@ namespace Crosswords;
 
 public partial class WordListWindow
 {
-    public WordListWindow()
+    public WordListWindow(string target)
     {
         InitializeComponent();
         _source = new Connu();
+        _sought = target;
     }
 
     private Connu _source;
+    private string _sought;
 
     private void CloseButton_OnClick(object sender, RoutedEventArgs e)
     {
@@ -28,6 +30,7 @@ public partial class WordListWindow
         AddButton.IsEnabled = false;
         FindButton.IsEnabled = false;
         OrderTextBlock.Text = string.Empty;
+        FindTextBox.Text = _sought.ToLowerInvariant();
         FindTextBox.Focus();
     }
 

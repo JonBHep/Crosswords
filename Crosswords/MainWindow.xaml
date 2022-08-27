@@ -37,11 +37,7 @@
                 <Button Width="80" Height="26" Margin="6 0 0 0" x:Name="OpenButton" Click="OpenButton_Click">Open</Button>
                 
                 <Button DockPanel.Dock="Right" Width="80" Height="26" FontWeight="Bold" Click="CloseButton_Click">Close</Button>
-                <!-- <Button DockPanel.Dock="Right" x:Name="VocabButton" Margin=" 0 0 6 0" Width="80" Height="26" -->
-                <!--         ToolTip="Check all answers against word list" -->
-                <!--         Click="CheckVocabButton_Click"> -->
-                <!--     Check -->
-                <!-- </Button> -->
+                
             </DockPanel>
 
             <DockPanel Grid.Row="2" Margin="12 12 12 0" VerticalAlignment="Center" LastChildFill="False">
@@ -55,7 +51,6 @@
                         Click="ClearAllButton_Click">
                     Clear
                 </Button>
-                <!-- <ProgressBar DockPanel.Dock="Right" x:Name="PuzzleProgressBar" Value="20" Width="166" Height="12" Margin="12 0 0 0" Foreground="PaleGreen" Background="SeaGreen" BorderBrush="Gray" /> -->
                 <TextBlock x:Name="ProgressTextBlock" VerticalAlignment="Center" Margin="12 0 0 0" FontSize="16" FontWeight="Bold" Text="[progress]" />
                 <StackPanel x:Name="ProgressPanel" Orientation="Horizontal" VerticalAlignment="Center" DockPanel.Dock="Right"></StackPanel>
             </DockPanel>
@@ -219,10 +214,10 @@
                 </Grid.ColumnDefinitions>
                 <Grid x:Name="CrosswordGrid"  Margin="4" MinHeight="200" />   
                 <DockPanel Grid.Column="1">
-                    <TextBlock DockPanel.Dock="Top" Margin="0 4 0 4" TextAlignment="Center">NOT IN DICTIONARY</TextBlock>
+                    <TextBlock x:Name="StrangersTextBlock" DockPanel.Dock="Top" Margin="0 4 0 4" Background="Ivory" FontWeight="Medium" TextAlignment="Center">NOT IN DICTIONARY</TextBlock>
                     <DockPanel DockPanel.Dock="Bottom" LastChildFill="False">
                         <Button Width="72" Height="24" Margin="0 4 4 6" ToolTip="Re-check list against dictionary" Click="CheckVocabButton_Click">Re-check</Button>
-                        <Button x:Name="RemoveStrangerButton" Width="72" Height="24" Margin="0 4 4 6" ToolTip="Remove selected item from list" Click="RemoveStrangerButton_OnClick">Remove</Button>
+                        <Button x:Name="AddStrangerButton" Width="72" Height="24" Margin="0 4 4 6" ToolTip="Add selected item to dictionary" Click="AddStrangerButton_OnClick">Add</Button>
                     </DockPanel>
                     <ListBox x:Name="StrangerListBox" DockPanel.Dock="Top" Background="OldLace" SelectionChanged="StrangerListBox_OnSelectionChanged"></ListBox>
                 </DockPanel>

@@ -45,7 +45,7 @@ public partial class MainWindow
     private string _selectedClueKey = string.Empty;
     private bool _disableCheckBoxesTrigger;
     private Canvas[,] _cellPaper = new Canvas[0, 0];
-    private List<string> _strangers;
+    private readonly List<string> _strangers;
         
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
@@ -663,15 +663,17 @@ public partial class MainWindow
 
     private void RefreshStrangersList()
     {
-        RemoveStrangerButton.IsEnabled = false;
+        AddStrangerButton.IsEnabled = false;
         _strangers.Sort();
+        StrangersTextBlock.Background = _strangers.Count == 0 ? Brushes.Ivory : Brushes.OrangeRed;
+        StrangersTextBlock.Foreground = _strangers.Count == 0 ? Brushes.Black : Brushes.Ivory;
         StrangerListBox.Items.Clear();
         foreach (var biz in _strangers)
         {
             StrangerListBox.Items.Add(new TextBlock()
             {
                 Text = biz
-                , FontFamily = new FontFamily("Liberation Mono"), Foreground = Brushes.OrangeRed
+                , FontFamily = new FontFamily("Liberation Mono"), Foreground = Brushes.Red
                 , FontSize = 14
             });
         }
@@ -679,18 +681,16 @@ public partial class MainWindow
 
     private void ClueListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (sender is ListBox {SelectedItem: ListBoxItem {Tag: string k}} box )
+        if (sender is not ListBox {SelectedItem: ListBoxItem {Tag: string k}} box) return;
+        if (box.Equals(ClueAListBox))
         {
-            if (box.Equals(ClueAListBox))
-            {
-                ClueDListBox.SelectedIndex = -1;
-            }
-            else
-            {
-                ClueAListBox.SelectedIndex = -1;
-            }
-            ShowClueDetails(k);
-        } 
+            ClueDListBox.SelectedIndex = -1;
+        }
+        else
+        {
+            ClueAListBox.SelectedIndex = -1;
+        }
+        ShowClueDetails(k);
     }
 
     private void ShowClueDetails(string clueCode)
@@ -1192,7 +1192,7 @@ public partial class MainWindow
 
     private void ListButton_OnClick(object sender, RoutedEventArgs e)
     {
-        WordListWindow wlw = new() {Owner = this};
+        WordListWindow wlw = new(String.Empty) {Owner = this};
         wlw.ShowDialog();
     }
 
@@ -1276,7 +1276,7 @@ public partial class MainWindow
         ListEachButton.IsEnabled = ListWholeButton.IsEnabled = words.Length > 1;
     }
 
-    private void CheckVocabButton_Click(object sender, RoutedEventArgs e)
+    private void CheckVocab()
     {
         Cursor = Cursors.Wait;
         var retain = new List<string>();
@@ -1290,47 +1290,16 @@ public partial class MainWindow
             }
         }
 
-        SolidColorBrush dimbrush = Brushes.Silver;
-        SolidColorBrush abrush = Brushes.RoyalBlue;
-        SolidColorBrush dbrush = Brushes.DarkViolet;
-
-        //ClueAListBox.Items.Clear();
-        //ClueDListBox.Items.Clear();
-
-        //SolidColorBrush pinceau = abrush;
         List<Clue> clist = _puzzle.CluesAcross;
-        // TextBlock blk = new TextBlock();
-        // Run r = new Run() {Text = $"ACROSS: ", FontWeight = FontWeights.Bold, Foreground = pinceau};
-        // blk.Inlines.Add(r);
-        // r = new Run() {Text = $"{clist.Count} clues", Foreground = pinceau};
-        // blk.Inlines.Add(r);
-        // ListBoxItem itm = new ListBoxItem() {Content = blk, IsHitTestVisible = false};
-        // ClueAListBox.Items.Add(itm);
 
         foreach (var clu in clist)
         {
-//            pinceau = dimbrush;
-            // if (!clu.IsComplete())
-            // {
-            //     //pinceau = abrush;
-            // }
-
-            //var spl = new StackPanel() {Orientation = Orientation.Horizontal};
-
-            // blk = new TextBlock()
-            //   {Width = 80, Text = clu.Number.ToString(), FontWeight = FontWeights.Medium, Foreground = pinceau};
-            //spl.Children.Add(blk);
-
             if (clu.Content.Format.Length == 0)
             {
                 clu.Content.Format = $"{clu.WordLength}";
             }
 
-            //blk = new TextBlock() {Text = $" ({clu.Content.Format})", Foreground = pinceau, Width = 80};
-            //spl.Children.Add(blk);
-
             var wd = _puzzle.PatternedWordConstrained(clu.Key);
-            //var known = new Connu();
             var whether = known.FoundInWordList(wd);
             if (!whether)
             {
@@ -1339,50 +1308,18 @@ public partial class MainWindow
                     retain.Add(wd);    
                 }
             }
-            //Brush brosse = whether ? Brushes.DarkGreen : Brushes.Red;
-
-            // blk = new TextBlock()
-            //     {FontFamily = _fixedFont, Foreground = brosse, Text = wd, Padding = new Thickness(0, 3, 0, 0)};
-            // spl.Children.Add(blk);
-
-            // itm = new ListBoxItem() {Content = spl, Tag = clu.Key};
-            // ClueAListBox.Items.Add(itm);
         }
 
-        // pinceau = dbrush;
         clist = _puzzle.CluesDown;
-        // blk = new TextBlock();
-        // r = new Run() {Text = $"DOWN: ", FontWeight = FontWeights.Bold, Foreground = pinceau};
-        // blk.Inlines.Add(r);
-        // r = new Run() {Text = $"{clist.Count} clues", Foreground = pinceau};
-        // blk.Inlines.Add(r);
-        // itm = new ListBoxItem() {Content = blk, IsHitTestVisible = false};
-        // ClueDListBox.Items.Add(itm);
 
         foreach (var clu in clist)
         {
-            // pinceau = dimbrush;
-            // if (!clu.IsComplete())
-            // {
-            // pinceau = dbrush;
-            // }
-
-            // StackPanel spl = new StackPanel() {Orientation = Orientation.Horizontal};
-
-            // blk = new TextBlock()
-            // {Width = 80, Text = clu.Number.ToString(), FontWeight = FontWeights.Medium, Foreground = pinceau};
-            // spl.Children.Add(blk);
-
             if (clu.Content.Format.Length == 0)
             {
                 clu.Content.Format = $"{clu.WordLength}";
             }
 
-            // blk = new TextBlock() {Text = $" ({clu.Content.Format})", Foreground = pinceau, Width = 80};
-            // spl.Children.Add(blk);
-
             var wd = _puzzle.PatternedWordConstrained(clu.Key);
-            //var known = new Connu();
             var whether = known.FoundInWordList(wd);
             if (!whether)
             {
@@ -1392,14 +1329,6 @@ public partial class MainWindow
                 }
             }
 
-            // Brush brosse = whether ? Brushes.DarkGreen : Brushes.Red;
-            //
-            // blk = new TextBlock()
-            //     {FontFamily = _fixedFont, Foreground = brosse, Text = wd, Padding = new Thickness(0, 3, 0, 0)};
-            // spl.Children.Add(blk);
-            //
-            // itm = new ListBoxItem() {Content = spl, Tag = clu.Key};
-            // ClueDListBox.Items.Add(itm);
         }
 
         retain.Sort();
@@ -1412,7 +1341,11 @@ public partial class MainWindow
         RefreshStrangersList();
         Cursor = Cursors.Arrow;
     }
-
+    private void CheckVocabButton_Click(object sender, RoutedEventArgs e)
+    {
+        CheckVocab();
+    }
+    
     private void MainWindow_OnPreviewKeyDown(object sender, KeyEventArgs e)
     {
         if (e.Key == Key.Enter)
@@ -1484,8 +1417,6 @@ public partial class MainWindow
     private void TemplateListEachButton_OnClick(object sender, RoutedEventArgs e)
     {
         Cursor= Cursors.Wait;
-        // ListEachButton.IsEnabled = false;
-        // ListWholeButton.IsEnabled = false;
         TemplateListBox.Items.Clear();
         List<string> finds = TemplateMatchesIndividualWordsList(TemplateTextBox.Text.Trim());
         foreach (var find in finds)
@@ -1499,7 +1430,6 @@ public partial class MainWindow
     private void TemplateListWholeButton_OnClick(object sender, RoutedEventArgs e)
     {
         Cursor= Cursors.Wait;
-        // ListWholeButton.IsEnabled = false;
         TemplateListBox.Items.Clear();
         List<string> finds =TemplateMatchesUnSpacedList(TemplateTextBox.Text.Trim());
         foreach (var find in finds)
@@ -1514,26 +1444,24 @@ public partial class MainWindow
     {
         if (StrangerListBox.SelectedItem is TextBlock {Text: { } word})
         {
-            RemoveStrangerButton.Tag = word;
-            RemoveStrangerButton.IsEnabled = true;RemoveStrangerButton.Tag = word;
-            RemoveStrangerButton.IsEnabled = true;
+            AddStrangerButton.Tag = word;
+            AddStrangerButton.IsEnabled = true;AddStrangerButton.Tag = word;
+            AddStrangerButton.IsEnabled = true;
         }
         else
         {
-            RemoveStrangerButton.Tag = null;
-            RemoveStrangerButton.IsEnabled = false;                
+            AddStrangerButton.Tag = null;
+            AddStrangerButton.IsEnabled = false;                
         }
     }
 
-    private void RemoveStrangerButton_OnClick(object sender, RoutedEventArgs e)
+    private void AddStrangerButton_OnClick(object sender, RoutedEventArgs e)
     {
-        if (RemoveStrangerButton.Tag is string word)
+        if (AddStrangerButton.Tag is string word)
         {
-            if (_strangers.Contains(word))
-            {
-                _strangers.Remove(word);
-                RefreshStrangersList();
-            }
+            var win = new WordListWindow(word){Owner = this};
+            win.ShowDialog();
+            CheckVocab();
         }
     }
         
