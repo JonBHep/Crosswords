@@ -82,7 +82,6 @@ public partial class MainWindow
         DisplayGrid();
         NameTextBlock.Text = "Choose Open or New";
         SwitchClueControls(false);
-        // VocabButton.IsEnabled = false;
         ListEachButton.IsEnabled = false;
         ListWholeButton.IsEnabled = false;
             
@@ -557,8 +556,6 @@ public partial class MainWindow
 
     private void LoadPuzzleFromFile(string puzzlePath)
     {
-        // SaveCrossword();
-        // VocabButton.IsEnabled = false;
         AnagramTextBox.Clear();
         TemplateTextBox.Clear();
         using (StreamReader rdr = new StreamReader(puzzlePath, Clue.JbhEncoding))
@@ -588,6 +585,7 @@ public partial class MainWindow
 
         DisplayGrid();
         SwitchClueControls(false);
+        CheckVocab(clearFirst: true);
     }
 
     // private void LoadButton_Click(object sender, RoutedEventArgs e)
@@ -640,21 +638,10 @@ public partial class MainWindow
                     if (!_strangers.Contains(wd))
                     {
                         _strangers.Add(wd);
-                        _strangers.Sort();
-                        StrangerListBox.Items.Clear();
-                        foreach (var biz in _strangers)
-                        {
-                            StrangerListBox.Items.Add(new TextBlock()
-                            {
-                                Text = biz
-                                , FontFamily = new FontFamily("Liberation Mono"), Foreground = Brushes.OrangeRed
-                                , FontSize = 14
-                            });
-                        }
+                        RefreshStrangersList();
                     }
                 }
-                //
-                    
+                
                 DisplayGrid();
                 SwitchClueControls(false);
             }
@@ -706,7 +693,8 @@ public partial class MainWindow
         PatternTextBlock.Text = TemplateTextBox.Text = _puzzle.PatternedWordConstrained(clueCode);
         ExtraLettersTextBox.Clear();
         WarnLettersVsClue();
-        CountTemplateMatches();
+        TemplateListBox.Items.Clear();
+        ClearMatchingResult();
     }
 
     private void ShowClueTitle(Clue indice)
@@ -785,10 +773,7 @@ public partial class MainWindow
         AnagramButton.IsEnabled = AnagramTextBox.Text.Trim().Length > 0;
     }
         
-    private void ExtraLettersTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
-    {
-        CleanGivenLetters(ExtraLettersTextBox, false);
-    }
+    
         
     private void FormatEntryTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
     {
@@ -995,14 +980,13 @@ public partial class MainWindow
     private void TemplateListButton_OnClick(object sender, RoutedEventArgs e)
     {
         ListTemplateMatches();
-            
     }
+    
     private void TemplateCountButton_OnClick(object sender, RoutedEventArgs e)
     {
         CountTemplateMatches();
     }
        
-        
     private void ListTemplateMatches()
     {
         Cursor = Cursors.Wait;
@@ -1012,9 +996,7 @@ public partial class MainWindow
         {
             TemplateListBox.Items.Add(wd);
         }
-        var g = TemplateListBox.Items.Count;
-        TemplateCountBlock.Text = (g < 1) ? "No matches" : g > 1 ? $"{g:#,0} matches" : "1 match";
-            
+        ShowMatchingResult(TemplateListBox.Items.Count);
         Cursor = Cursors.Arrow;
     }
         
@@ -1022,47 +1004,12 @@ public partial class MainWindow
     {
         var onlyCaps = CapitalsCheckBox.IsChecked ?? false;
         var onlyRevs = ReversibleCheckBox.IsChecked ?? false;
-        // var alsoWhole = UnspacedCheckBox.IsChecked ?? false;
         var pattern = TemplateTextBox.Text;
         var extras = ExtraLettersTextBox.Text.Trim();
         var known = new Connu();
         return known.GetTemplateMatches(pattern, onlyCaps, onlyRevs, extras);
     }
-        
-    // private void DisplayTemplateMatchesIndividualWordsList()
-    // {
-    //     var onlyCaps =false;
-    //     var onlyRevs = false;
-    //     var pattern = TemplateTextBox.Text.Trim();
-    //     var extras =string.Empty;
-    //     var known = new Connu();
-    //     pattern = pattern.Replace('-', ' '); // make all word breaks spaces (no hyphens)
-    //     string[] words = pattern.Split(" ");
-    //     if (words.Length < 2)
-    //     {
-    //         return;
-    //     }
-    //
-    //     var w = 1;
-    //     foreach (var word in words)
-    //     {
-    //         TemplateListBox.Items.Add(new ListBoxItem()
-    //         {
-    //             IsHitTestVisible = false
-    //             , Content = new TextBlock()
-    //                 {Text = $"WORD {w}", FontWeight = FontWeights.Bold, Foreground = Brushes.Blue}
-    //         });
-    //         
-    //         var splitList = known.GetTemplateMatches(word, onlyCaps, onlyRevs, false, extras);
-    //         foreach (var s in splitList)
-    //         {
-    //             TemplateListBox.Items.Add(s);
-    //         }
-    //
-    //         w++;
-    //     }
-    // }
-        
+ 
     private List<string> TemplateMatchesIndividualWordsList(string pattern)
     {
         var finds = new List<string>();
@@ -1128,9 +1075,7 @@ public partial class MainWindow
         TemplateListBox.Items.Clear();
         List<string> hits = TemplateMatchesList();
         int count = hits.Count;
-        TemplateCountBlock.Text = (count > 999) ? "1,000+ matches" :
-            (count < 1) ? "No matches" :
-            count > 1 ? $"{count:#,0} matches" : "1 match";
+        ShowMatchingResult(count);
         Cursor = Cursors.Arrow;
     }
 
@@ -1258,30 +1203,15 @@ public partial class MainWindow
             }
         }
     }
-
-    private void TemplateTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
-    {
-        CleanGivenLetters(TemplateTextBox, true);
-        TemplateListBox.Items.Clear();
-        TemplateCountBlock.Text = string.Empty;
-
-        _disableCheckBoxesTrigger = true;
-        CapitalsCheckBox.IsChecked = false;
-        ReversibleCheckBox.IsChecked = false;
-        _disableCheckBoxesTrigger = false;
-            
-        // enable list buttons according to whether pattern is multi-word
-        var pattern =TemplateTextBox.Text.Trim().Replace('-', ' '); // make all word breaks spaces (no hyphens)
-        var words = pattern.Split(" ");
-        ListEachButton.IsEnabled = ListWholeButton.IsEnabled = words.Length > 1;
-    }
-
-    private void CheckVocab()
+  
+    private void CheckVocab(bool clearFirst)
     {
         Cursor = Cursors.Wait;
         var retain = new List<string>();
         var known = new Connu();
 
+        if (clearFirst){_strangers.Clear();}
+        
         foreach (var mot in _strangers)
         {
             if (!known.FoundInWordList(mot))
@@ -1341,10 +1271,10 @@ public partial class MainWindow
         RefreshStrangersList();
         Cursor = Cursors.Arrow;
     }
-    private void CheckVocabButton_Click(object sender, RoutedEventArgs e)
-    {
-        CheckVocab();
-    }
+    // private void CheckVocabButton_Click(object sender, RoutedEventArgs e)
+    // {
+    //     CheckVocab();
+    // }
     
     private void MainWindow_OnPreviewKeyDown(object sender, KeyEventArgs e)
     {
@@ -1399,14 +1329,7 @@ public partial class MainWindow
         }
     }
 
-    private void Capitals_Toggled(object sender, RoutedEventArgs e)
-    {
-        if (_disableCheckBoxesTrigger)
-        {
-            return;
-        }
-        CountTemplateMatches();
-    }
+    
 
     private void PointersButton_OnClick(object sender, RoutedEventArgs e)
     {
@@ -1423,7 +1346,7 @@ public partial class MainWindow
         {
             TemplateListBox.Items.Add(find);
         }
-        TemplateCountBlock.Text = $"Matches {TemplateListBox.Items.Count}";
+        ShowMatchingResult(TemplateListBox.Items.Count);
         Cursor = Cursors.Arrow;
     }
 
@@ -1436,7 +1359,7 @@ public partial class MainWindow
         {
             TemplateListBox.Items.Add(find);
         }
-        TemplateCountBlock.Text = $"Matches {TemplateListBox.Items.Count}";
+        ShowMatchingResult(TemplateListBox.Items.Count);
         Cursor = Cursors.Arrow;
     }
 
@@ -1461,8 +1384,58 @@ public partial class MainWindow
         {
             var win = new WordListWindow(word){Owner = this};
             win.ShowDialog();
-            CheckVocab();
+            CheckVocab(clearFirst: false);
         }
     }
-        
+
+    private void ClearExtrasButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        ExtraLettersTextBox.Clear();
+    }
+    
+    private void TemplateTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
+    {
+        CleanGivenLetters(TemplateTextBox, true);
+        ClearMatchingResult();
+
+        _disableCheckBoxesTrigger = true;
+        CapitalsCheckBox.IsChecked = false;
+        ReversibleCheckBox.IsChecked = false;
+        _disableCheckBoxesTrigger = false;
+
+        // enable list buttons according to whether pattern is multi-word
+        var pattern = TemplateTextBox.Text.Trim().Replace('-', ' '); // make all word breaks spaces (no hyphens)
+        var words = pattern.Split(" ");
+        ListEachButton.IsEnabled = ListWholeButton.IsEnabled = words.Length > 1;
+    }
+    
+    private void ExtraLettersTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
+    {
+        CleanGivenLetters(ExtraLettersTextBox, false);
+        ClearMatchingResult();
+    }
+ 
+    private void MatchingCheckBox_Toggled(object sender, RoutedEventArgs e)
+    {
+        if (_disableCheckBoxesTrigger)
+        {
+            return;
+        }
+        ClearMatchingResult();
+    }
+    
+    private void ClearMatchingResult()
+    {
+        TemplateListBox.Items.Clear();
+        TemplateCountBlock.Text = "Unchecked";
+        TemplateCountBlock.Foreground= Brushes.DimGray;
+    }
+    
+    private void ShowMatchingResult(int count)
+    {
+        TemplateCountBlock.Text = (count > 499) ? "500+ matches" :
+            (count < 1) ? "No matches" :
+            count > 1 ? $"{count:#,0} matches" : "1 match";
+        TemplateCountBlock.Foreground= Brushes.DarkViolet;
+    }
 }
