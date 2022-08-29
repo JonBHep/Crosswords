@@ -11,9 +11,9 @@ public class ClueContent
     {
         bool ok = true;
         char[] acceptableChars = "0123456789,-".ToCharArray();
-        for (int n = 0; n < q.Length; n++)
+        foreach (var t in q)
         {
-            if (!acceptableChars.Contains(q[n]))
+            if (!acceptableChars.Contains(t))
             {
                 ok = false;
                 break;
@@ -57,9 +57,8 @@ public class ClueContent
         List<string> r = new();
         var builder = new StringBuilder("#");
 
-        for (var p = 0; p < q.Length; p++)
+        foreach (var c in q)
         {
-            char c = q[p];
             if (char.IsDigit(c))
             {
                 builder.Append(c);
@@ -80,14 +79,8 @@ public class ClueContent
 
     public string Letters 
     {
-        get
-        {
-            return _letters;
-        }
-        set
-        {
-            _letters = value;
-        } 
+        get => _letters;
+        set => _letters = value;
     }
     public string Format { get; set; }
 
@@ -111,11 +104,47 @@ public class ClueContent
         return $"{Letters}:{Format}";
     }
 
-    public static List<string> LetterPatterns(int length)
+    // public static List<string> LetterPatterns(int length)
+    // {
+    //     List<List<int>> foundPatterns = AddGap(length, new List<int>());
+    //     int order = 1;
+    //     bool added = true;
+    //     while (added)
+    //     {
+    //         List<List<int>> additions = new();
+    //         foreach (var pattern in foundPatterns)
+    //         {
+    //             if (pattern.Count == order)
+    //             {
+    //                 List<List<int>> novelties = AddGap(length, pattern);
+    //                 additions.AddRange(novelties);
+    //             }
+    //         }
+    //
+    //         foundPatterns
+    //             .AddRange(additions); // new items added to foundPatterns OUTSIDE the iteration over foundPatterns
+    //         order++;
+    //         added = additions.Count > 0;
+    //     }
+    //
+    //     List<List<int>> sortedFoundPatterns = SortedPatterns(foundPatterns);  // limit list to five words (four gaps)
+    //     
+    //     // Convert the list of int positions into a list of word-length patterns
+    //     List<string> results = new();
+    //
+    //     foreach (var gapPattern in sortedFoundPatterns)
+    //     {
+    //         results.Add(Translated(length, gapPattern));
+    //     }
+    //
+    //     return results;
+    // }
+    
+    public static List<List<int>> WordLengthPatterns(int length)
     {
-        List<List<int>> foundPatterns = AddGap(length, new List<int>());
-        int order = 1;
-        bool added = true;
+        var foundPatterns = AddGap(length, new List<int>());
+        var order = 1;
+        var added = true;
         while (added)
         {
             List<List<int>> additions = new();
@@ -123,7 +152,7 @@ public class ClueContent
             {
                 if (pattern.Count == order)
                 {
-                    List<List<int>> novelties = AddGap(length, pattern);
+                    var novelties = AddGap(length, pattern);
                     additions.AddRange(novelties);
                 }
             }
@@ -134,20 +163,24 @@ public class ClueContent
             added = additions.Count > 0;
         }
 
-        List<List<int>> sortedFoundPatterns = SortedPatterns(foundPatterns);  // limit list to five words (four gaps)
-        
-        // Convert the list of int positions into a list of word-length patterns
-        List<string> results = new();
-
-        foreach (var gapPattern in sortedFoundPatterns)
-        {
-            results.Add(Translated(length, gapPattern));
-        }
-
-        return results;
+        var sortedFoundPatterns = SortedPatterns(foundPatterns);  // limit list to five words (four gaps)
+        return sortedFoundPatterns;
     }
 
-    private static string Translated(int clueLength, List<int> raw)
+    // public List<string> WordLengthPatternSpaced(int fullLength,List<List<int>> patterns)
+    // {
+    //     // Convert the list of int positions into a list of word-length patterns
+    //     List<string> results = new();
+    //
+    //     foreach (var gapPattern in patterns)
+    //     {
+    //         results.Add(Translated(fullLength, gapPattern));
+    //     }
+    //
+    //     return results;
+    // }
+    
+    public static string Translated(int clueLength, List<int> raw)
     {
         string answer = string.Empty;
         int position = 0;
@@ -161,7 +194,23 @@ public class ClueContent
         answer += $"{tailLength}";
         return answer;
     }
-
+    
+    public static string TranslatedSpaced(int clueLength, List<int> raw)
+    {
+        string answer = string.Empty;
+        int position = 0;
+        foreach (var p in raw)
+        {
+            var wordLength = p - position;
+            var wordString = $"{wordLength},".PadLeft(3);
+            answer += wordString;
+            position = p;
+        }
+        int tailLength = clueLength - position;
+        answer += $"{tailLength}".PadLeft(2);
+        return answer;
+    }
+    
     /// <summary>
     /// Converts a string of integers separated by commas into a list of all permutations of the separators as commas and hyphens
     /// </summary>

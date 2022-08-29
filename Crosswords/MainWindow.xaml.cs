@@ -751,16 +751,25 @@ public partial class MainWindow
 
     private void FillCluePatternCombo(int length)
     {
-        List<string> patterns = ClueContent.LetterPatterns(length);
+        // List<string> patterns = ClueContent.LetterPatterns(length);
+        List<List<int>> variants = ClueContent.WordLengthPatterns(length);
+        
         CluePatternCombo.Items.Clear();
         ClueVariantCombo.Items.Clear();
         CluePatternCombo.Items.Add(
-            new ComboBoxItem() {Tag = $"{length}", Content = new TextBlock() {Text = $"{length}"}});
-        foreach (var pattern in patterns)
+            new ComboBoxItem() {Tag = $"{length}", Content = new TextBlock() {Text = $"{length}".PadLeft(2)}});
+        foreach (var variant in variants)
         {
+            string ts = ClueContent.TranslatedSpaced(length, variant);
+            string tn = ClueContent.Translated(length, variant);
             CluePatternCombo.Items.Add(
-                new ComboBoxItem() {Tag = pattern, Content = new TextBlock() {Text = pattern}});
+                new ComboBoxItem() {Tag = tn, Content = new TextBlock() {Text = ts}});
         }
+        // foreach (var pattern in patterns)
+        // {
+        //     CluePatternCombo.Items.Add(
+        //         new ComboBoxItem() {Tag = pattern, Content = new TextBlock() {Text = pattern}});
+        // }
 
         CluePatternCombo.SelectedIndex = -1;
     }
@@ -786,14 +795,14 @@ public partial class MainWindow
                 if (ClueContent.GoodFormatSpecification(fmt, cluelength))
                 {
                     FormatApplyButton.IsEnabled = true;
-                    FormatConflictWarningTextBlock.Text = string.Empty;
+                    // FormatConflictWarningTextBlock.Text = string.Empty;
                     FormatApplyButton.IsDefault = true;
                     // LetterCountTextBlock.Text = $"{cluelength}";
                 }
                 else
                 {
                     FormatApplyButton.IsEnabled = false;
-                    FormatConflictWarningTextBlock.Text = "Not a valid format for this clue length";
+                    // FormatConflictWarningTextBlock.Text = "Not a valid format for this clue length";
                     // LetterCountTextBlock.Text = string.Empty;
                 }
             }

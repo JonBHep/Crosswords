@@ -93,14 +93,14 @@
                 
                 <DockPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="11 6" LastChildFill="False">
                     <TextBlock VerticalAlignment="Center" FontWeight="Medium" Width="72">Format:</TextBlock>
-                    <TextBox x:Name="FormatEntryTextBox" AcceptsReturn="False" Width="200" FontSize="16" FontFamily="Lucida Console"
-                             Padding="4" TextChanged="FormatEntryTextBox_OnTextChanged" />
+                    <TextBox x:Name="FormatEntryTextBox" AcceptsReturn="False" Width="128" FontSize="16" FontFamily="Lucida Console"
+                             Padding="4" IsReadOnly="True" TextChanged="FormatEntryTextBox_OnTextChanged" />
                     <Button x:Name="FormatApplyButton" Margin="12 0" Width="80" Height="26" VerticalAlignment="Center"
                             Click="FormatApplyButton_OnClick">Apply</Button>
-                    <TextBlock x:Name="FormatConflictWarningTextBlock" Foreground="Red" VerticalAlignment="Center"
-                               FontWeight="Medium">Invalid format</TextBlock>
+                    <!-- <TextBlock x:Name="FormatConflictWarningTextBlock" Foreground="Red" VerticalAlignment="Center" -->
+                    <!--            FontWeight="Medium">Invalid format</TextBlock> -->
                     <TextBlock Foreground="Black" VerticalAlignment="Center" FontWeight="Medium" Margin="8 0 4 0">Pick word lengths</TextBlock>
-                    <ComboBox x:Name="CluePatternCombo" Width="128" VerticalAlignment="Center" FontSize="16" FontFamily="Lucida Console" SelectionChanged="CluePatternCombo_OnSelectionChanged" />
+                    <ComboBox x:Name="CluePatternCombo" Width="200" VerticalAlignment="Center" FontSize="16" FontFamily="Lucida Console" SelectionChanged="CluePatternCombo_OnSelectionChanged" />
                     <TextBlock Foreground="Black" VerticalAlignment="Center" FontWeight="Medium" Margin="8 0 4 0">Pick format</TextBlock>
                     <ComboBox x:Name="ClueVariantCombo" Width="128" VerticalAlignment="Center" FontSize="16" FontFamily="Lucida Console" SelectionChanged="ClueVariantCombo_OnSelectionChanged" />
                 </DockPanel>
