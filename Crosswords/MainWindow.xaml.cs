@@ -25,8 +25,9 @@ public partial class MainWindow
         InitializeComponent();
         _puzzle = new CrosswordGrid(DefaultSpecification);
         _strangers = new List<string>();
+        _familiars = new Connu();
     }
-        
+    
     private const string DefaultSpecification
         = "15......#........#.#.#.#.#.#.#.#........#......#.#.#.#.#.#.#.####............#.#.#.#.#.###.#....###........#.#.#.#.#.#.#.#........###....#.###.#.#.#.#.#............####.#.#.#.#.#.#.#......#........#.#.#.#.#.#.#.#........#......";
     private const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -46,7 +47,9 @@ public partial class MainWindow
     private bool _disableCheckBoxesTrigger;
     private Canvas[,] _cellPaper = new Canvas[0, 0];
     private readonly List<string> _strangers;
-        
+    private readonly Connu _familiars;
+    
+    // TODO Why do we sometimes get wildcard format added to list of missing words?
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
         var scrX = SystemParameters.PrimaryScreenWidth;
@@ -587,20 +590,7 @@ public partial class MainWindow
         SwitchClueControls(false);
         CheckVocab(clearFirst: true);
     }
-
-    // private void LoadButton_Click(object sender, RoutedEventArgs e)
-    // {
-    //     OpenFileDialog dlg = new OpenFileDialog()
-    //     {
-    //         Filter = "Crossword files (*.cwd)|*.cwd", InitialDirectory = CrosswordsPath, Title = "Open crossword"
-    //     };
-    //     bool? ans = dlg.ShowDialog();
-    //     if ((ans.HasValue) && (ans.Value))
-    //     {
-    //         LoadPuzzleFromFile(dlg.FileName);
-    //     }
-    // }
-
+   
     private void LettersApplyButton_Click(object sender, RoutedEventArgs e)
     {
         ApplyLetters();
@@ -631,8 +621,7 @@ public partial class MainWindow
                     
                 // TODO Experimental
                 var wd = _puzzle.PatternedWordConstrained(_selectedClueKey);
-                var known = new Connu();
-                var whether = known.FoundInWordList(wd);
+                var whether =_familiars.FoundInWordList(wd);
                 if (!whether)
                 {
                     if (!_strangers.Contains(wd))
@@ -641,19 +630,28 @@ public partial class MainWindow
                         RefreshStrangersList();
                     }
                 }
-                
+                else
+                {
+                    ShowLexiconCount();
+                }
                 DisplayGrid();
                 SwitchClueControls(false);
             }
         }
     }
 
+    private void ShowLexiconCount()
+    {
+        StrangersTextBlock.Text = $"NOT IN DICTIONARY ({_familiars.LexiconCount():#,#})";
+    }
+    
     private void RefreshStrangersList()
     {
         AddStrangerButton.IsEnabled = false;
         _strangers.Sort();
         StrangersTextBlock.Background = _strangers.Count == 0 ? Brushes.Ivory : Brushes.OrangeRed;
         StrangersTextBlock.Foreground = _strangers.Count == 0 ? Brushes.Black : Brushes.Ivory;
+        ShowLexiconCount();
         StrangerListBox.Items.Clear();
         foreach (var biz in _strangers)
         {
@@ -751,7 +749,6 @@ public partial class MainWindow
 
     private void FillCluePatternCombo(int length)
     {
-        // List<string> patterns = ClueContent.LetterPatterns(length);
         List<List<int>> variants = ClueContent.WordLengthPatterns(length);
         
         CluePatternCombo.Items.Clear();
@@ -765,12 +762,7 @@ public partial class MainWindow
             CluePatternCombo.Items.Add(
                 new ComboBoxItem() {Tag = tn, Content = new TextBlock() {Text = ts}});
         }
-        // foreach (var pattern in patterns)
-        // {
-        //     CluePatternCombo.Items.Add(
-        //         new ComboBoxItem() {Tag = pattern, Content = new TextBlock() {Text = pattern}});
-        // }
-
+        
         CluePatternCombo.SelectedIndex = -1;
     }
     private void AnagramTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
@@ -779,10 +771,8 @@ public partial class MainWindow
         AnagramLengthBlock.Text = $"Length {AnagramTextBox.Text.Trim().Length}";
         AnagramListBox.Items.Clear();
         AnagramCountBlock.Text = string.Empty;
-        AnagramButton.IsEnabled = AnagramTextBox.Text.Trim().Length > 0;
+        AnagramCountButton.IsEnabled=  AnagramButton.IsEnabled = AnagramTextBox.Text.Trim().Length > 0;
     }
-        
-    
         
     private void FormatEntryTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
     {
@@ -795,15 +785,11 @@ public partial class MainWindow
                 if (ClueContent.GoodFormatSpecification(fmt, cluelength))
                 {
                     FormatApplyButton.IsEnabled = true;
-                    // FormatConflictWarningTextBlock.Text = string.Empty;
                     FormatApplyButton.IsDefault = true;
-                    // LetterCountTextBlock.Text = $"{cluelength}";
                 }
                 else
                 {
                     FormatApplyButton.IsEnabled = false;
-                    // FormatConflictWarningTextBlock.Text = "Not a valid format for this clue length";
-                    // LetterCountTextBlock.Text = string.Empty;
                 }
             }
         }
@@ -964,28 +950,39 @@ public partial class MainWindow
     private static string CrosswordsPath => System.IO.Path.Combine(Jbh.AppManager.DataPath, "Crosswords");
        
 
-    private void AnagramButton_OnClick(object sender, RoutedEventArgs e)
+    private void AnagramListButton_OnClick(object sender, RoutedEventArgs e)
     {
-        GetAnagrams();
+        ListAnagrams();
     }
 
-    private void GetAnagrams()
+    private void AnagramCountButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        Cursor = Cursors.Wait;
+        _ =GetAnagramList(); // displays count
+        Cursor = Cursors.Arrow;
+    }
+
+    private void ListAnagrams()
     {
         Cursor = Cursors.Wait;
         AnagramListBox.Items.Clear();
-        string source = AnagramTextBox.Text.Trim();
-        var known = new Connu();
-        List<string> mixes = known.GetAnagrams(source);
+        var mixes = GetAnagramList();
         foreach (var a in mixes)
         {
             AnagramListBox.Items.Add(a);
         }
-
-        int g = AnagramListBox.Items.Count;
-        AnagramCountBlock.Text = (g < 1) ? "No matches" : g > 1 ? $"{g:#,0} matches" : "1 match";
         Cursor = Cursors.Arrow;
     }
 
+    private List<string> GetAnagramList()
+    {
+        string source = AnagramTextBox.Text.Trim();
+        var mixes= _familiars.GetAnagrams(source);
+        int g = mixes.Count;
+        AnagramCountBlock.Text = (g < 1) ? "No matches" : g > 1 ? $"{g:#,0} matches" : "1 match";
+        return mixes;
+    }
+    
     private void TemplateListButton_OnClick(object sender, RoutedEventArgs e)
     {
         ListTemplateMatches();
@@ -1015,8 +1012,7 @@ public partial class MainWindow
         var onlyRevs = ReversibleCheckBox.IsChecked ?? false;
         var pattern = TemplateTextBox.Text;
         var extras = ExtraLettersTextBox.Text.Trim();
-        var known = new Connu();
-        return known.GetTemplateMatches(pattern, onlyCaps, onlyRevs, extras);
+        return  _familiars.GetTemplateMatches(pattern, onlyCaps, onlyRevs, extras);
     }
  
     private List<string> TemplateMatchesIndividualWordsList(string pattern)
@@ -1025,7 +1021,6 @@ public partial class MainWindow
         var onlyCaps =false;
         var onlyRevs = false;
         var extras = string.Empty;
-        var known = new Connu();
         pattern = pattern.Replace('-', ' '); // make all word breaks spaces (no hyphens)
         string[] words = pattern.Split(" ");
         if (words.Length < 2)
@@ -1035,7 +1030,7 @@ public partial class MainWindow
 
         for (int w = 0; w < words.Length; w++)
         {
-            var partialList = known.GetTemplateMatches(words[w], onlyCaps, onlyRevs,  extras);
+            var partialList = _familiars.GetTemplateMatches(words[w], onlyCaps, onlyRevs,  extras);
             foreach (var match in partialList)
             {
                 string combi = string.Empty;
@@ -1063,7 +1058,6 @@ public partial class MainWindow
         var onlyCaps =false;
         var onlyRevs = false;
         var extras = string.Empty;
-        var known = new Connu();
         var unSpaced = string.Empty;
         foreach (var ch in pattern)
         {
@@ -1075,7 +1069,7 @@ public partial class MainWindow
                 }
             }
         }
-        return known.GetTemplateMatches(unSpaced, onlyCaps, onlyRevs,  extras);
+        return _familiars.GetTemplateMatches(unSpaced, onlyCaps, onlyRevs,  extras);
     }
         
     private void CountTemplateMatches()
@@ -1146,7 +1140,7 @@ public partial class MainWindow
 
     private void ListButton_OnClick(object sender, RoutedEventArgs e)
     {
-        WordListWindow wlw = new(String.Empty) {Owner = this};
+        WordListWindow wlw = new(String.Empty, _familiars) {Owner = this};
         wlw.ShowDialog();
     }
 
@@ -1217,13 +1211,12 @@ public partial class MainWindow
     {
         Cursor = Cursors.Wait;
         var retain = new List<string>();
-        var known = new Connu();
-
+        
         if (clearFirst){_strangers.Clear();}
         
         foreach (var mot in _strangers)
         {
-            if (!known.FoundInWordList(mot))
+            if (!_familiars.FoundInWordList(mot))
             {
                 retain.Add(mot);
             }
@@ -1239,7 +1232,7 @@ public partial class MainWindow
             }
 
             var wd = _puzzle.PatternedWordConstrained(clu.Key);
-            var whether = known.FoundInWordList(wd);
+            var whether = _familiars.FoundInWordList(wd);
             if (!whether)
             {
                 if (!retain.Contains(wd))
@@ -1259,7 +1252,7 @@ public partial class MainWindow
             }
 
             var wd = _puzzle.PatternedWordConstrained(clu.Key);
-            var whether = known.FoundInWordList(wd);
+            var whether = _familiars.FoundInWordList(wd);
             if (!whether)
             {
                 if (!retain.Contains(wd))
@@ -1280,10 +1273,6 @@ public partial class MainWindow
         RefreshStrangersList();
         Cursor = Cursors.Arrow;
     }
-    // private void CheckVocabButton_Click(object sender, RoutedEventArgs e)
-    // {
-    //     CheckVocab();
-    // }
     
     private void MainWindow_OnPreviewKeyDown(object sender, KeyEventArgs e)
     {
@@ -1305,7 +1294,7 @@ public partial class MainWindow
             }
             else if (AnagramTextBox.IsFocused)
             {
-                GetAnagrams();
+                ListAnagrams();
             }
             else if (TemplateTextBox.IsFocused)
             {
@@ -1391,7 +1380,7 @@ public partial class MainWindow
     {
         if (AddStrangerButton.Tag is string word)
         {
-            var win = new WordListWindow(word){Owner = this};
+            var win = new WordListWindow(word, _familiars){Owner = this};
             win.ShowDialog();
             CheckVocab(clearFirst: false);
         }

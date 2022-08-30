@@ -143,8 +143,11 @@
                             <TextBlock x:Name="AnagramLengthBlock" FontWeight="Medium" Margin="8 0 4 0" TextAlignment="Center" VerticalAlignment="Center">Length 0</TextBlock>
                         </DockPanel>
                         <DockPanel Grid.Row="1" Grid.Column="0">
-                            <Button x:Name="AnagramButton" Width="80" Height="26" VerticalAlignment="Center"
-                                    Click="AnagramButton_OnClick">Find</Button>
+                            <Button x:Name="AnagramCountButton" Width="72" Height="26" VerticalAlignment="Center"
+                                    Click="AnagramCountButton_OnClick" IsEnabled="False">Count</Button>
+                            <Button x:Name="AnagramButton" Width="72" Height="26" Margin="4 0 0 0" VerticalAlignment="Center"
+                                    Click="AnagramListButton_OnClick" IsEnabled="False">List</Button>
+                            
                             <TextBlock x:Name="AnagramCountBlock" VerticalAlignment="Center" Margin="4 0 0 0" />
                         </DockPanel>
                         <ListBox x:Name="AnagramListBox" Margin="0 4 0 0" FontFamily="Lucida Console" FontSize="14" Grid.Row="2" Grid.Column="0"
@@ -217,10 +220,6 @@
                 <DockPanel Grid.Column="1">
                     <TextBlock x:Name="StrangersTextBlock" DockPanel.Dock="Top" Margin="0 4 0 4" Background="Ivory" FontWeight="Medium" TextAlignment="Center">NOT IN DICTIONARY</TextBlock>
                     <Button x:Name="AddStrangerButton" DockPanel.Dock="Bottom" HorizontalAlignment="Left" Width="72" Height="24" Margin="0 4 4 6" ToolTip="Add selected item to dictionary" Click="AddStrangerButton_OnClick">Add</Button>
-                    <!-- <DockPanel DockPanel.Dock="Bottom" LastChildFill="False"> -->
-                    <!--     <Button Width="72" Height="24" Margin="0 4 4 6" ToolTip="Re-check list against dictionary" Click="CheckVocabButton_Click">Re-check</Button> -->
-                    <!--      -->
-                    <!-- </DockPanel> -->
                     <ListBox x:Name="StrangerListBox" DockPanel.Dock="Top" Background="OldLace" SelectionChanged="StrangerListBox_OnSelectionChanged"></ListBox>
                 </DockPanel>
             </Grid>

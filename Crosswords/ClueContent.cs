@@ -103,42 +103,6 @@ public class ClueContent
         // called when saving Clues to file
         return $"{Letters}:{Format}";
     }
-
-    // public static List<string> LetterPatterns(int length)
-    // {
-    //     List<List<int>> foundPatterns = AddGap(length, new List<int>());
-    //     int order = 1;
-    //     bool added = true;
-    //     while (added)
-    //     {
-    //         List<List<int>> additions = new();
-    //         foreach (var pattern in foundPatterns)
-    //         {
-    //             if (pattern.Count == order)
-    //             {
-    //                 List<List<int>> novelties = AddGap(length, pattern);
-    //                 additions.AddRange(novelties);
-    //             }
-    //         }
-    //
-    //         foundPatterns
-    //             .AddRange(additions); // new items added to foundPatterns OUTSIDE the iteration over foundPatterns
-    //         order++;
-    //         added = additions.Count > 0;
-    //     }
-    //
-    //     List<List<int>> sortedFoundPatterns = SortedPatterns(foundPatterns);  // limit list to five words (four gaps)
-    //     
-    //     // Convert the list of int positions into a list of word-length patterns
-    //     List<string> results = new();
-    //
-    //     foreach (var gapPattern in sortedFoundPatterns)
-    //     {
-    //         results.Add(Translated(length, gapPattern));
-    //     }
-    //
-    //     return results;
-    // }
     
     public static List<List<int>> WordLengthPatterns(int length)
     {
@@ -163,23 +127,10 @@ public class ClueContent
             added = additions.Count > 0;
         }
 
-        var sortedFoundPatterns = SortedPatterns(foundPatterns);  // limit list to five words (four gaps)
+        var sortedFoundPatterns = SortedPatterns(foundPatterns);  // limit list to given maximum words
         return sortedFoundPatterns;
     }
-
-    // public List<string> WordLengthPatternSpaced(int fullLength,List<List<int>> patterns)
-    // {
-    //     // Convert the list of int positions into a list of word-length patterns
-    //     List<string> results = new();
-    //
-    //     foreach (var gapPattern in patterns)
-    //     {
-    //         results.Add(Translated(fullLength, gapPattern));
-    //     }
-    //
-    //     return results;
-    // }
-    
+  
     public static string Translated(int clueLength, List<int> raw)
     {
         string answer = string.Empty;
@@ -293,9 +244,12 @@ public class ClueContent
 
     private static List<List<int>> SortedPatterns(List<List<int>> source)
     {
-        // limit list to five words (four gaps)
+        const int x = 6;
+        // limit list to x words (x-1 gaps)
+        // TODO Check this doesn't slow us down too much - if so, allow manual entry in text box which is currently read-only
+        
         List<List<int>> results = new(); // will be sorted by number of words and then by lengths of words
-        for (int length = 1; length < 5; length++)
+        for (int length = 1; length < x; length++)
         {
             List<Tuple<string, List<int>>> sortingList = new();
             foreach (var sample in source)

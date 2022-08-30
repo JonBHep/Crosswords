@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -8,10 +7,10 @@ namespace Crosswords;
 
 public partial class WordListWindow
 {
-    public WordListWindow(string target)
+    public WordListWindow(string target, Connu dic)
     {
         InitializeComponent();
-        _source = new Connu();
+        _source =dic;
         _sought = target;
     }
 
@@ -36,9 +35,9 @@ public partial class WordListWindow
 
     private void OrderButton_OnClick(object sender, RoutedEventArgs e)
     {
-        Connu.ListReport report =_source.SourceListHealth();
-        OrderTextBlock.Text = report.StringReport;
-        SizeTextBlock.Text = $"{report.WordCount:#,0} words";
+        var report =_source.SourceListHealth();
+        OrderTextBlock.Text = report;
+        SizeTextBlock.Text =$"{_source.LexiconCount():#,0} entries";
     }
 
     private void AddButton_OnClick(object sender, RoutedEventArgs e)
@@ -48,8 +47,8 @@ public partial class WordListWindow
         if (AddButton.Tag is string word)
         {
             AddButton.IsEnabled = false;
-            int newCount = _source.AddWord(word);
-            SizeTextBlock.Text = $"{newCount:#,0} words";
+            _source.AddWord(word);
+            SizeTextBlock.Text = $"{_source.LexiconCount():#,#} words";
             FindResultTextBlock.Text = "Added";
             Cursor=Cursors.Arrow;
         }
@@ -63,12 +62,12 @@ public partial class WordListWindow
     private void FindButton_OnClick(object sender, RoutedEventArgs e)
     {
         var cherchee = FindTextBox.Text.Trim();
-        Connu.ListReport searchReport = _source.SearchReport(cherchee);
+        var searchReport = _source.SearchReport(cherchee);
         
-        FindResultTextBlock.Text =searchReport.StringReport;
-        AddButton.IsEnabled = (searchReport.StringReport == "Not found");
+        FindResultTextBlock.Text =searchReport;
+        AddButton.IsEnabled = (searchReport == "Not found");
         AddButton.Tag = cherchee;
-        SizeTextBlock.Text = $"{searchReport.WordCount:#,0} words";
+        SizeTextBlock.Text = $"{_source.LexiconCount():#,#} words";
     }
     
 }

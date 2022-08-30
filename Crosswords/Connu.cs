@@ -6,19 +6,8 @@ namespace Crosswords;
 
 public class Connu
 {
-
-    public struct ListReport
-    {
-        public string StringReport { get; }
-        public int WordCount { get; }
-
-        public ListReport(string mistake, int quantity)
-        {
-            StringReport = mistake;
-            WordCount = quantity;
-        }
-    }
-
+    // public  int EntryCount { get; private set; }
+    
     public Connu()
     {
         _filePath = Path.Combine(Jbh.AppManager.DataPath, "Lists", "wordlist.txt");
@@ -30,9 +19,8 @@ public class Connu
 
     public string FilePath => _filePath;
 
-    public ListReport SourceListHealth()
+    public string SourceListHealth()
     {
-        var counter = 0;
         var precedent = string.Empty;
         var precedentUnSpaced = string.Empty;
         var flaw = "No order errors";
@@ -43,7 +31,6 @@ public class Connu
                 var mot = reader.ReadLine();
                 if (mot is { } word)
                 {
-                    counter++;
                     var wordUnSpaced = CrosswordWordTemplate.SortingString(word);
                     if (string.Compare(wordUnSpaced, precedentUnSpaced, StringComparison.CurrentCultureIgnoreCase) < 0)
                     {
@@ -56,12 +43,28 @@ public class Connu
             }
         }
 
-        return new ListReport(flaw, counter);
+        // EntryCount = counter;
+        return flaw;
     }
 
-    public ListReport SearchReport(string sought)
+    public int LexiconCount()
     {
         var counter = 0;
+        using var reader = new StreamReader(_filePath, Clue.JbhEncoding);
+        while (!reader.EndOfStream)
+        {
+            var mot = reader.ReadLine();
+            if (mot is { })
+            {
+                counter++;
+            }
+        }
+
+        return counter;
+    }
+
+    public string SearchReport(string sought)
+    {
         var foundString = "Not found";
         using (var reader = new StreamReader(_filePath, Clue.JbhEncoding))
         {
@@ -70,7 +73,6 @@ public class Connu
                 var mot = reader.ReadLine();
                 if (mot is { } word)
                 {
-                    counter++;
                     if (string.Equals(word, sought, StringComparison.CurrentCultureIgnoreCase))
                     {
                         foundString = string.Equals(word, sought, StringComparison.CurrentCulture)
@@ -81,7 +83,8 @@ public class Connu
             }
         }
 
-        return new ListReport(foundString, counter);
+        // EntryCount = counter;
+        return foundString;
     }
 
     public  bool FoundInWordList(string verba)
@@ -106,10 +109,9 @@ public class Connu
         return flag;
     }
     
-    public int AddWord(string word)
+    public void AddWord(string word)
     {
         var waiting = true;
-        var counter = 0;
         var wordSorted = CrosswordWordTemplate.SortingString(word);
         using (var fs = new FileStream(_tempPath, FileMode.Create))
         {
@@ -128,11 +130,9 @@ public class Connu
                         {
                             writer.WriteLine(word);
                             waiting = false;
-                            counter++;
                         }
 
                         writer.WriteLine(existing);
-                        counter++;
                     }
                 }
             }
@@ -140,7 +140,6 @@ public class Connu
 
         File.Delete(_filePath);
         File.Move(_tempPath, _filePath);
-        return counter;
     }
 
     public List<string> GetAnagrams(string source)
@@ -163,63 +162,7 @@ public class Connu
 
         return anagrams;
     }
-    
-    // public List<string> GetTemplateMatches(string pattern, bool onlyCapitalised, bool onlyReversibles, bool alsoUnSpaced, string extras)
-    // {
-    //     var results = new List<string>();
-    //     var template = new CrosswordWordTemplate(pattern);
-    //     List<string> matches = new();
-    //     using StreamReader reader = new(_filePath, Clue.JbhEncoding);
-    //     while (!reader.EndOfStream)
-    //     {
-    //         var mot = reader.ReadLine();
-    //         if (mot is { } word)
-    //         {
-    //             var wordTemplate = new CrosswordWordTemplate(word);
-    //             if (wordTemplate.MatchesTemplateWithExtraCharsToBeIncluded(template, extras, alsoUnSpaced))
-    //             {
-    //                 if (char.IsUpper(word[0]) || !onlyCapitalised)
-    //                 {
-    //                     matches.Add(word);
-    //                 }
-    //             }
-    //         }
-    //     }
-    //  
-    //     if (onlyReversibles)
-    //     {
-    //         var retained = new List<string>();
-    //         reader.BaseStream.Position = 0; // reset read position to start
-    //         while (!reader.EndOfStream)
-    //         {
-    //             var mot = reader.ReadLine();
-    //             if (mot is { })
-    //             {
-    //                 var back = ClueContent.Backwards(mot);
-    //                 if (matches.Contains(back))
-    //                 {
-    //                     retained.Add(back);
-    //                 }
-    //             }
-    //         }
-    //
-    //         retained.Sort();
-    //         foreach (var wd in retained)
-    //         {
-    //             results.Add(wd);
-    //         }
-    //     }
-    //     else
-    //     {
-    //         foreach (var wd in matches)
-    //         {
-    //             results.Add(wd);
-    //         }
-    //     }
-    //
-    //     return results;
-    // }
-    
+   
     public List<string> GetTemplateMatches(string pattern, bool onlyCapitalised, bool onlyReversibles, string extras)
     {
         var results = new List<string>();
@@ -241,7 +184,7 @@ public class Connu
                 }
             }
         }
-     
+
         if (onlyReversibles)
         {
             var retained = new List<string>();
