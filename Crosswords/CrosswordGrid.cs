@@ -305,17 +305,17 @@ public class CrosswordGrid
 
     public string PatternedWordConstrained(string clueKey) // pattern of letters supplied by crossing words
     {
-        Clue clu = _clus[clueKey];
+        var clu = _clus[clueKey];
         if (clu.IsComplete())
         {
             return clu.PatternedWordIntrinsic;
         }
 
-        StringBuilder aliens = new StringBuilder();
-        List<GridPoint> cellList = clu.IncludedCells();
+        var aliens = new StringBuilder();
+        var cellList = clu.IncludedCells();
         foreach (var t in cellList)
         {
-            string? autreClef = ClueSharingCell(t, clueKey, out char alienChar);
+            var autreClef = ClueSharingCell(t, clueKey, out var alienChar);
             if (autreClef is null)
             {
                 aliens.Append(Clue.UnknownLetterChar);
@@ -326,11 +326,11 @@ public class CrosswordGrid
             }
         }
 
-        string chiffres = aliens.ToString();
-        int letterPointer = 0;
-        List<string> elements = ClueContent.FormatList(clu.Content.Format);
-        StringBuilder builder = new StringBuilder();
-        foreach (string element in elements)
+        var chiffres = aliens.ToString();
+        var letterPointer = 0;
+        var elements = ClueContent.FormatList(clu.Content.Format);
+        var builder = new StringBuilder();
+        foreach (var element in elements)
         {
             switch (element[0])
             {
@@ -346,10 +346,10 @@ public class CrosswordGrid
                 }
             }
 
-            string numeric = element[1..];
-            if (int.TryParse(numeric, out int i))
+            var numeric = element[1..];
+            if (int.TryParse(numeric, out var i))
             {
-                for (int a = 0; a < i; a++)
+                for (var a = 0; a < i; a++)
                 {
                     builder.Append(chiffres[letterPointer]);
                     letterPointer++;

@@ -49,7 +49,6 @@ public partial class MainWindow
     private readonly List<string> _strangers;
     private readonly Connu _familiars;
     
-    // TODO Why do we sometimes get wildcard format added to list of missing words?
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
         var scrX = SystemParameters.PrimaryScreenWidth;
@@ -619,7 +618,6 @@ public partial class MainWindow
                 LettersEntryTextBox.Clear();
                 _puzzle.ClueOf(_selectedClueKey).Content.Letters = nova;
                     
-                // TODO Experimental
                 var wd = _puzzle.PatternedWordConstrained(_selectedClueKey);
                 var whether =_familiars.FoundInWordList(wd);
                 if (!whether)
@@ -1210,7 +1208,7 @@ public partial class MainWindow
     private void CheckVocab(bool clearFirst)
     {
         Cursor = Cursors.Wait;
-        var retain = new List<string>();
+        var bizarre = new List<string>();
         
         if (clearFirst){_strangers.Clear();}
         
@@ -1218,7 +1216,7 @@ public partial class MainWindow
         {
             if (!_familiars.FoundInWordList(mot))
             {
-                retain.Add(mot);
+                bizarre.Add(mot);
             }
         }
 
@@ -1231,13 +1229,16 @@ public partial class MainWindow
                 clu.Content.Format = $"{clu.WordLength}";
             }
 
-            var wd = _puzzle.PatternedWordConstrained(clu.Key);
-            var whether = _familiars.FoundInWordList(wd);
-            if (!whether)
+            if (clu.IsComplete())
             {
-                if (!retain.Contains(wd))
+                var wd = _puzzle.PatternedWordConstrained(clu.Key);
+                var whether = _familiars.FoundInWordList(wd);
+                if (!whether)
                 {
-                    retain.Add(wd);    
+                    if (!bizarre.Contains(wd))
+                    {
+                        bizarre.Add(wd);
+                    }
                 }
             }
         }
@@ -1251,21 +1252,24 @@ public partial class MainWindow
                 clu.Content.Format = $"{clu.WordLength}";
             }
 
-            var wd = _puzzle.PatternedWordConstrained(clu.Key);
-            var whether = _familiars.FoundInWordList(wd);
-            if (!whether)
+            if (clu.IsComplete())
             {
-                if (!retain.Contains(wd))
+                var wd = _puzzle.PatternedWordConstrained(clu.Key);
+                var whether = _familiars.FoundInWordList(wd);
+                if (!whether)
                 {
-                    retain.Add(wd);    
+                    if (!bizarre.Contains(wd))
+                    {
+                        bizarre.Add(wd);
+                    }
                 }
             }
-
+            
         }
 
-        retain.Sort();
+        bizarre.Sort();
         _strangers.Clear();
-        foreach (var mot in retain)
+        foreach (var mot in bizarre)
         {
             _strangers.Add(mot);
         }
