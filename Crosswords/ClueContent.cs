@@ -133,15 +133,15 @@ public class ClueContent
   
     public static string Translated(int clueLength, List<int> raw)
     {
-        string answer = string.Empty;
-        int position = 0;
+        var answer = string.Empty;
+        var position = 0;
         foreach (var p in raw)
         {
-            int wordLength = p - position;
+            var wordLength = p - position;
             answer += $"{wordLength},";
             position = p;
         }
-        int tailLength = clueLength - position;
+        var tailLength = clueLength - position;
         answer += $"{tailLength}";
         return answer;
     }

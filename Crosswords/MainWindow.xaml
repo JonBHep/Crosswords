@@ -218,8 +218,12 @@
                 </Grid.ColumnDefinitions>
                 <Grid x:Name="CrosswordGrid"  Margin="4" MinHeight="200" />   
                 <DockPanel Grid.Column="1">
-                    <TextBlock x:Name="StrangersTextBlock" DockPanel.Dock="Top" Margin="0 4 0 4" Background="Ivory" FontWeight="Medium" TextAlignment="Center">NOT IN DICTIONARY</TextBlock>
-                    <Button x:Name="AddStrangerButton" DockPanel.Dock="Bottom" HorizontalAlignment="Left" Width="72" Height="24" Margin="0 4 4 6" ToolTip="Add selected item to dictionary" Click="AddStrangerButton_OnClick">Add</Button>
+                    <TextBlock x:Name="NotInListBlock" DockPanel.Dock="Top" Margin="0 4 0 4" Background="Ivory" FontWeight="Medium" TextAlignment="Center">NOT IN LIST</TextBlock>
+                    <DockPanel DockPanel.Dock="Bottom">
+                        <Button x:Name="AddStrangerButton" Width="72" Height="24" Margin="0 4 4 6" ToolTip="Add selected item to dictionary" Click="AddStrangerButton_OnClick">Add</Button>
+                        <Border x:Name="StrangersSignal" CornerRadius="6" Background="DarkSeaGreen" Height="18" BorderBrush="SeaGreen" BorderThickness="2" VerticalAlignment="Stretch"></Border>
+                    </DockPanel>
+                    
                     <ListBox x:Name="StrangerListBox" DockPanel.Dock="Top" Background="OldLace" SelectionChanged="StrangerListBox_OnSelectionChanged"></ListBox>
                 </DockPanel>
             </Grid>

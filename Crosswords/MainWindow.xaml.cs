@@ -640,15 +640,15 @@ public partial class MainWindow
 
     private void ShowLexiconCount()
     {
-        StrangersTextBlock.Text = $"NOT IN DICTIONARY ({_familiars.LexiconCount():#,#})";
+        NotInListBlock.Text = $"NOT IN LIST ({_familiars.LexiconCount():#,#})";
     }
     
     private void RefreshStrangersList()
     {
         AddStrangerButton.IsEnabled = false;
         _strangers.Sort();
-        StrangersTextBlock.Background = _strangers.Count == 0 ? Brushes.Ivory : Brushes.OrangeRed;
-        StrangersTextBlock.Foreground = _strangers.Count == 0 ? Brushes.Black : Brushes.Ivory;
+        StrangersSignal.Background = _strangers.Count == 0 ? Brushes.DarkSeaGreen : Brushes.OrangeRed;
+        StrangersSignal.BorderBrush = _strangers.Count == 0 ? Brushes.SeaGreen : Brushes.Ivory;
         ShowLexiconCount();
         StrangerListBox.Items.Clear();
         foreach (var biz in _strangers)
@@ -747,16 +747,23 @@ public partial class MainWindow
 
     private void FillCluePatternCombo(int length)
     {
-        List<List<int>> variants = ClueContent.WordLengthPatterns(length);
+        var variants = ClueContent.WordLengthPatterns(length);
         
         CluePatternCombo.Items.Clear();
         ClueVariantCombo.Items.Clear();
         CluePatternCombo.Items.Add(
-            new ComboBoxItem() {Tag = $"{length}", Content = new TextBlock() {Text = $"{length}".PadLeft(2)}});
+            new ComboBoxItem() {Tag = $"{length}", Content = new TextBlock() {Text = $"ONE WORD {length}".PadLeft(2)}});
+        var words = 1;
         foreach (var variant in variants)
         {
-            string ts = ClueContent.TranslatedSpaced(length, variant);
-            string tn = ClueContent.Translated(length, variant);
+            if (variant.Count >= words)
+            {
+                words = variant.Count + 1;
+                CluePatternCombo.Items.Add(
+                    new ComboBoxItem() {IsHitTestVisible =false, Content = new TextBlock() {Text = $"{words} WORDS"}});    
+            }
+            var ts = ClueContent.TranslatedSpaced(length, variant);
+            var tn = ClueContent.Translated(length, variant);
             CluePatternCombo.Items.Add(
                 new ComboBoxItem() {Tag = tn, Content = new TextBlock() {Text = ts}});
         }
