@@ -219,6 +219,21 @@
                 <Grid x:Name="CrosswordGrid"  Margin="4" MinHeight="200" />   
                 <DockPanel Grid.Column="1">
                     <TextBlock x:Name="NotInListBlock" DockPanel.Dock="Top" Margin="0 4 0 4" Background="Ivory" FontWeight="Medium" TextAlignment="Center">NOT IN LIST</TextBlock>
+                    
+                    
+                        <Border DockPanel.Dock="Bottom" Margin="0 0 8 0" CornerRadius="2" Background="White" BorderBrush="Blue" BorderThickness="1" Padding="3 2" Height="26">
+                            <DockPanel>
+                                <TextBlock Margin="0 0 8 0" FontWeight="Bold" VerticalAlignment="Center" >Clue Lists:</TextBlock>
+                                <CheckBox x:Name="ClueListHideCheckBox" VerticalAlignment= "Center" VerticalContentAlignment="Center"
+                                          Margin="0 0 8 0" ToolTip="Hide completed clues in lists" 
+                                          Checked="ClueListOptionCheckBox_OnChecked" Unchecked="ClueListOptionCheckBox_OnChecked">Hide solved clues</CheckBox>
+                                <CheckBox x:Name="ClueListSmallCheckBox" VerticalAlignment= "Center" VerticalContentAlignment="Center"
+                                          Margin="0 0 8 0" Checked="ClueListOptionCheckBox_OnChecked" Unchecked="ClueListOptionCheckBox_OnChecked"
+                                          >Small font</CheckBox>        
+                            </DockPanel>
+                        </Border>
+                    
+                    
                     <DockPanel DockPanel.Dock="Bottom">
                         <Button x:Name="AddStrangerButton" Width="72" Height="24" Margin="0 4 4 6" ToolTip="Add selected item to dictionary" Click="AddStrangerButton_OnClick">Add</Button>
                         <Border x:Name="StrangersSignal" CornerRadius="6" Background="DarkSeaGreen" Height="18" BorderBrush="SeaGreen" BorderThickness="2" VerticalAlignment="Stretch"></Border>

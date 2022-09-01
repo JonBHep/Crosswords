@@ -350,38 +350,42 @@ public partial class MainWindow
 
     private void ListClues()
     {
-        int cluesDone = 0;
-        SolidColorBrush dimbrush = Brushes.Silver;
-        SolidColorBrush abrush = Brushes.RoyalBlue;
-        SolidColorBrush dbrush = Brushes.DarkViolet;
-
+        var cluesDone = 0;
+        var dimBrush = Brushes.Silver;
+        var clueBrush = Brushes.RoyalBlue;
+        var fSize = ClueListSmallCheckBox.IsChecked ?? false ? 12 : 14;
+        var vis = ClueListHideCheckBox.IsChecked ?? false ? Visibility.Collapsed : Visibility.Visible;
+        
         ClueAListBox.Items.Clear();
         ClueDListBox.Items.Clear();
 
         // Across heading
         SolidColorBrush pinceau;
-        List<Clue> clueList = _puzzle.CluesAcross;
+        var clueList = _puzzle.CluesAcross;
         var clueCount = clueList.Count;
         var block = new TextBlock();
-        var r = new Run() {Text = $"ACROSS: ", FontWeight = FontWeights.Bold, Foreground = abrush};
+        var r = new Run() {Text = $"ACROSS: ", FontWeight = FontWeights.Bold,FontSize = fSize, Foreground = clueBrush};
         block.Inlines.Add(r);
-        r = new Run() {Text = $"{clueList.Count} clues", Foreground = abrush};
+        r = new Run() {Text = $"{clueList.Count} clues", Foreground = clueBrush};
         block.Inlines.Add(r);
         ClueAListBox.Items.Add(new ListBoxItem() {Content = block, IsHitTestVisible = false});
 
-        foreach (Clue clu in clueList)
+        foreach (var clu in clueList)
         {
-            pinceau = abrush;
+            pinceau = clueBrush;
+            Visibility seen = Visibility.Visible;
+            
             if (clu.IsComplete())
             {
-                pinceau = dimbrush;
+                pinceau = dimBrush;
+                seen = vis;
                 cluesDone++;
             }
 
-            StackPanel spl = new StackPanel() {Orientation = Orientation.Horizontal};
+            var spl = new StackPanel() {Orientation = Orientation.Horizontal};
 
             block = new TextBlock()
-                {Width = 80, Text = clu.Number.ToString(), FontWeight = FontWeights.Medium, Foreground = pinceau};
+                {Width = 80, Text = clu.Number.ToString(), FontWeight = FontWeights.Medium, FontSize = fSize, Foreground = pinceau};
             spl.Children.Add(block);
 
             if (clu.Content.Format.Length == 0)
@@ -389,39 +393,42 @@ public partial class MainWindow
                 clu.Content.Format = $"{clu.WordLength}";
             }
 
-            block = new TextBlock() {Text = $" ({clu.Content.Format})", Foreground = pinceau, Width = 80};
+            block = new TextBlock() {Text = $" ({clu.Content.Format})",FontSize = fSize, Foreground = pinceau, Width = 80};
             spl.Children.Add(block);
 
-            string wd = _puzzle.PatternedWordConstrained(clu.Key);
+            var wd = _puzzle.PatternedWordConstrained(clu.Key);
             block = new TextBlock()
-                {FontFamily = _fixedFont, Foreground = pinceau, Text = wd, Padding = new Thickness(0, 3, 0, 0)};
+                {FontFamily = _fixedFont, Foreground = pinceau, Text = wd,FontSize = fSize, Padding = new Thickness(0, 3, 0, 0)};
             spl.Children.Add(block);
 
-            ClueAListBox.Items.Add(new ListBoxItem() {Content = spl, Tag = clu.Key});
+            ClueAListBox.Items.Add(new ListBoxItem() {Content = spl, Tag = clu.Key, Visibility = seen});
         }
 
         clueList = _puzzle.CluesDown;
         clueCount += clueList.Count;
         block = new TextBlock();
-        r = new Run() {Text = $"DOWN: ", FontWeight = FontWeights.Bold, Foreground = dbrush};
+        r = new Run() {Text = $"DOWN: ", FontWeight = FontWeights.Bold,FontSize = fSize, Foreground = clueBrush};
         block.Inlines.Add(r);
-        r = new Run() {Text = $"{clueList.Count} clues", Foreground = dbrush};
+        r = new Run() {Text = $"{clueList.Count} clues", Foreground = clueBrush};
         block.Inlines.Add(r);
         ClueDListBox.Items.Add(new ListBoxItem() {Content = block, IsHitTestVisible = false});
 
-        foreach (Clue clu in clueList)
+        foreach (var clu in clueList)
         {
-            pinceau = dbrush;
+            pinceau = clueBrush;
+            Visibility seen = Visibility.Visible;
+            
             if (clu.IsComplete())
             {
-                pinceau = dimbrush;
+                pinceau = dimBrush;
+                seen = vis;
                 cluesDone++;
             }
 
-            StackPanel spl = new StackPanel() {Orientation = Orientation.Horizontal};
+            var spl = new StackPanel() {Orientation = Orientation.Horizontal};
 
             block = new TextBlock()
-                {Width = 80, Text = clu.Number.ToString(), FontWeight = FontWeights.Medium, Foreground = pinceau};
+                {Width = 80, Text = clu.Number.ToString(), FontWeight = FontWeights.Medium,FontSize = fSize, Foreground = pinceau};
             spl.Children.Add(block);
 
             if (clu.Content.Format.Length == 0)
@@ -429,14 +436,14 @@ public partial class MainWindow
                 clu.Content.Format = $"{clu.WordLength}";
             }
 
-            block = new TextBlock() {Text = $" ({clu.Content.Format})", Foreground = pinceau, Width = 80};
+            block = new TextBlock() {Text = $" ({clu.Content.Format})", Foreground = pinceau,FontSize = fSize, Width = 80};
             spl.Children.Add(block);
 
-            string wd = _puzzle.PatternedWordConstrained(clu.Key);
+            var wd = _puzzle.PatternedWordConstrained(clu.Key);
             block = new TextBlock()
-                {FontFamily = _fixedFont, Foreground = pinceau, Text = wd, Padding = new Thickness(0, 3, 0, 0)};
+                {FontFamily = _fixedFont, Foreground = pinceau,FontSize = fSize, Text = wd, Padding = new Thickness(0, 3, 0, 0)};
             spl.Children.Add(block);
-            ClueDListBox.Items.Add(new ListBoxItem() {Content = spl, Tag = clu.Key});
+            ClueDListBox.Items.Add(new ListBoxItem() {Content = spl, Tag = clu.Key, Visibility = seen});
 
             // Display progress
             ProgressTextBlock.Inlines.Clear();
@@ -449,21 +456,16 @@ public partial class MainWindow
             }
 
             ProgressPanel.Children.Clear();
-            for (int n = 0; n < cluesDone; n++)
+            for (var n = 0; n < cluesDone; n++)
             {
                 ProgressPanel.Children.Add(ProgressShape(Brushes.SeaGreen));
             }
-            for (int n = 0; n <clueCount - cluesDone; n++)
+            for (var n = 0; n <clueCount - cluesDone; n++)
             {
                 ProgressPanel.Children.Add( ProgressShape(Brushes.IndianRed));
             }
         }
-
-        // if (cluesDone == clueCount)
-        // {
-        //     VocabButton.IsEnabled = true;
-        // }
-
+        
     }
 
     private static Polygon ProgressShape(Brush pinceau)
@@ -752,7 +754,7 @@ public partial class MainWindow
         CluePatternCombo.Items.Clear();
         ClueVariantCombo.Items.Clear();
         CluePatternCombo.Items.Add(
-            new ComboBoxItem() {Tag = $"{length}", Content = new TextBlock() {Text = $"ONE WORD {length}".PadLeft(2)}});
+            new ComboBoxItem() {Tag = $"{length}", Content = new TextBlock() {Foreground =Brushes.Blue, Text = $"ONE WORD {length}".PadLeft(2)}});
         var words = 1;
         foreach (var variant in variants)
         {
@@ -760,7 +762,7 @@ public partial class MainWindow
             {
                 words = variant.Count + 1;
                 CluePatternCombo.Items.Add(
-                    new ComboBoxItem() {IsHitTestVisible =false, Content = new TextBlock() {Text = $"{words} WORDS"}});    
+                    new ComboBoxItem() {IsHitTestVisible =false, Content = new TextBlock() {Foreground =Brushes.Blue,Text = $"{words} WORDS"}});    
             }
             var ts = ClueContent.TranslatedSpaced(length, variant);
             var tn = ClueContent.Translated(length, variant);
@@ -963,6 +965,7 @@ public partial class MainWindow
     private void AnagramCountButton_OnClick(object sender, RoutedEventArgs e)
     {
         Cursor = Cursors.Wait;
+        AnagramListBox.Items.Clear();
         _ =GetAnagramList(); // displays count
         Cursor = Cursors.Arrow;
     }
@@ -981,10 +984,19 @@ public partial class MainWindow
 
     private List<string> GetAnagramList()
     {
-        string source = AnagramTextBox.Text.Trim();
+        var source = AnagramTextBox.Text.Trim();
+        bool self = _familiars.FoundInWordList(source);
         var mixes= _familiars.GetAnagrams(source);
-        int g = mixes.Count;
-        AnagramCountBlock.Text = (g < 1) ? "No matches" : g > 1 ? $"{g:#,0} matches" : "1 match";
+        var g = mixes.Count;
+        if (self)
+        {
+            g--;
+            AnagramCountBlock.Text = (g < 1) ? "No others" : g > 1 ? $"{g:#,0} others" : "1 other";    
+        }
+        else
+        {
+            AnagramCountBlock.Text = (g < 1) ? "No matches" : g > 1 ? $"{g:#,0} matches" : "1 match";
+        }
         return mixes;
     }
     
@@ -1447,4 +1459,10 @@ public partial class MainWindow
             count > 1 ? $"{count:#,0} matches" : "1 match";
         TemplateCountBlock.Foreground= Brushes.DarkViolet;
     }
+
+    private void ClueListOptionCheckBox_OnChecked(object sender, RoutedEventArgs e)
+    {
+        ListClues();
+    }
+    
 }
