@@ -351,10 +351,10 @@ public partial class MainWindow
     private void ListClues()
     {
         var cluesDone = 0;
-        var dimBrush = Brushes.Silver;
+        var dimBrush = Brushes.Gray;
         var clueBrush = Brushes.RoyalBlue;
-        var fSize = ClueListSmallCheckBox.IsChecked ?? false ? 12 : 14;
-        var vis = ClueListHideCheckBox.IsChecked ?? false ? Visibility.Collapsed : Visibility.Visible;
+        var fSize = ClueListSmallCheckBox.IsChecked ?? false ? 12 : 15;
+        var vis = ClueListHideCheckBox.IsChecked ?? false ? Visibility.Visible : Visibility.Collapsed;
         
         ClueAListBox.Items.Clear();
         ClueDListBox.Items.Clear();
@@ -372,13 +372,14 @@ public partial class MainWindow
 
         foreach (var clu in clueList)
         {
+            // default values for unsolved clue
             pinceau = clueBrush;
-            Visibility seen = Visibility.Visible;
+            var seen = Visibility.Visible;
             
             if (clu.IsComplete())
             {
-                pinceau = dimBrush;
-                seen = vis;
+                pinceau = dimBrush; // depends on CheckBox selection
+                seen = vis; // depends on CheckBox selection
                 cluesDone++;
             }
 
@@ -772,6 +773,7 @@ public partial class MainWindow
         
         CluePatternCombo.SelectedIndex = -1;
     }
+    
     private void AnagramTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
     {
         CleanGivenLetters(AnagramTextBox, false);
@@ -1205,15 +1207,17 @@ public partial class MainWindow
     {
         if (FormatEntryTextBox.Text.Trim().Length > 0)
         {
-            string fmt = FormatEntryTextBox.Text.Trim();
+            var fmt = FormatEntryTextBox.Text.Trim();
             if (!string.IsNullOrWhiteSpace(_selectedClueKey))
             {
                 if (ClueContent.GoodFormatSpecification(fmt, _puzzle.ClueOf(_selectedClueKey).WordLength))
                 {
+                    Cursor= Cursors.Wait;
                     _puzzle.ClueOf(_selectedClueKey).Content.Format = fmt;
                     DisplayGrid();
                     ShowClueDetails(_selectedClueKey);
                     FormatApplyButton.IsEnabled = false;
+                    Cursor= Cursors.Arrow;
                 }
                 else
                 {
@@ -1222,6 +1226,7 @@ public partial class MainWindow
                 }
             }
         }
+       
     }
   
     private void CheckVocab(bool clearFirst)

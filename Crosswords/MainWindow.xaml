@@ -225,8 +225,8 @@
                             <DockPanel>
                                 <TextBlock Margin="0 0 8 0" FontWeight="Bold" VerticalAlignment="Center" >Clue Lists:</TextBlock>
                                 <CheckBox x:Name="ClueListHideCheckBox" VerticalAlignment= "Center" VerticalContentAlignment="Center"
-                                          Margin="0 0 8 0" ToolTip="Hide completed clues in lists" 
-                                          Checked="ClueListOptionCheckBox_OnChecked" Unchecked="ClueListOptionCheckBox_OnChecked">Hide solved clues</CheckBox>
+                                          Margin="0 0 8 0" ToolTip="Show completed clues in lists" 
+                                          Checked="ClueListOptionCheckBox_OnChecked" Unchecked="ClueListOptionCheckBox_OnChecked">Show solved clues</CheckBox>
                                 <CheckBox x:Name="ClueListSmallCheckBox" VerticalAlignment= "Center" VerticalContentAlignment="Center"
                                           Margin="0 0 8 0" Checked="ClueListOptionCheckBox_OnChecked" Unchecked="ClueListOptionCheckBox_OnChecked"
                                           >Small font</CheckBox>        
