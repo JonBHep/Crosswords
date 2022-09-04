@@ -29,7 +29,7 @@
                 <Border Canvas.Left="256" Canvas.Top="11" VerticalAlignment="Center" Background="SandyBrown" Height="28" Width="64" CornerRadius="8">
                     <TextBlock FontSize="14" Foreground="PapayaWhip" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium">NET6.0</TextBlock>
                 </Border>
-                <TextBlock x:Name="NameTextBlock" Canvas.Left="360" Canvas.Top="14" FontSize="16" FontWeight="Bold">default</TextBlock>
+                <TextBlock x:Name="NameTextBlock" Canvas.Left="360" Canvas.Top="10" FontSize="20" FontWeight="Bold">default</TextBlock>
                 </Canvas>
             
             <DockPanel Grid.Row="1" Margin="12 12 12 0" LastChildFill="False">
@@ -218,10 +218,15 @@
                 </Grid.ColumnDefinitions>
                 <Grid x:Name="CrosswordGrid"  Margin="4" MinHeight="200" />   
                 <DockPanel Grid.Column="1">
+                    <Border x:Name="SecondClueTitleTextBorder" DockPanel.Dock="Top" BorderThickness="1" BorderBrush="Green" 
+                            CornerRadius="6" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="4 0 1 0" Background="MintCream">
+                        <TextBlock Margin="6 0 6 0" x:Name="SecondClueTitleTextBlock"
+                                   FontWeight="Bold" FontFamily="Arial" FontSize="32" VerticalAlignment="Center" TextAlignment="Right" Foreground="Green">
+                            [clue title]
+                        </TextBlock>
+                    </Border>
                     <TextBlock x:Name="NotInListBlock" DockPanel.Dock="Top" Margin="0 4 0 4" Background="Ivory" FontWeight="Medium" TextAlignment="Center">NOT IN LIST</TextBlock>
-                    
-                    
-                        <Border DockPanel.Dock="Bottom" Margin="0 0 8 0" CornerRadius="2" Background="White" BorderBrush="Blue" BorderThickness="1" Padding="3 2" Height="26">
+                    <Border DockPanel.Dock="Bottom" Margin="0 0 8 0" CornerRadius="2" Background="White" BorderBrush="Blue" BorderThickness="1" Padding="3 2" Height="26">
                             <DockPanel>
                                 <TextBlock Margin="0 0 8 0" FontWeight="Bold" VerticalAlignment="Center" >Clue Lists:</TextBlock>
                                 <CheckBox x:Name="ClueListHideCheckBox" VerticalAlignment= "Center" VerticalContentAlignment="Center"
@@ -232,8 +237,6 @@
                                           >Small font</CheckBox>        
                             </DockPanel>
                         </Border>
-                    
-                    
                     <DockPanel DockPanel.Dock="Bottom">
                         <Button x:Name="AddStrangerButton" Width="72" Height="24" Margin="0 4 4 6" ToolTip="Add selected item to dictionary" Click="AddStrangerButton_OnClick">Add</Button>
                         <Border x:Name="StrangersSignal" CornerRadius="6" Background="DarkSeaGreen" Height="18" BorderBrush="SeaGreen" BorderThickness="2" VerticalAlignment="Stretch"></Border>

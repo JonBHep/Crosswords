@@ -69,6 +69,7 @@ public partial class MainWindow
     {
         Visibility vis = on ? Visibility.Visible : Visibility.Hidden;
         SelectedClueGrid.Visibility = vis;
+        SecondClueTitleTextBlock.Visibility = vis;
         if (on)
         {
             LettersEntryTextBox.Focus();
@@ -88,7 +89,7 @@ public partial class MainWindow
         ListWholeButton.IsEnabled = false;
             
         PuzzleHeaderDockPanel.Visibility = Visibility.Visible;
-        string? path = MostRecentlySavedGamePath();
+        var path = MostRecentlySavedGamePath();
         if (path is { })
         {
             LoadPuzzleFromFile(path);    
@@ -488,9 +489,9 @@ public partial class MainWindow
     private void NewButton_Click(object sender, RoutedEventArgs e)
     {
         SaveCrossword();
-        CreationWindow cwin = new CreationWindow() {Owner = this};
+        var cwin = new CreationWindow() {Owner = this};
 
-        bool? q = cwin.ShowDialog();
+        var q = cwin.ShowDialog();
 
         if (!q.HasValue)
         {
@@ -549,11 +550,11 @@ public partial class MainWindow
 
     private void SaveCrossword()
     {
-        string path = System.IO.Path.Combine(CrosswordsPath, _xWordTitle + ".cwd");
-        FileStream fs = new FileStream(path, FileMode.Create);
-        using StreamWriter wri = new StreamWriter(fs, Clue.JbhEncoding);
+        var path = System.IO.Path.Combine(CrosswordsPath, _xWordTitle + ".cwd");
+        var fs = new FileStream(path, FileMode.Create);
+        using var wri = new StreamWriter(fs, Clue.JbhEncoding);
         wri.WriteLine(_puzzle.Specification);
-        foreach (string tk in _puzzle.ClueKeyList)
+        foreach (var tk in _puzzle.ClueKeyList)
         {
             wri.WriteLine($"{tk}%{_puzzle.ClueOf(tk).Content.Specification()}");
         }
@@ -637,6 +638,7 @@ public partial class MainWindow
                 }
                 DisplayGrid();
                 SwitchClueControls(false);
+                SaveCrossword(); // in case of crash / power failure
             }
         }
     }
@@ -698,19 +700,28 @@ public partial class MainWindow
 
     private void ShowClueTitle(Clue indice)
     {
-        string dirn = indice.Direction == 'A' ? "Across" : "Down";
-        ClueTitleTextBlock.Text = $"{indice.Number} {dirn}";
+        var direction = indice.Direction == 'A' ? "Across" : "Down";
+        ClueTitleTextBlock.Text = $"{indice.Number} {direction}";
+        SecondClueTitleTextBlock.Text = $"{indice.Number} {direction}";
         if (indice.IsComplete())
         {
             ClueTitleTextBlock.Foreground=Brushes.Green;
             ClueTitleTextBorder.Background=Brushes.MintCream;
             ClueTitleTextBorder.BorderBrush=Brushes.Green;
+            
+            SecondClueTitleTextBlock.Foreground=Brushes.Green;
+            SecondClueTitleTextBorder.Background=Brushes.MintCream;
+            SecondClueTitleTextBorder.BorderBrush=Brushes.Green;
         }
         else
         {
             ClueTitleTextBlock.Foreground=Brushes.IndianRed;
             ClueTitleTextBorder.Background=Brushes.OldLace;
             ClueTitleTextBorder.BorderBrush=Brushes.IndianRed;
+            
+            SecondClueTitleTextBlock.Foreground=Brushes.IndianRed;
+            SecondClueTitleTextBorder.Background=Brushes.OldLace;
+            SecondClueTitleTextBorder.BorderBrush=Brushes.IndianRed;
         }
     }
         
