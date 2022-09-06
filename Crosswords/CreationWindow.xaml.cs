@@ -27,12 +27,10 @@ public partial class CreationWindow
         var scrY = SystemParameters.PrimaryScreenHeight;
         var winX = scrX * .98;
         var winY = scrY * .94;
-        var xm = (scrX - winX) / 2;
-        var ym = (scrY - winY) / 4;
         Width = winX;
         Height = winY;
-        Left = xm;
-        Top = ym;
+        Left = (scrX - winX) / 2;
+        Top = (scrY - winY) / 4;
     }
 
     private void Window_ContentRendered(object sender, EventArgs e)
@@ -59,7 +57,34 @@ public partial class CreationWindow
         // Each cell contains a Canvas enclosed in a Border
         // Indices are inserted in the cell Canvas as a TextBlock
 
-        Canvas[,] cellCanvas = new Canvas[_puzzle.Width, _puzzle.Height];
+        var cellCanvas = new Canvas[_puzzle.Width, _puzzle.Height];
+        
+        // for marking centre row and column
+        int centreColumn;
+        var centreColumnRight = -1;
+        int centreRow;
+        var centreRowLower = -1;
+
+        if (_puzzle.Width % 2 == 0)
+        {
+            centreColumnRight =_puzzle.Width / 2;
+            centreColumn = centreColumnRight-1;
+        }
+        else
+        {
+            centreColumn = (int) decimal.Floor((decimal) _puzzle.Width / 2);
+        }
+
+        if (_puzzle.Height % 2 == 0)
+        {
+            centreRowLower = _puzzle.Height /2;
+            centreRow =centreRowLower-1;
+        }
+        else
+        {
+            centreRow = (int) decimal.Floor((decimal)_puzzle.Width / 2);
+        }
+        
         const double gapSize = 2;
         Brush blackBrush = Brushes.DarkSlateGray;
         XwordGrid.Children.Clear();
@@ -68,9 +93,9 @@ public partial class CreationWindow
         
         for (var x = 0; x < _puzzle.Width; x++)
         {
-            ColumnDefinition col = new ColumnDefinition() {Width = new GridLength(_squareSide)};
+            var col = new ColumnDefinition() {Width = new GridLength(_squareSide)};
             XwordGrid.ColumnDefinitions.Add(col);
-            ColumnDefinition gap = new ColumnDefinition() {Width = new GridLength(gapSize)};
+            var gap = new ColumnDefinition() {Width = new GridLength(gapSize)};
             XwordGrid.ColumnDefinitions.Add(gap);
         }
 
@@ -78,9 +103,9 @@ public partial class CreationWindow
 
         for (var y = 0; y < _puzzle.Height; y++)
         {
-            RowDefinition row = new RowDefinition() {Height = new GridLength(_squareSide)};
+            var row = new RowDefinition() {Height = new GridLength(_squareSide)};
             XwordGrid.RowDefinitions.Add(row);
-            RowDefinition gap = new RowDefinition() {Height = new GridLength(gapSize)};
+            var gap = new RowDefinition() {Height = new GridLength(gapSize)};
             XwordGrid.RowDefinitions.Add(gap);
         }
 
@@ -103,18 +128,18 @@ public partial class CreationWindow
                 }
                 else
                 {
-                    cellCanvas[x, y].Background = Brushes.White;
-                    int i = _puzzle.Index(x, y);
+                    cellCanvas[x, y].Background = (x == centreColumn|| y==centreRow || x == centreColumnRight|| y==centreRowLower) ? Brushes.OldLace : Brushes.White;
+                    var i = _puzzle.Index(x, y);
                     if (i > 0)
                     {
-                        TextBlock indexBlock = new TextBlock() {FontSize = 12, Text = i.ToString(), Margin = new Thickness(2,0,0,0)};
+                        var indexBlock = new TextBlock() {FontSize = 12, Text = i.ToString(), Margin = new Thickness(2,0,0,0)};
                         cellCanvas[x, y].Children.Add(indexBlock);
                     }
                 }
 
-                Border b = new Border()
+                var b = new Border()
                 {
-                    BorderBrush = Brushes.DarkSlateGray, BorderThickness = new Thickness(1)
+                    BorderBrush = Brushes.DarkSlateGray, BorderThickness = new Thickness(1,1,1,1)
                     , Child = cellCanvas[x, y]
                 };
                 Grid.SetColumn(b, x * 2);
@@ -141,10 +166,10 @@ public partial class CreationWindow
 
             if (Symmetrical)
             {
-                int symmX = _puzzle.Width - (locus.X + 1);
-                int symmY = _puzzle.Height - (locus.Y + 1);
-                GridPoint symmLocus = new GridPoint(symmX, symmY);
-                _puzzle.SetCell(symmLocus, _puzzle.Cell(locus));
+                int mirrorX = _puzzle.Width - (locus.X + 1);
+                int mirrorY = _puzzle.Height - (locus.Y + 1);
+                var mirrorLocus = new GridPoint(mirrorX, mirrorY);
+                _puzzle.SetCell(mirrorLocus, _puzzle.Cell(locus));
             }
 
             DisplayGrid();
@@ -185,7 +210,6 @@ public partial class CreationWindow
                 {
                     return;
                 }
-                // File.Delete(_gamePath); 
             }
 
             FileStream fs = new FileStream(_gamePath, FileMode.Create);  // create or overwrite

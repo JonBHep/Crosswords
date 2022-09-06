@@ -19,7 +19,6 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
             
@@ -33,17 +32,19 @@
                 </Canvas>
             
             <DockPanel Grid.Row="1" Margin="12 12 12 0" LastChildFill="False">
-                <Button Width="80" Height="26" Click="NewButton_Click">New</Button>
-                <Button Width="80" Height="26" Margin="6 0 0 0" x:Name="OpenButton" Click="OpenButton_Click">Open</Button>
-                <Button DockPanel.Dock="Right" Width="80" Height="26" FontWeight="Bold" Click="CloseButton_Click">Close</Button>
-            </DockPanel>
-
-            <DockPanel Grid.Row="2" Margin="12 12 12 0" VerticalAlignment="Center" LastChildFill="False">
                 <Button DockPanel.Dock="Right" Width="80" Height="26" Margin="6 0 0 0" ToolTip="List of clue words and possible indications" Click="PointersButton_OnClick">Pointers</Button>
                 <Button DockPanel.Dock="Right" Width="80" Height="26" Margin="6 0 0 0" Click="ListButton_OnClick">Word list</Button>
+                <Button Width="80" Height="26" Click="NewButton_Click" ToolTip="New crossword grid">New</Button>
+                <Button Width="80" Height="26" Margin="6 0 6 0" Click="OpenButton_Click" ToolTip="Open saved crossword">Open</Button>
+                <Button Width="80" Height="26" FontWeight="Bold" Click="CloseButton_Click" ToolTip="Close application">Close</Button>
             </DockPanel>
+
+            <!-- <DockPanel Grid.Row="2" Margin="12 12 12 0" VerticalAlignment="Center" LastChildFill="False"> -->
+            <!--      -->
+            <!--      -->
+            <!-- </DockPanel> -->
             
-            <DockPanel x:Name="PuzzleHeaderDockPanel" Grid.Row="3" Margin="12 12 12 0" LastChildFill="False">
+            <DockPanel x:Name="PuzzleHeaderDockPanel" Grid.Row="2" Margin="12 12 12 0" LastChildFill="False">
                 <Button HorizontalAlignment="Left" Width="80" Height="26"
                         ToolTip="Clear letters (the grid and clue letter patterns are not affected)"
                         Click="ClearAllButton_Click">
@@ -53,8 +54,9 @@
                 <StackPanel x:Name="ProgressPanel" Orientation="Horizontal" VerticalAlignment="Center" DockPanel.Dock="Right"></StackPanel>
             </DockPanel>
             
-            <Border Grid.Row="4" BorderBrush="Tan" BorderThickness="1.5" CornerRadius="8" Margin="4">
-            <Grid  x:Name="SelectedClueGrid">
+            <Border Grid.Row="3" BorderBrush="Tan" BorderThickness="1.5" CornerRadius="8" Margin="4">
+            
+                <Grid  x:Name="SelectedClueGrid">
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
@@ -69,7 +71,7 @@
                 </Grid.ColumnDefinitions>
                 
                 <Border x:Name="ClueTitleTextBorder" Grid.Column="1" Grid.Row="0" BorderThickness="1" BorderBrush="Green" CornerRadius="6" HorizontalAlignment="Right" 
-                        VerticalAlignment="Center" Margin="4 0 1 0" Background="MintCream">
+                        VerticalAlignment="Center" Margin="0 2 2 0" Background="MintCream">
                 <TextBlock Margin="6 0 6 0" x:Name="ClueTitleTextBlock"
                            FontWeight="Bold" FontFamily="Arial" FontSize="32" VerticalAlignment="Center" TextAlignment="Right" Foreground="Green">
                     [clue title]
@@ -123,7 +125,7 @@
             </Grid>
             </Border>
             
-            <Grid Grid.Row="5" Margin="2 6 2 0">
+            <Grid Grid.Row="4" Margin="2 6 2 0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="360"/>
                     <ColumnDefinition />
@@ -148,7 +150,7 @@
                             <Button x:Name="AnagramButton" Width="72" Height="26" Margin="4 0 0 0" VerticalAlignment="Center"
                                     Click="AnagramListButton_OnClick" IsEnabled="False">List</Button>
                             
-                            <TextBlock x:Name="AnagramCountBlock" VerticalAlignment="Center" Margin="4 0 0 0" />
+                            <TextBlock x:Name="AnagramCountBlock" VerticalAlignment="Center" FontSize="14" Margin="4 0 0 0" />
                         </DockPanel>
                         <ListBox x:Name="AnagramListBox" Margin="0 4 0 0" FontFamily="Lucida Console" FontSize="14" Grid.Row="2" Grid.Column="0"
                                  MouseDoubleClick="AnagramBox_OnMouseDoubleClick" />        
@@ -198,7 +200,7 @@
                                     Click="TemplateListButton_OnClick" ToolTip="List template matches">List</Button>
                             <Button DockPanel.Dock="Right" Margin="12 0 0 0" Width="72" Height="26" VerticalAlignment="Center"
                                     Click="TemplateCountButton_OnClick" ToolTip="Count template matches">Count</Button>
-                            <TextBlock x:Name="TemplateCountBlock" Margin="6 0 0 0" VerticalAlignment="Center" Foreground="DimGray">Unchecked</TextBlock>    
+                            <TextBlock x:Name="TemplateCountBlock" Margin="6 0 0 0" VerticalAlignment="Center" Foreground="DimGray" FontSize="14">Unchecked</TextBlock>    
                         </DockPanel>
                         
                         <ListBox x:Name="TemplateListBox" Margin="0 4 0 0" FontFamily="Lucida Console" FontSize="14" Grid.Row="4" 
@@ -218,13 +220,17 @@
                 </Grid.ColumnDefinitions>
                 <Grid x:Name="CrosswordGrid"  Margin="4" MinHeight="200" />   
                 <DockPanel Grid.Column="1">
-                    <Border x:Name="SecondClueTitleTextBorder" DockPanel.Dock="Top" BorderThickness="1" BorderBrush="Green" 
-                            CornerRadius="6" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="4 0 1 0" Background="MintCream">
+                
+                    <DockPanel DockPanel.Dock="Top">
+                        <Button DockPanel.Dock="Right" Width="88" Height="26" FontWeight="Bold" Click="CloseButton_Click" ToolTip="Close application">CLOSE</Button>
+                        <Border x:Name="SecondClueTitleTextBorder" BorderThickness="1" BorderBrush="Green" 
+                                CornerRadius="6" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="4 0 4 0" Background="MintCream">
                         <TextBlock Margin="6 0 6 0" x:Name="SecondClueTitleTextBlock"
                                    FontWeight="Bold" FontFamily="Arial" FontSize="32" VerticalAlignment="Center" TextAlignment="Right" Foreground="Green">
                             [clue title]
                         </TextBlock>
                     </Border>
+                    </DockPanel>
                     <TextBlock x:Name="NotInListBlock" DockPanel.Dock="Top" Margin="0 4 0 4" Background="Ivory" FontWeight="Medium" TextAlignment="Center">NOT IN LIST</TextBlock>
                     <Border DockPanel.Dock="Bottom" Margin="0 0 8 0" CornerRadius="2" Background="White" BorderBrush="Blue" BorderThickness="1" Padding="3 2" Height="26">
                             <DockPanel>
