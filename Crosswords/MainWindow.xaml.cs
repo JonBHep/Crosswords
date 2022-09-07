@@ -791,7 +791,8 @@ public partial class MainWindow
         AnagramLengthBlock.Text = $"Length {AnagramTextBox.Text.Trim().Length}";
         AnagramListBox.Items.Clear();
         AnagramCountBlock.Text = string.Empty;
-        AnagramCountButton.IsEnabled=  AnagramButton.IsEnabled = AnagramTextBox.Text.Trim().Length > 0;
+        AnagramRandomButton.IsEnabled = AnagramCountButton.IsEnabled
+            = AnagramButton.IsEnabled = AnagramTextBox.Text.Trim().Length > 0;
     }
         
     private void FormatEntryTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
@@ -1480,5 +1481,37 @@ public partial class MainWindow
     {
         ListClues();
     }
-    
+
+    private void AnagramRandomButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        Cursor = Cursors.Wait;
+        AnagramListBox.Items.Clear();
+        var mixes = TenMixes(AnagramTextBox.Text.Trim().ToLower());
+        foreach (var a in mixes)
+        {
+            AnagramListBox.Items.Add(a);
+        }
+
+        Cursor = Cursors.Arrow;
+    }
+
+    private static List<string> TenMixes(string seed)
+    {
+        var mixList = new List<string>();
+        while (mixList.Count < 10)
+        {
+            var array = seed.ToCharArray();
+            var rng = new Random();
+            var n = array.Length;
+            while (n > 1)
+            {
+                n--;
+                var k = rng.Next(n + 1);
+                (array[k], array[n]) = (array[n], array[k]);
+            }
+            mixList.Add( new string(array));
+        }
+        mixList.Sort();
+        return mixList;
+    }
 }
