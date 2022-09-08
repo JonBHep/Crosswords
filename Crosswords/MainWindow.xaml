@@ -65,22 +65,32 @@
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
                 
-                <Border x:Name="ClueTitleTextBorder" Grid.Column="1" Grid.Row="0" BorderThickness="1" BorderBrush="Green" CornerRadius="6" HorizontalAlignment="Right" 
-                        VerticalAlignment="Center" Margin="0 2 2 0" Background="MintCream">
-                <TextBlock Margin="6 0 6 0" x:Name="ClueTitleTextBlock"
-                           FontWeight="Bold" FontFamily="Arial" FontSize="32" VerticalAlignment="Center" TextAlignment="Right" Foreground="Green">
-                    [clue title]
-                </TextBlock>
+                    <DockPanel Grid.Row="0" Grid.Column="0" Margin="12 6" LastChildFill="False">
+                        
+                        <Border x:Name="ClueTitleTextBorder" DockPanel.Dock="Right" BorderThickness="1" BorderBrush="Green" CornerRadius="6" HorizontalAlignment="Right" 
+                                VerticalAlignment="Center" Margin="0 2 2 0" Background="MintCream">
+                            <TextBlock Margin="6 0 6 0" x:Name="ClueTitleTextBlock"
+                                       FontWeight="Bold" FontFamily="Arial" FontSize="32" VerticalAlignment="Center" TextAlignment="Right" Foreground="Green">
+                                [clue title]
+                            </TextBlock>
+                        </Border>
+                        
+                        <TextBlock VerticalAlignment="Center" FontWeight="Medium" Width="72">Formatted:</TextBlock>
+                        
+                        <Border VerticalAlignment="Center" BorderBrush="Black" BorderThickness="2">
+                            <TextBlock x:Name="PatternTextBlock" VerticalAlignment="Center" FontSize="32" FontFamily="Lucida Console" Padding="4 0 4 0" />    
+                        </Border>
+                        
+                        <TextBlock x:Name="LetterCountTextBlock" VerticalAlignment="Center" FontSize="12" FontFamily="Arial" Margin="16 0 0 0" />
+                    </DockPanel>
                     
-                </Border>
-                
-                <DockPanel Grid.Row="0" Grid.Column="0" Margin="12 6">
-                    <TextBlock x:Name="LettersCaption" VerticalAlignment="Center" FontWeight="Medium" Width="72">Letters:</TextBlock>
+                <DockPanel Grid.Row="4" Grid.Column="0" Margin="12 6">
+                    <Button DockPanel.Dock="Right" Margin="12 6 0 12" HorizontalAlignment="Left" Width="80"
+                            Height="26" ToolTip="Clear clue to pattern" Click="ClueClearButton_OnClick">
+                        Clear
+                    </Button>
+                    <TextBlock VerticalAlignment="Center" FontWeight="Medium" Width="72">Letters:</TextBlock>
                     <TextBox x:Name="LettersEntryTextBox" AcceptsReturn="False" Width="200" FontSize="16" VerticalAlignment="Center"
                              FontFamily="Lucida Console" Padding="4" TextChanged="LettersEntryTextBox_TextChanged" />
                     <Button x:Name="LettersApplyButton" Margin="12 0" Width="80" Height="26" VerticalAlignment="Center"
@@ -91,36 +101,24 @@
                                FontWeight="Medium">
                         Conflicts with existing letters
                     </TextBlock>
+                    
                 </DockPanel>
                 
-                <DockPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="11 6" LastChildFill="False">
+                <DockPanel Grid.Row="1" Grid.Column="0" Margin="11 6" LastChildFill="False">
                     <TextBlock VerticalAlignment="Center" FontWeight="Medium" Width="72">Format:</TextBlock>
                     <TextBox x:Name="FormatEntryTextBox" AcceptsReturn="False" Width="128" FontSize="16" FontFamily="Lucida Console"
                              Padding="4" IsReadOnly="True" TextChanged="FormatEntryTextBox_OnTextChanged" />
                     <Button x:Name="FormatApplyButton" Margin="12 0" Width="80" Height="26" VerticalAlignment="Center"
                             Click="FormatApplyButton_OnClick">Apply</Button>
-                    <!-- <TextBlock x:Name="FormatConflictWarningTextBlock" Foreground="Red" VerticalAlignment="Center" -->
-                    <!--            FontWeight="Medium">Invalid format</TextBlock> -->
                     <TextBlock Foreground="Black" VerticalAlignment="Center" FontWeight="Medium" Margin="8 0 4 0">Pick word lengths</TextBlock>
                     <ComboBox x:Name="CluePatternCombo" Width="200" VerticalAlignment="Center" FontSize="16" FontFamily="Lucida Console" SelectionChanged="CluePatternCombo_OnSelectionChanged" />
                     <TextBlock Foreground="Black" VerticalAlignment="Center" FontWeight="Medium" Margin="8 0 4 0">Pick format</TextBlock>
                     <ComboBox x:Name="ClueVariantCombo" Width="128" VerticalAlignment="Center" FontSize="16" FontFamily="Lucida Console" SelectionChanged="ClueVariantCombo_OnSelectionChanged" />
                 </DockPanel>
                 
-                <TextBlock Grid.Row="3" Grid.Column="0" Margin="12 6" FontFamily="Arial">To set the format of the clue, separate word lengths with a comma or a hyphen e.g. '5,5-4'.</TextBlock>
+                <TextBlock Grid.Row="2" Grid.Column="0" Margin="12 6" FontFamily="Arial">To set the format of the clue, separate word lengths with a comma or a hyphen e.g. '5,5-4'.</TextBlock>
                 
-                <DockPanel Grid.Row="4" Grid.Column="0" Margin="12 6" LastChildFill="False">
-                    <TextBlock VerticalAlignment="Center" FontWeight="Medium" Width="72">Formatted:</TextBlock>
-                    <TextBlock x:Name="PatternTextBlock" VerticalAlignment="Center" FontSize="18" FontFamily="Lucida Console" Padding="4 0 0 0" />
-                    <TextBlock x:Name="LetterCountTextBlock" VerticalAlignment="Center" FontSize="12" FontFamily="Arial" Margin="16 0 0 0" />
-                </DockPanel>
-                
-                <TextBlock Grid.Row="1" Grid.Column="0" Margin="12 6" FontFamily="Arial">Letters only; no hyphens, spaces or unknown letters.</TextBlock>
-                
-                <Button Grid.Row="5" Grid.Column="0" Margin="12 6 0 12" HorizontalAlignment="Left" Width="80"
-                        Height="26" ToolTip="Clear clue to pattern" Click="ClueClearButton_OnClick">
-                    Clear
-                </Button>
+                <TextBlock Grid.Row="5" Grid.Column="0" Margin="12 6" FontFamily="Arial">Letters only; no hyphens, spaces or unknown letters.</TextBlock>
 
             </Grid>
             </Border>
