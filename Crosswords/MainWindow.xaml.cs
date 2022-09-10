@@ -689,6 +689,7 @@ public partial class MainWindow
         _selectedClueKey = clueCode;
         SwitchClueControls(true);
         FormatEntryTextBox.Text = cloo.Content.Format;
+        FormatApplyButton.IsEnabled = false;
         LetterCountTextBlock.Text = $"({cloo.WordLength} letters)";
         FillCluePatternCombo(cloo.WordLength);
         PatternTextBlock.Text = TemplateTextBox.Text = _puzzle.PatternedWordConstrained(clueCode);
