@@ -66,8 +66,8 @@
                     
                     <DockPanel Grid.Row="0" Grid.Column="0" Margin="6 0" LastChildFill="False">
                         <Border x:Name="ClueTitleTextBorder" BorderThickness="1" BorderBrush="Green" CornerRadius="6" HorizontalAlignment="Right" 
-                                VerticalAlignment="Center" Margin="0 2 2 0" Background="MintCream">
-                            <TextBlock Margin="6 0 6 0" x:Name="ClueTitleTextBlock"
+                                VerticalAlignment="Center" Margin="0 4 0 4" Background="MintCream">
+                            <TextBlock Margin="8 0 8 0" x:Name="ClueTitleTextBlock"
                                        FontWeight="Bold" FontFamily="Arial" FontSize="32" VerticalAlignment="Center" TextAlignment="Right" Foreground="Green">
                                 [clue title]
                             </TextBlock>
@@ -86,41 +86,28 @@
                                     </Grid.RowDefinitions>
                                     
                                     <DockPanel Margin="11 6" LastChildFill="False">
-                                <!-- <Button x:Name="FormatApplyButton" DockPanel.Dock="Right" Margin="12 0" Width="80" Height="26" VerticalAlignment="Center" -->
-                                <!--         Click="FormatApplyButton_OnClick">Apply</Button> -->
-                                <!-- <TextBlock VerticalAlignment="Center" FontWeight="Medium" Width="72">Format:</TextBlock> -->
                                 
                                 <TextBlock Foreground="Black" VerticalAlignment="Center" FontWeight="Medium" Width="84">Word lengths</TextBlock>
                                 <ComboBox x:Name="CluePatternCombo" Width="200" VerticalAlignment="Center" FontSize="16" FontFamily="Lucida Console" SelectionChanged="CluePatternCombo_OnSelectionChanged" />
-                                <!-- <TextBlock Foreground="Black" VerticalAlignment="Center" FontWeight="Medium" Margin="8 0 4 0">Pick format</TextBlock> -->
-                                <!-- <ComboBox x:Name="ClueVariantCombo" Width="200" VerticalAlignment="Center" FontSize="16" FontFamily="Lucida Console" SelectionChanged="ClueVariantCombo_OnSelectionChanged" /> -->
                             </DockPanel>    
-                                    
                                     <DockPanel Grid.Row="1" Margin="11 6" LastChildFill="False">
-                                        <Button x:Name="FormatApplyButton" DockPanel.Dock="Right" Margin="12 0" Width="80" Height="26" VerticalAlignment="Center"
-                                                Click="FormatApplyButton_OnClick">Apply</Button>
-                                        <TextBox x:Name="FormatEntryTextBox" DockPanel.Dock="Right" AcceptsReturn="False" Width="128" FontSize="16" FontFamily="Lucida Console"
-                                                 Padding="4" IsReadOnly="True" TextChanged="FormatEntryTextBox_OnTextChanged" />
-                                        <!-- <TextBlock VerticalAlignment="Center" FontWeight="Medium" Width="72">Format:</TextBlock> -->
-                                        <!-- <TextBox x:Name="FormatEntryTextBox" AcceptsReturn="False" Width="128" FontSize="16" FontFamily="Lucida Console" -->
-                                        <!--          Padding="4" IsReadOnly="True" TextChanged="FormatEntryTextBox_OnTextChanged" /> -->
-                                        <!-- <TextBlock Foreground="Black" VerticalAlignment="Center" FontWeight="Medium" Margin="8 0 4 0">Pick word lengths</TextBlock> -->
-                                        <!-- <ComboBox x:Name="CluePatternCombo" Width="200" VerticalAlignment="Center" FontSize="16" FontFamily="Lucida Console" SelectionChanged="CluePatternCombo_OnSelectionChanged" /> -->
                                         <TextBlock Foreground="Black" VerticalAlignment="Center" FontWeight="Medium" Width="84">Spacing</TextBlock>
-                                        <ComboBox x:Name="ClueVariantCombo" Width="200" VerticalAlignment="Center" FontSize="16" FontFamily="Lucida Console" SelectionChanged="ClueVariantCombo_OnSelectionChanged" />
+                                        <ComboBox x:Name="ClueVariantCombo" Width="200" VerticalAlignment="Center" FontSize="16" 
+                                                  FontFamily="Lucida Console" SelectionChanged="ClueVariantCombo_OnSelectionChanged" />
+                                        <TextBox x:Name="FormatEntryTextBox" AcceptsReturn="False" Width="128" Margin="12 0 12 0" FontSize="16" FontFamily="Lucida Console"
+                                                 Padding="4" IsReadOnly="True" TextChanged="FormatEntryTextBox_OnTextChanged" />
+                                        <Button x:Name="FormatApplyButton" Width="80" Height="26" VerticalAlignment="Center"
+                                                Click="FormatApplyButton_OnClick">Apply</Button>
                                     </DockPanel>
                         </Grid>
                     </Border>
-                
-                
-                <!-- <TextBlock Grid.Row="3" Grid.Column="0" Margin="12 6" FontFamily="Arial">To set the format of the clue, separate word lengths with a comma or a hyphen e.g. '5,5-4'.</TextBlock> -->
                
                     <DockPanel Grid.Row="2" Grid.Column="0" Margin="12 6">
                         <Button DockPanel.Dock="Right" Margin="12 6 0 12" HorizontalAlignment="Left" Width="80"
                                 Height="26" ToolTip="Clear clue to pattern" Click="ClueClearButton_OnClick">
                             Clear
                         </Button>
-                        <TextBlock VerticalAlignment="Center" FontWeight="Medium" Width="72">Letters:</TextBlock>
+                        <TextBlock VerticalAlignment="Center" FontWeight="Medium" Width="84" Margin="4 0 0 0">Letters:</TextBlock>
                         <TextBox x:Name="LettersEntryTextBox" AcceptsReturn="False" Width="200" FontSize="16" VerticalAlignment="Center"
                                  FontFamily="Lucida Console" Padding="4" TextChanged="LettersEntryTextBox_TextChanged" />
                         <Button x:Name="LettersApplyButton" Margin="12 0" Width="80" Height="26" VerticalAlignment="Center"
@@ -134,7 +121,7 @@
                     
                     </DockPanel>
                     
-                <TextBlock Grid.Row="3" Grid.Column="0" Margin="12 6" FontFamily="Arial">Letters only; no hyphens, spaces or unknown letters.</TextBlock>
+                <TextBlock Grid.Row="3" Grid.Column="0" Margin="16 6" FontFamily="Arial">Letters only; no hyphens, spaces or wildcards.</TextBlock>
 
             </Grid>
             </Border>
@@ -237,11 +224,11 @@
                 <Grid x:Name="CrosswordGrid"  Margin="4" MinHeight="200" />   
                 <DockPanel Grid.Column="1">
                 
-                    <DockPanel DockPanel.Dock="Top">
+                    <DockPanel DockPanel.Dock="Top" LastChildFill="False">
                         <Button DockPanel.Dock="Right" Width="88" Height="26" FontWeight="Bold" Click="CloseButton_Click" ToolTip="Close application">CLOSE</Button>
                         <Border x:Name="SecondClueTitleTextBorder" BorderThickness="1" BorderBrush="Green" 
-                                CornerRadius="6" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="4 0 4 0" Background="MintCream">
-                        <TextBlock Margin="6 0 6 0" x:Name="SecondClueTitleTextBlock"
+                                CornerRadius="6" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 4 0 4" Background="MintCream">
+                        <TextBlock Margin="8 0 8 0" x:Name="SecondClueTitleTextBlock"
                                    FontWeight="Bold" FontFamily="Arial" FontSize="32" VerticalAlignment="Center" TextAlignment="Right" Foreground="Green">
                             [clue title]
                         </TextBlock>

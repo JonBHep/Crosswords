@@ -69,7 +69,7 @@ public partial class MainWindow
     {
         Visibility vis = on ? Visibility.Visible : Visibility.Hidden;
         SelectedClueGrid.Visibility = vis;
-        SecondClueTitleTextBlock.Visibility = vis;
+        SecondClueTitleTextBorder.Visibility = vis;
         if (on)
         {
             LettersEntryTextBox.Focus();
@@ -1367,8 +1367,6 @@ public partial class MainWindow
             FormatEntryTextBox.Text = format;
         }
     }
-
-    
 
     private void PointersButton_OnClick(object sender, RoutedEventArgs e)
     {
