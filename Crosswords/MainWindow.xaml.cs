@@ -9,7 +9,6 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using Microsoft.Win32;
 
 namespace Crosswords;
 
@@ -39,7 +38,7 @@ public partial class MainWindow
         
     private readonly Brush _barBrush = Brushes.OrangeRed;
     private readonly Brush _hyphenBrush = Brushes.Crimson;
-    private readonly Brush _letterBrush = Brushes.DarkRed;
+    private readonly Brush _letterBrush = Brushes.DarkOliveGreen;  // previously dark red 
     private readonly Brush _blackSquareBrush = Brushes.DimGray;
     private readonly Brush _highlightSquareBrush = Brushes.Moccasin;
         
@@ -124,7 +123,7 @@ public partial class MainWindow
                 {Width = new GridLength(gapSize)}); // gap between columns
         }
 
-        ColumnDefinition lastcol = new ColumnDefinition();
+        var lastcol = new ColumnDefinition();
         CrosswordGrid.ColumnDefinitions.Add(lastcol);
 
         for (var y = 0; y < _puzzle.Height; y++) // add row definitions
@@ -182,9 +181,9 @@ public partial class MainWindow
         // Add letters and word-separators (bars and hyphens) from Clue.PatternedWord
         foreach (string q in _puzzle.ClueKeyList)
         {
-            Clue clu = _puzzle.ClueOf(q);
-            int px = clu.Xstart;
-            int py = clu.Ystart;
+            var clu = _puzzle.ClueOf(q);
+            var px = clu.Xstart;
+            var py = clu.Ystart;
             if (clu.Direction == 'A')
             {
                 px--;
@@ -562,12 +561,18 @@ public partial class MainWindow
 
     private void LoadPuzzleFromFile(string puzzlePath)
     {
+        if (!File.Exists(puzzlePath))
+        {
+            MessageBox.Show(puzzlePath, "Cannot find file", MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+        
         AnagramTextBox.Clear();
         TemplateTextBox.Clear();
-        using (StreamReader rdr = new StreamReader(puzzlePath, Clue.JbhEncoding))
+        using (var rdr = new StreamReader(puzzlePath, Clue.JbhEncoding))
         {
             // load puzzle grid
-            string? read = rdr.ReadLine();
+            var read = rdr.ReadLine();
             if (read is { } spec)
             {
                 _puzzle = new CrosswordGrid(spec);
@@ -1179,17 +1184,14 @@ public partial class MainWindow
     private void OpenButton_Click(object sender, RoutedEventArgs e)
     {
         SaveCrossword();
-        OpenFileDialog dlg = new OpenFileDialog()
+        var dialogue = new OpenDialogueWindow() {Owner = this};
+        var answer = dialogue.ShowDialog();
+        if (answer ?? false)
         {
-            Filter = "Crossword files (*.cwd)|*.cwd", InitialDirectory = CrosswordsPath, Title = "Open crossword"
-        };
-        bool? ans = dlg.ShowDialog();
-        if (ans ?? false)
-        {
-            LoadPuzzleFromFile(dlg.FileName);
+            LoadPuzzleFromFile(dialogue.PuzzleFileSpecification());
         }
     }
-       
+
     private static string? MostRecentlySavedGamePath()
     {
         var gameFiles = Directory.GetFiles(CrosswordsPath, "*.cwd");
@@ -1513,4 +1515,41 @@ public partial class MainWindow
         mixList.Sort();
         return mixList;
     }
+
+    private void ClearAnagramButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        AnagramTextBox.Clear();
+        LostLettersTextBox.Clear();
+    }
+
+    private void LostLettersTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
+    {
+        CleanGivenLetters(LostLettersTextBox, false);
+        ReduceAnagramButton.IsEnabled = LostLettersTextBox.Text.Trim().Length > 0;
+    }
+
+    private void ReduceAnagramButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        var existing = AnagramTextBox.Text.Trim();
+        var toLose = LostLettersTextBox.Text.Trim();
+        var unFound = string.Empty;
+        foreach (var character in toLose)
+        {
+            var isat = existing.IndexOf(character);
+            if (isat >= 0)
+            {
+                var lefts = existing[..isat];
+                var rights = existing[(isat + 1)..];
+                existing = lefts + rights;
+            }
+            else
+            {
+                unFound += character;
+            }
+        }
+
+        AnagramTextBox.Text = existing;
+        LostLettersTextBox.Text = unFound;
+    }
+    
 }

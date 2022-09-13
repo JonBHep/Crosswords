@@ -1,0 +1,34 @@
+﻿<Window x:Class="Crosswords.OpenDialogueWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        mc:Ignorable="d"
+        Title="OpenDialogueWindow" Height="256" Width="800" Loaded="OpenDialogueWindow_OnLoadedDialogueWindow_OnLoaded" WindowStartupLocation="CenterScreen" WindowStyle="None" AllowsTransparency="True" Background="Transparent" ShowInTaskbar="False">
+<Border CornerRadius="16" Background="OldLace" BorderBrush="SaddleBrown" BorderThickness="2">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBlock FontWeight="Bold" Text="Select crossword" VerticalAlignment="Center" FontSize="16"></TextBlock>
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Select book" VerticalAlignment="Center" FontSize="14"></TextBlock>
+            <ComboBox  Grid.Row="1" Grid.Column="1" x:Name="BooksCombo" VerticalAlignment="Center" FontFamily="Consolas" SelectionChanged="BooksCombo_OnSelectionChanged"></ComboBox>
+            
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Select puzzle" VerticalAlignment="Center" FontSize="14"></TextBlock>
+            <ComboBox  Grid.Row="2" Grid.Column="1" x:Name="PuzzleCombo" VerticalAlignment="Center" FontFamily="Consolas" SelectionChanged="PuzzleCombo_OnSelectionChanged"></ComboBox>
+            
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="Selected puzzle" VerticalAlignment="Center" FontSize="14"></TextBlock>
+            <TextBlock x:Name="SelectedPuzzleTextBlock" Grid.Row="3" Grid.Column="1" Text="[selected puzzle]" VerticalAlignment="Center" FontWeight="Bold" FontSize="14"></TextBlock>
+            <Button Grid.Row="4" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="72" Height="24" FontWeight="Bold" Click="SaveButton_OnClick">Open</Button>
+            <Button Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Width="72" Height="24" IsCancel="True">Cancel</Button>
+        </Grid>
+    </Border>
+</Window>

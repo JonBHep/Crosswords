@@ -84,6 +84,7 @@ public partial class SaveDialogueWindow
     public string PuzzleFileSpecification()
     {
         string bk = BookTitleBlock.Text;
+        
         if (string.IsNullOrWhiteSpace(bk))
         {
             return string.Empty;
@@ -94,7 +95,7 @@ public partial class SaveDialogueWindow
             return string.Empty;
         }
 
-        string pFile = $"{bk}-{p}.cwd";
+        var pFile = $"{bk}-{p}.cwd";
         return Path.Combine(CrosswordsPath, pFile);
     }
 
