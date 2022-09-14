@@ -268,7 +268,17 @@ public class CrosswordGrid
         return clus;
     }
 
-    public List<string> ClueKeyList => _clus.Keys.ToList();
+    //public List<string> ClueKeyList => _clus.Keys.ToList();
+
+    public List<string> ClueKeysSorted
+    {
+        get
+        {
+            var keys = _clus.Keys.ToList();
+            keys.Sort();
+            return keys;
+        }
+    }
 
     public Clue ClueOf(string ky)
     {

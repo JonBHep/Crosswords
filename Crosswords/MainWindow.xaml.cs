@@ -179,7 +179,7 @@ public partial class MainWindow
         ListClues();
 
         // Add letters and word-separators (bars and hyphens) from Clue.PatternedWord
-        foreach (string q in _puzzle.ClueKeyList)
+        foreach (string q in _puzzle.ClueKeysSorted)
         {
             var clu = _puzzle.ClueOf(q);
             var px = clu.Xstart;
@@ -249,63 +249,54 @@ public partial class MainWindow
 
     private void Cell_MouseDown(object sender, MouseButtonEventArgs e)
     {
-        if (sender is Canvas {Tag: string q})
+        if (sender is not Canvas {Tag: string q}) return;
+        
+        // get coordinates
+        var locus = CoordPoint(q);
+
+        var t = string.Empty;
+        ClueAListBox.SelectedIndex = -1;
+        ClueDListBox.SelectedIndex = -1;
+        foreach (var s in _puzzle.ClueKeysSorted)
         {
-            // get coordinates
-            GridPoint locus = CoordPoint(q);
-
-            var t = string.Empty;
-            ClueAListBox.SelectedIndex = -1;
-            ClueDListBox.SelectedIndex = -1;
-            foreach (var s in _puzzle.ClueKeyList)
+            if (_puzzle.ClueOf(s).IncludesCell(locus) is not null)
             {
-                if (_puzzle.ClueOf(s).IncludesCell(locus) is not null)
-                {
-                    t = s;
-                    break;
-                }
+                t = s;
+                break;
             }
-
-            // Select the corresponding clue in the Across or Down clue ListBox 
-            int r = -1;
-            for (var z = 1; z < ClueAListBox.Items.Count; z++) // don't take first item which is the heading
-            {
-                if (ClueAListBox.Items[z] is ListBoxItem {Tag: string j})
-                {
-                    if (j == t)
-                    {
-                        r = z;
-                        break;
-                    }
-                }
-            }
-
-            if (r >= 0)
-            {
-                ClueAListBox.SelectedIndex = r;
-                return;
-            }
-
-            for (int z = 1; z < ClueDListBox.Items.Count; z++) // don't take first item which is the heading
-            {
-                if (ClueDListBox.Items[z] is ListBoxItem {Tag: string j})
-                {
-                    if (j == t)
-                    {
-                        r = z;
-                        break;
-                    }
-                }
-            }
-
-            if (r >= 0)
-            {
-                ClueDListBox.SelectedIndex = r;
-                return;
-            }
-
-            SwitchClueControls(false);
         }
+
+        // Select the corresponding clue in the Across or Down clue ListBox 
+        var r = -1;
+        for (var z = 1; z < ClueAListBox.Items.Count; z++) // don't take first item which is the heading
+        {
+            if (ClueAListBox.Items[z] is not ListBoxItem {Tag: string j}) continue;
+            if (j != t) continue;
+            r = z;
+            break;
+        }
+
+        if (r >= 0)
+        {
+            ClueAListBox.SelectedIndex = r;
+            return;
+        }
+
+        for (var z = 1; z < ClueDListBox.Items.Count; z++) // don't take first item which is the heading
+        {
+            if (ClueDListBox.Items[z] is not ListBoxItem {Tag: string j}) continue;
+            if (j != t) continue;
+            r = z;
+            break;
+        }
+
+        if (r >= 0)
+        {
+            ClueDListBox.SelectedIndex = r;
+            return;
+        }
+
+        SwitchClueControls(false);
     }
 
     private void MakeRightBar(GridPoint point)
@@ -539,7 +530,7 @@ public partial class MainWindow
             return;
         }
 
-        foreach (var key in _puzzle.ClueKeyList)
+        foreach (var key in _puzzle.ClueKeysSorted)
         {
             _puzzle.ClueOf(key).ClearLetters();
         }
@@ -553,7 +544,7 @@ public partial class MainWindow
         var fs = new FileStream(path, FileMode.Create);
         using var wri = new StreamWriter(fs, Clue.JbhEncoding);
         wri.WriteLine(_puzzle.Specification);
-        foreach (var tk in _puzzle.ClueKeyList)
+        foreach (var tk in _puzzle.ClueKeysSorted)
         {
             wri.WriteLine($"{tk}%{_puzzle.ClueOf(tk).Content.Specification()}");
         }

@@ -216,7 +216,7 @@ public partial class CreationWindow
             using (var wri = new StreamWriter(fs, Clue.JbhEncoding))
             {
                 wri.WriteLine(_puzzle.Specification);
-                foreach (string tk in _puzzle.ClueKeyList)
+                foreach (string tk in _puzzle.ClueKeysSorted)
                 {
                     wri.WriteLine($"{tk}%{_puzzle.ClueOf(tk).Content.Specification()}");
                 }
