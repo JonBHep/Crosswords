@@ -18,7 +18,7 @@ namespace Crosswords;
 public partial class MainWindow
 {
     // https://www.crosswordunclued.com/2009/09/crossword-grid-symmetry.html
-       
+    
     public MainWindow()
     {
         InitializeComponent();
@@ -32,7 +32,7 @@ public partial class MainWindow
     private const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private const double SquareSide = 36;
     private const double LetterWidth = 30;
-    private readonly FontFamily _fixedFont = new("Liberation Mono");
+    private readonly FontFamily _fixedFont = new("Liberation Mono, Consolas");
     private CrosswordGrid _puzzle;
     private string _xWordTitle = "default";
         
@@ -523,9 +523,10 @@ public partial class MainWindow
 
     private void ClearAllButton_Click(object sender, RoutedEventArgs e)
     {
-        MessageBoxResult answ = MessageBox.Show("Clear all the letters?", Jbh.AppManager.AppName
+        var answer = MessageBox.Show("Clear all the letters?", Jbh.AppManager.AppName
             , MessageBoxButton.OKCancel, MessageBoxImage.Question);
-        if (answ == MessageBoxResult.Cancel)
+        
+        if (answer == MessageBoxResult.Cancel)
         {
             return;
         }
@@ -1024,7 +1025,7 @@ public partial class MainWindow
     private void ListTemplateMatches()
     {
         Cursor = Cursors.Wait;
-        List<string> hits = TemplateMatchesList();
+        var hits = TemplateMatchesList();
         TemplateListBox.Items.Clear();
         foreach (var wd in hits)
         {
@@ -1182,7 +1183,23 @@ public partial class MainWindow
             LoadPuzzleFromFile(dialogue.PuzzleFileSpecification());
         }
     }
+    private void OpenAndClearButton_Click(object sender, RoutedEventArgs e)
+    {
+        SaveCrossword();
+        var dialogue = new OpenDialogueWindow() {Owner = this};
+        var answer = dialogue.ShowDialog();
+        if (!answer ?? false) return;
+        
+        LoadPuzzleFromFile(dialogue.PuzzleFileSpecification());
+        
+        foreach (var key in _puzzle.ClueKeysSorted)
+        {
+            _puzzle.ClueOf(key).ClearLetters();
+        }
 
+        DisplayGrid();
+    }
+    
     private static string? MostRecentlySavedGamePath()
     {
         var gameFiles = Directory.GetFiles(CrosswordsPath, "*.cwd");
@@ -1483,13 +1500,13 @@ public partial class MainWindow
         {
             AnagramListBox.Items.Add(a);
         }
-
         Cursor = Cursors.Arrow;
     }
 
     private static List<string> TenMixes(string seed)
     {
         var mixList = new List<string>();
+        var i = 0;
         while (mixList.Count < 10)
         {
             var array = seed.ToCharArray();
@@ -1501,9 +1518,11 @@ public partial class MainWindow
                 var k = rng.Next(n + 1);
                 (array[k], array[n]) = (array[n], array[k]);
             }
-            mixList.Add( new string(array));
+            mixList.Add(new string(array));
         }
+        
         mixList.Sort();
+        MessageBox.Show($"Rejected {i}");
         return mixList;
     }
 

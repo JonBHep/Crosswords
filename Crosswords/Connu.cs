@@ -6,7 +6,6 @@ namespace Crosswords;
 
 public class Connu
 {
-    // public  int EntryCount { get; private set; }
     
     public Connu()
     {
@@ -43,7 +42,6 @@ public class Connu
             }
         }
 
-        // EntryCount = counter;
         return flaw;
     }
 
@@ -66,24 +64,19 @@ public class Connu
     public string SearchReport(string sought)
     {
         var foundString = "Not found";
-        using (var reader = new StreamReader(_filePath, Clue.JbhEncoding))
+        using var reader = new StreamReader(_filePath, Clue.JbhEncoding);
+        while (!reader.EndOfStream)
         {
-            while (!reader.EndOfStream)
+            var mot = reader.ReadLine();
+            if (mot == null) continue;
+            if (string.Equals(mot, sought, StringComparison.CurrentCultureIgnoreCase))
             {
-                var mot = reader.ReadLine();
-                if (mot is { } word)
-                {
-                    if (string.Equals(word, sought, StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        foundString = string.Equals(word, sought, StringComparison.CurrentCulture)
-                            ? "Found exact string"
-                            : "Found string differently cased";
-                    }
-                }
+                foundString = string.Equals(mot, sought, StringComparison.CurrentCulture)
+                    ? "Found exact string"
+                    : "Found string differently cased";
             }
         }
 
-        // EntryCount = counter;
         return foundString;
     }
 

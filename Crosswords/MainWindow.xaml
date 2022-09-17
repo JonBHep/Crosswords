@@ -34,9 +34,10 @@
             <DockPanel Grid.Row="1" Margin="12 12 12 0" LastChildFill="False">
                 <Button DockPanel.Dock="Right" Width="80" Height="26" Margin="6 0 0 0" ToolTip="List of clue words and possible indications" Click="PointersButton_OnClick">Pointers</Button>
                 <Button DockPanel.Dock="Right" Width="80" Height="26" Margin="6 0 0 0" Click="ListButton_OnClick">Word list</Button>
-                <Button Width="80" Height="26" Click="NewButton_Click" ToolTip="New crossword grid">New</Button>
-                <Button Width="80" Height="26" Margin="6 0 6 0" Click="OpenButton_Click" ToolTip="Open saved crossword">Open</Button>
-                <Button Width="80" Height="26" FontWeight="Bold" Click="CloseButton_Click" ToolTip="Close application">Close</Button>
+                <Button Width="88" Height="26" Click="NewButton_Click" ToolTip="New crossword grid">New</Button>
+                <Button Width="88" Height="26" Margin="6 0 6 0" Click="OpenButton_Click" ToolTip="Open saved crossword">Open</Button>
+                <Button Width="88" Height="26" Margin="6 0 6 0" Click="OpenAndClearButton_Click" ToolTip="Open saved crossword, clearing previous answers">Open fresh</Button>
+                <Button Width="88" Height="26" FontWeight="Bold" Click="CloseButton_Click" ToolTip="Close application">Close</Button>
             </DockPanel>
 
             <!-- <DockPanel Grid.Row="2" Margin="12 12 12 0" VerticalAlignment="Center" LastChildFill="False"> -->
