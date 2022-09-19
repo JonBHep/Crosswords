@@ -1495,7 +1495,7 @@ public partial class MainWindow
     {
         Cursor = Cursors.Wait;
         AnagramListBox.Items.Clear();
-        var mixes = TenMixes(AnagramTextBox.Text.Trim().ToLower());
+        var mixes = TwentyMixes(AnagramTextBox.Text.Trim().ToLower());
         foreach (var a in mixes)
         {
             AnagramListBox.Items.Add(a);
@@ -1503,11 +1503,10 @@ public partial class MainWindow
         Cursor = Cursors.Arrow;
     }
 
-    private static List<string> TenMixes(string seed)
+    private static List<string> TwentyMixes(string seed)
     {
         var mixList = new List<string>();
-        var i = 0;
-        while (mixList.Count < 10)
+        while (mixList.Count < 20)
         {
             var array = seed.ToCharArray();
             var rng = new Random();
@@ -1522,7 +1521,6 @@ public partial class MainWindow
         }
         
         mixList.Sort();
-        MessageBox.Show($"Rejected {i}");
         return mixList;
     }
 
