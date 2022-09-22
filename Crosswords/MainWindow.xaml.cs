@@ -763,6 +763,7 @@ public partial class MainWindow
         
         CluePatternCombo.Items.Clear();
         ClueVariantCombo.Items.Clear();
+        ClueVariantCombo.Visibility = Visibility.Hidden;
         CluePatternCombo.Items.Add(
             new ComboBoxItem() {Tag = $"{length}", Content = new TextBlock() {Foreground =Brushes.Blue, Text = $"ONE WORD {length}".PadLeft(2)}});
         var words = 1;
@@ -1367,6 +1368,7 @@ public partial class MainWindow
             }
 
             ClueVariantCombo.SelectedIndex = 0;
+            ClueVariantCombo.Visibility = Visibility.Visible;
         }
     }
 
