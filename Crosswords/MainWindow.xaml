@@ -105,7 +105,7 @@
                
                     <DockPanel Grid.Row="2" Grid.Column="0" Margin="12 6">
                         <Button DockPanel.Dock="Right" Margin="12 6 0 12" HorizontalAlignment="Left" Width="80"
-                                Height="26" ToolTip="Clear clue to pattern" Click="ClueClearButton_OnClick">
+                                Height="26" ToolTip="Clear clue, leaving pattern" Click="ClueClearButton_OnClick">
                             Clear
                         </Button>
                         <TextBlock VerticalAlignment="Center" FontWeight="Medium" Width="84" Margin="4 0 0 0">Letters:</TextBlock>
@@ -162,13 +162,14 @@
                         </DockPanel>
 
                         <DockPanel Grid.Row="3" Grid.Column="0">
-                            <Button x:Name="AnagramRandomButton" Width="72" Height="26" Margin="4 0 0 0" VerticalAlignment="Center"
+                            <Button x:Name="AnagramRandomButton" DockPanel.Dock="Right" Width="72" Height="26" Margin="4 0 0 0" VerticalAlignment="Center"
                                     Click="AnagramRandomButton_OnClick" IsEnabled="False">Random</Button>
-                            <Button x:Name="AnagramCountButton" Width="72" Height="26" Margin="4 0 0 0" VerticalAlignment="Center"
-                                    Click="AnagramCountButton_OnClick" IsEnabled="False">Count</Button>
-                            <Button x:Name="AnagramButton" Width="72" Height="26" Margin="4 0 0 0" VerticalAlignment="Center"
+                            <Button x:Name="AnagramButton" DockPanel.Dock="Right" Width="72"  Height="26" Margin="4 0 0 0" VerticalAlignment="Center"
                                     Click="AnagramListButton_OnClick" IsEnabled="False">List</Button>
-                            <TextBlock x:Name="AnagramCountBlock" VerticalAlignment="Center" FontSize="14" Margin="4 0 0 0" />
+                            <Button x:Name="AnagramCountButton" DockPanel.Dock="Right" Width="72" Height="26" Margin="4 0 0 0" VerticalAlignment="Center"
+                                    Click="AnagramCountButton_OnClick" IsEnabled="False">Count</Button>
+                            <TextBlock x:Name="AnagramCountBlock" VerticalAlignment="Center" Foreground="DimGray" FontSize="14" Margin="6 0 0 0" Text="Unchecked"/>
+                            
                         </DockPanel>
                         <ListBox x:Name="AnagramListBox" Margin="0 4 0 0" FontFamily="Lucida Console" FontSize="14" Grid.Row="4" Grid.Column="0"
                                  MouseDoubleClick="AnagramBox_OnMouseDoubleClick" />        

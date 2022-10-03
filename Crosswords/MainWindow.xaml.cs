@@ -439,14 +439,21 @@ public partial class MainWindow
 
             // Display progress
             ProgressTextBlock.Inlines.Clear();
-            ProgressTextBlock.Inlines.Add(new Run()
-                {Text = (cluesDone == clueCount) ? "COMPLETE" : $"Completed {cluesDone} of {clueCount} clues"});
-            if (cluesDone < clueCount)
+            ProgressTextBlock.Inlines.Add(new Run() {Text = $"{clueCount} clues: "});
+
+            if (cluesDone == clueCount)
             {
                 ProgressTextBlock.Inlines.Add(new Run()
-                    {Text = $" [{clueCount - cluesDone}]", Foreground = Brushes.Tomato});
+                    {Text =  "COMPLETE", Foreground = Brushes.SeaGreen });    
             }
-
+            else
+            {
+                ProgressTextBlock.Inlines.Add(new Run()
+                    {Text = $"Completed {cluesDone} ", Foreground = Brushes.SeaGreen});
+                ProgressTextBlock.Inlines.Add(new Run()
+                    {Text = $"{clueCount - cluesDone} remaining", Foreground = Brushes.IndianRed});
+            }
+            
             ProgressPanel.Children.Clear();
             for (var n = 0; n < cluesDone; n++)
             {
@@ -789,7 +796,8 @@ public partial class MainWindow
         CleanGivenLetters(AnagramTextBox, false);
         AnagramLengthBlock.Text = $"Length {AnagramTextBox.Text.Trim().Length}";
         AnagramListBox.Items.Clear();
-        AnagramCountBlock.Text = string.Empty;
+        AnagramCountBlock.Text ="Unchecked";
+        AnagramCountBlock.Foreground=Brushes.DimGray;
         AnagramRandomButton.IsEnabled = AnagramCountButton.IsEnabled
             = AnagramButton.IsEnabled = AnagramTextBox.Text.Trim().Length > 0;
     }
@@ -1005,10 +1013,12 @@ public partial class MainWindow
         {
             g--;
             AnagramCountBlock.Text = (g < 1) ? "No others" : g > 1 ? $"{g:#,0} others" : "1 other";    
+            AnagramCountBlock.Foreground= Brushes.DarkViolet;
         }
         else
         {
             AnagramCountBlock.Text = (g < 1) ? "No matches" : g > 1 ? $"{g:#,0} matches" : "1 match";
+            AnagramCountBlock.Foreground= Brushes.DarkViolet;
         }
         return mixes;
     }
